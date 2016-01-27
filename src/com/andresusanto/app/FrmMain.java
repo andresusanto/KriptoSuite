@@ -5,6 +5,8 @@
  */
 package com.andresusanto.app;
 
+import com.andresusanto.engine.Vigenere;
+
 /**
  *
  * @author Andre
@@ -47,6 +49,16 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        String coba = "TESTING+SAJA!";
+        
+        Vigenere vigenere = new Vigenere("ANDRESUSANTO", true);
+        
+        System.out.println("RAW : " + coba);
+        coba = vigenere.encrypt(coba);
+        System.out.println("RAW : " + coba);
+        coba = vigenere.decrypt(coba);
+        System.out.println("RAW : " + coba);
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrmMain().setVisible(true);
