@@ -50,7 +50,7 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Playfair playfair = new Playfair("AAABBBCCCDEFGHIIIIEEEXXXKLMNOPQRSTUVWXYZ");
+        Playfair playfair = new Playfair("JJJAAABBBCCCDEFGHIIIIEEEXXXKLMNOPQRSTUVWXYZ");
         
         
         java.awt.EventQueue.invokeLater(new Runnable() {

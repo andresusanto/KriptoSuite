@@ -17,7 +17,7 @@ public class Playfair {
         StringBuilder tmp = new StringBuilder();
         
         for(int i = 0; i < key.length() && i < 25; i++){
-            if (tmp.indexOf("" + key.charAt(i)) == -1)
+            if (tmp.indexOf("" + key.charAt(i)) == -1 && key.charAt(i) != 'J')
                 tmp.append(key.charAt(i));
         }
         
@@ -32,5 +32,23 @@ public class Playfair {
         
         key = tmp.toString();
         System.out.println(key);
+        System.out.println(preprocess("DSASU"));
+    }
+    
+    private StringBuilder preprocess(String plain){
+        StringBuilder plaintxt = new StringBuilder(plain.replace('J', 'I'));
+        
+        char prev = '\0';
+        for (int i = 0; i < plaintxt.length(); i++){
+           if (plaintxt.charAt(i) == prev){
+               plaintxt.insert(i, 'Z');
+           }
+           prev = plaintxt.charAt(i);
+        }
+        
+        if (plaintxt.length() % 2 != 0)
+            plaintxt.append('Z');
+        
+        return plaintxt;
     }
 }
