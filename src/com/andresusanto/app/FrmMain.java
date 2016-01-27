@@ -50,14 +50,14 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Playfair playfair = new Playfair("JJJAAABBBCCCDEFGHIIIIEEEXXXKLMNOPQRSTUVWXYZ");
+        Playfair playfair = new Playfair("STANDERCHBKFGILMOPQUVWXYZ");
+        System.out.println(playfair.encrypt("GOODBROOMSSWEEPCLEAN"));
         
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrmMain().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
