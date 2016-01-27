@@ -5,6 +5,7 @@
  */
 package com.andresusanto.app;
 
+import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Vigenere;
 
 /**
@@ -49,15 +50,8 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String coba = "TESTING+SAJA!";
+        Playfair playfair = new Playfair("AAABBBCCCDEFGHIIIIEEEXXXKLMNOPQRSTUVWXYZ");
         
-        Vigenere vigenere = new Vigenere("ANDRESUSANTO", true);
-        
-        System.out.println("RAW : " + coba);
-        coba = vigenere.encrypt(coba);
-        System.out.println("RAW : " + coba);
-        coba = vigenere.decrypt(coba);
-        System.out.println("RAW : " + coba);
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
