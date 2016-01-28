@@ -8,6 +8,12 @@ package com.andresusanto.app;
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Vigenere;
 import com.andresusanto.option.SpacingOption;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -51,15 +57,27 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         Vigenere vig = new Vigenere("KRN", false, SpacingOption.GROUP_5);
         System.out.println(vig.encrypt("ANDRE SUSANTO ADALAH ANAK YANG PALING KEREN SEDUNIA COY"));
         System.out.println(vig.decrypt("KEQBV FEJNXKB KUNVRU KENU PNXX CKCVXX XOIRX JRNLASR PYP"));
         
+        Path path = Paths.get("D:\\crypt.txt");
+        try {
+            byte[] data = Files.readAllBytes(path);
+            
+            byte[] encrypted = vig.decrypt(data);
+            
+            Files.write(Paths.get("D:\\crypt.txt"), encrypted);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmMain().setVisible(true);
+            new FrmMain().setVisible(true);
             }
-        });*/
+            });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -6,6 +6,7 @@
 package com.andresusanto.engine;
 
 import com.andresusanto.option.SpacingOption;
+import java.io.ByteArrayOutputStream;
 
 /**
  *
@@ -22,6 +23,32 @@ public class Vigenere {
         this.spacing = spacing;
     }
     
+    // fungsi enkripsi untuk tipe byte
+    public byte[] encrypt(byte data[]){
+        ByteArrayOutputStream res = new ByteArrayOutputStream();
+        
+        for (int i = 0, j = 0; i < data.length; i++) {
+            res.write((byte)((data[i] + key.charAt(j) - 255) % 256));
+            j = ++j % key.length();
+        }
+        
+        return res.toByteArray();
+    }
+    
+    // fungsi dekripsi untuk tipe byte
+    public byte[] decrypt(byte data[]){
+        ByteArrayOutputStream res = new ByteArrayOutputStream();
+        
+        for (int i = 0, j = 0; i < data.length; i++) {
+            res.write((byte)((data[i] - key.charAt(j) + 255) % 256));
+            j = ++j % key.length();
+        }
+        
+        return res.toByteArray();
+    }
+    
+    
+    // fungsi enkripsi untuk tipe string
     public String encrypt(String text) {
         StringBuilder res = new StringBuilder();
         text = text.toUpperCase();
@@ -48,6 +75,7 @@ public class Vigenere {
         return res.toString();
     }
 
+    // fungsi dekripsi untuk tipe string
     public String decrypt(String text) {
         StringBuilder res = new StringBuilder();
         text = text.toUpperCase();
