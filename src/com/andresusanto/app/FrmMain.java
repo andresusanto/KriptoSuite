@@ -51,9 +51,9 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Playfair playfair = new Playfair("STANDERCHBKFGILMOPQUVWXYZ", SpacingOption.GROUP_5);
-        System.out.println(playfair.encrypt("GOOD BROOMS SWEEP CLEAN"));
-        System.out.println(playfair.decrypt("FPUT ECUWPOD VTVBVCM BGCSDY"));
+        Vigenere vig = new Vigenere("KRN", false, SpacingOption.DEFAULT);
+        System.out.println(vig.encrypt("ANDRE SUSANTO"));
+        System.out.println(vig.decrypt("KEQBV FEJNXKB"));
         
         /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
