@@ -7,6 +7,7 @@ package com.andresusanto.app;
 
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Vigenere;
+import com.andresusanto.option.SpacingOption;
 
 /**
  *
@@ -50,8 +51,9 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Playfair playfair = new Playfair("STANDERCHBKFGILMOPQUVWXYZ");
-        System.out.println(playfair.encrypt("GOODBROOMSSWEEPCLEAN"));
+        Playfair playfair = new Playfair("STANDERCHBKFGILMOPQUVWXYZ", SpacingOption.DEFAULT);
+        System.out.println(playfair.encrypt("GOOD BROOMS SWEEP CLEAN"));
+        System.out.println(playfair.decrypt("FPUTECWWVETVKKXGKBND"));
         
         /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

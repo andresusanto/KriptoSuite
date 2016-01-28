@@ -5,14 +5,17 @@
  */
 package com.andresusanto.engine;
 
+import com.andresusanto.option.SpacingOption;
+
 /**
  *
  * @author Andre
  */
 public class Playfair {
     private String key;
+    private SpacingOption spacing;
     
-    public Playfair(String key){
+    public Playfair(String key, SpacingOption spacing){
         // bentuk tabel key dari key yang dimasukkan oleh pengguna
         StringBuilder tmp = new StringBuilder();
         
@@ -31,18 +34,38 @@ public class Playfair {
         }
         
         this.key = tmp.toString();
+        this.spacing = spacing;
+    }
+    
+    private int findNextChar(int start, StringBuilder plain){
+        if (start >= plain.length()) return -1;
+        
+        for (int i = start; i < plain.length(); i++){
+            if (plain.charAt(i) != ' ') return i;
+        }
+        return -1;
     }
     
     private StringBuilder preprocess(String plain){
         StringBuilder plaintxt = new StringBuilder(plain.replace('J', 'I'));
         
-        for (int i = 0; i < plaintxt.length() - 1; i += 2){
-           if (plaintxt.charAt(i) == plaintxt.charAt(i + 1)){
-               plaintxt.insert(i + 1, 'Z');
-           }
+        if (spacing != SpacingOption.DEFAULT)
+            plaintxt = new StringBuilder(plaintxt.toString().replace(" ", ""));
+        
+        
+        int i = findNextChar(0, plaintxt);
+        int j = findNextChar(i + 1, plaintxt);
+
+        while (i != -1 && j != -1){
+            if (plaintxt.charAt(i) == plaintxt.charAt(j)){
+                plaintxt.insert(j, 'Z');
+            }
+
+            i = findNextChar(j + 1, plaintxt);
+            j = findNextChar(i + 1, plaintxt);
         }
         
-        if (plaintxt.length() % 2 != 0)
+        if (plaintxt.toString().replace(" ", "").length() % 2 != 0)
             plaintxt.append('Z');
         
         return plaintxt;
@@ -63,29 +86,53 @@ public class Playfair {
     
     public String encrypt(String text) {
         StringBuilder plain = preprocess(text);
-        StringBuilder encrypted = new StringBuilder();
+        StringBuilder encrypted = new StringBuilder(plain);
         
-        for (int i = 0; i < plain.length(); i += 2){
+        int i = findNextChar(0, plain);
+        int j = findNextChar(i + 1, plain);
+        
+        while (i != -1 && j != -1){
             Point pos1 = getCharPos(plain.charAt(i));
-            Point pos2 = getCharPos(plain.charAt(i + 1));
+            Point pos2 = getCharPos(plain.charAt(j));
             
             if (pos1.x == pos2.x){
-                encrypted.append(getCharByPos(new Point(pos1.x, (pos1.y + 1) % 5)));
-                encrypted.append(getCharByPos(new Point(pos2.x, (pos2.y + 1) % 5)));
+                encrypted.setCharAt(i, getCharByPos(new Point(pos1.x, (pos1.y + 1) % 5)));
+                encrypted.setCharAt(j, getCharByPos(new Point(pos2.x, (pos2.y + 1) % 5)));
             }else if (pos1.y == pos2.y){
-                encrypted.append(getCharByPos(new Point((pos1.x + 1) % 5, pos1.y)));
-                encrypted.append(getCharByPos(new Point((pos2.x + 1) % 5, pos2.y)));
+                encrypted.setCharAt(i, getCharByPos(new Point((pos1.x + 1) % 5, pos1.y)));
+                encrypted.setCharAt(j, getCharByPos(new Point((pos2.x + 1) % 5, pos2.y)));
             }else{
-                encrypted.append(getCharByPos(new Point(pos2.x, pos1.y)));
-                encrypted.append(getCharByPos(new Point(pos1.x, pos2.y)));
+                encrypted.setCharAt(i, getCharByPos(new Point(pos2.x, pos1.y)));
+                encrypted.setCharAt(j, getCharByPos(new Point(pos1.x, pos2.y)));
             }
+            
+            i = findNextChar(j + 1, plain);
+            j = findNextChar(i + 1, plain);
         }
         
         return encrypted.toString();
     }
     
     public String decrypt(String text) {
-        return "";
+        StringBuilder decrypted = new StringBuilder();
+        
+        for (int i = 0; i < text.length(); i += 2){
+            Point pos1 = getCharPos(text.charAt(i));
+            Point pos2 = getCharPos(text.charAt(i + 1));
+            
+            if (pos1.x == pos2.x){
+                decrypted.append(getCharByPos(new Point(pos1.x, (pos1.y + 4) % 5)));
+                decrypted.append(getCharByPos(new Point(pos2.x, (pos2.y + 4) % 5)));
+            }else if (pos1.y == pos2.y){
+                decrypted.append(getCharByPos(new Point((pos1.x + 4) % 5, pos1.y)));
+                decrypted.append(getCharByPos(new Point((pos2.x + 4) % 5, pos2.y)));
+            }else{
+                decrypted.append(getCharByPos(new Point(pos2.x, pos1.y)));
+                decrypted.append(getCharByPos(new Point(pos1.x, pos2.y)));
+            }
+        }
+        
+        return decrypted.toString();
     }
     
     private static class Point{
