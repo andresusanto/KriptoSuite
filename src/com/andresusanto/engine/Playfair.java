@@ -114,22 +114,29 @@ public class Playfair {
     }
     
     public String decrypt(String text) {
-        StringBuilder decrypted = new StringBuilder();
+        StringBuilder encrypted = new StringBuilder(text);
+        StringBuilder decrypted = new StringBuilder(text);
         
-        for (int i = 0; i < text.length(); i += 2){
+        int i = findNextChar(0, encrypted);
+        int j = findNextChar(i + 1, encrypted);
+        
+        while (i != -1 && j != -1){
             Point pos1 = getCharPos(text.charAt(i));
-            Point pos2 = getCharPos(text.charAt(i + 1));
+            Point pos2 = getCharPos(text.charAt(j));
             
             if (pos1.x == pos2.x){
-                decrypted.append(getCharByPos(new Point(pos1.x, (pos1.y + 4) % 5)));
-                decrypted.append(getCharByPos(new Point(pos2.x, (pos2.y + 4) % 5)));
+                decrypted.setCharAt(i, getCharByPos(new Point(pos1.x, (pos1.y + 4) % 5)));
+                decrypted.setCharAt(j, getCharByPos(new Point(pos2.x, (pos2.y + 4) % 5)));
             }else if (pos1.y == pos2.y){
-                decrypted.append(getCharByPos(new Point((pos1.x + 4) % 5, pos1.y)));
-                decrypted.append(getCharByPos(new Point((pos2.x + 4) % 5, pos2.y)));
+                decrypted.setCharAt(i, getCharByPos(new Point((pos1.x + 4) % 5, pos1.y)));
+                decrypted.setCharAt(j, getCharByPos(new Point((pos2.x + 4) % 5, pos2.y)));
             }else{
-                decrypted.append(getCharByPos(new Point(pos2.x, pos1.y)));
-                decrypted.append(getCharByPos(new Point(pos1.x, pos2.y)));
+                decrypted.setCharAt(i, getCharByPos(new Point(pos2.x, pos1.y)));
+                decrypted.setCharAt(j, getCharByPos(new Point(pos1.x, pos2.y)));
             }
+            
+            i = findNextChar(j + 1, encrypted);
+            j = findNextChar(i + 1, encrypted);
         }
         
         return decrypted.toString();

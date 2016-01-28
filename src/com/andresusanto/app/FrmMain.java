@@ -53,7 +53,7 @@ public class FrmMain extends javax.swing.JFrame {
     public static void main(String[] args) {
         Playfair playfair = new Playfair("STANDERCHBKFGILMOPQUVWXYZ", SpacingOption.DEFAULT);
         System.out.println(playfair.encrypt("GOOD BROOMS SWEEP CLEAN"));
-        System.out.println(playfair.decrypt("FPUTECWWVETVKKXGKBND"));
+        System.out.println(playfair.decrypt("FPUT ECUWPOD VTVBVCM BGCSDY"));
         
         /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
