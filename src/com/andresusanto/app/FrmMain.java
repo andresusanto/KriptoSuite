@@ -8,12 +8,15 @@ package com.andresusanto.app;
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Vigenere;
 import com.andresusanto.option.SpacingOption;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
 
 /**
  *
@@ -37,17 +40,121 @@ public class FrmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listAlgorithm = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jLabel5 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Crypto Suite - 13512028 Andre Susanto");
+        setResizable(false);
+
+        listAlgorithm.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Vigenere Cipher standard", "Vigenere Cipher extended", "Playfair Cipher" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        listAlgorithm.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listAlgorithm.setSelectedIndex(0);
+        jScrollPane1.setViewportView(listAlgorithm);
+
+        jLabel1.setText("13512028 - Andre Susanto");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setText("Key");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setText("INPUT");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("OUTPUT");
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setText("Algorithm");
+
+        jToggleButton1.setText("Encrypt");
+
+        jButton1.setText("Decrypt");
+
+        jButton2.setText("From File ...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 302, Short.MAX_VALUE)
+                        .addComponent(jLabel1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jToggleButton1)
+                                .addComponent(jButton1)
+                                .addComponent(jButton2))
+                            .addComponent(jLabel1)))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
 
         pack();
@@ -56,30 +163,48 @@ public class FrmMain extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         
-        Vigenere vig = new Vigenere("KRN", false, SpacingOption.GROUP_5);
-        System.out.println(vig.encrypt("ANDRE SUSANTO ADALAH ANAK YANG PALING KEREN SEDUNIA COY"));
-        System.out.println(vig.decrypt("KEQBV FEJNXKB KUNVRU KENU PNXX CKCVXX XOIRX JRNLASR PYP"));
-        
-        Path path = Paths.get("D:\\crypt.txt");
-        try {
-            byte[] data = Files.readAllBytes(path);
-            
-            byte[] encrypted = vig.decrypt(data);
-            
-            Files.write(Paths.get("D:\\crypt.txt"), encrypted);
-        } catch (IOException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
+//        Vigenere vig = new Vigenere("KRN", false, SpacingOption.GROUP_5);
+//        System.out.println(vig.encrypt("ANDRE SUSANTO ADALAH ANAK YANG PALING KEREN SEDUNIA COY"));
+//        System.out.println(vig.decrypt("KEQBV FEJNXKB KUNVRU KENU PNXX CKCVXX XOIRX JRNLASR PYP"));
+//        
+//        Path path = Paths.get("D:\\crypt.txt");
+//        try {
+//            byte[] data = Files.readAllBytes(path);
+//            
+//            byte[] encrypted = vig.decrypt(data);
+//            
+//            Files.write(Paths.get("D:\\crypt.txt"), encrypted);
+//        } catch (IOException ex) {
+//            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-            new FrmMain().setVisible(true);
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                FrmMain frmMain = new FrmMain();
+                frmMain.setLocation(dim.width/2-frmMain.getSize().width/2, dim.height/2-frmMain.getSize().height/2);
+                frmMain.setVisible(true);
             }
-            });*/
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JList<String> listAlgorithm;
     // End of variables declaration//GEN-END:variables
 }
