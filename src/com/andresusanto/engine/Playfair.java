@@ -110,6 +110,14 @@ public class Playfair {
             j = findNextChar(i + 1, plain);
         }
         
+        
+        if (spacing == SpacingOption.GROUP_5){
+            int sumSpace = encrypted.length() / 5;
+            for (int k = 1; k <= sumSpace; k++){
+                encrypted.insert(k * 5 + (k - 1), ' ');
+            }
+        }
+        
         return encrypted.toString();
     }
     
