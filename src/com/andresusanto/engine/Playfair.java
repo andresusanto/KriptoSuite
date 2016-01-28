@@ -150,6 +150,14 @@ public class Playfair {
         return decrypted.toString();
     }
     
+    public static boolean isTextSupported(String text){
+        for (int i = 0, j = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if ((c < 'A' || c > 'Z') && c != ' ') return false;
+        }
+        return true;
+    }
+    
     private static class Point{
         public int x, y;
         
