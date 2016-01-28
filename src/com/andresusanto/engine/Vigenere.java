@@ -51,7 +51,6 @@ public class Vigenere {
     // fungsi enkripsi untuk tipe string
     public String encrypt(String text) {
         StringBuilder res = new StringBuilder();
-        text = text.toUpperCase();
         for (int i = 0, j = 0; i < text.length(); i++) {
             char c = text.charAt(i);
                         
@@ -78,7 +77,6 @@ public class Vigenere {
     // fungsi dekripsi untuk tipe string
     public String decrypt(String text) {
         StringBuilder res = new StringBuilder();
-        text = text.toUpperCase();
         for (int i = 0, j = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             

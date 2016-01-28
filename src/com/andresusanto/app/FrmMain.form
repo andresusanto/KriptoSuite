@@ -201,6 +201,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Load ..."/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="tabAlgorithm">
 
@@ -222,7 +225,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="cmbSpacingVig" max="32767" attributes="0"/>
-                          <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnVigEncrypt" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
@@ -230,7 +233,7 @@
                               </Group>
                               <EmptySpace min="0" pref="21" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jButton2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnVigDecrypt" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -246,9 +249,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cmbSpacingVig" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="119" max="32767" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnVigEncrypt" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnVigDecrypt" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -282,15 +285,21 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="btnVigEncrypt">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Encrypt Any File"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVigEncryptActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="btnVigDecrypt">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Decrypt Any File"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVigEncryptActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -362,6 +371,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Save ..."/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpen1ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>

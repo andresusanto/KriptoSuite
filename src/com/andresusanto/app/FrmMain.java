@@ -12,13 +12,17 @@ import com.andresusanto.option.SpacingOption;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -59,8 +63,8 @@ public class FrmMain extends javax.swing.JFrame {
         chkVigExtended = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
         cmbSpacingVig = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnVigEncrypt = new javax.swing.JButton();
+        btnVigDecrypt = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         cmbSpacingPlayfair = new javax.swing.JComboBox<>();
@@ -108,6 +112,11 @@ public class FrmMain extends javax.swing.JFrame {
         });
 
         btnOpen.setText("Load ...");
+        btnOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenActionPerformed(evt);
+            }
+        });
 
         chkVigExtended.setText("Extended (full ASCII)");
 
@@ -116,9 +125,19 @@ public class FrmMain extends javax.swing.JFrame {
 
         cmbSpacingVig.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Default", "No Spacing", "Group By 5" }));
 
-        jButton1.setText("Encrypt Any File");
+        btnVigEncrypt.setText("Encrypt Any File");
+        btnVigEncrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVigEncryptActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Decrypt Any File");
+        btnVigDecrypt.setText("Decrypt Any File");
+        btnVigDecrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVigEncryptActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,13 +147,13 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbSpacingVig, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnVigEncrypt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(chkVigExtended))
                         .addGap(0, 21, Short.MAX_VALUE))
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnVigDecrypt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -147,9 +166,9 @@ public class FrmMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbSpacingVig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnVigEncrypt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(btnVigDecrypt)
                 .addContainerGap())
         );
 
@@ -186,6 +205,11 @@ public class FrmMain extends javax.swing.JFrame {
         tabAlgorithm.addTab("Playfair", jPanel2);
 
         btnOpen1.setText("Save ...");
+        btnOpen1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpen1ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Andre Susanto - 13512028");
 
@@ -262,9 +286,14 @@ public class FrmMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEncryptActionPerformed
-        String input = txtInput.getText();
-        String key = txtKey.getText();
+        String input = txtInput.getText().trim();
+        String key = txtKey.getText().trim();
                 
+        if (key.length() == 0){
+            JOptionPane.showMessageDialog(null, "Key length must > 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         switch (tabAlgorithm.getSelectedIndex()){
             case 0:{
                 if (!chkVigExtended.isSelected()) {
@@ -294,9 +323,14 @@ public class FrmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEncryptActionPerformed
 
     private void btnDecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecryptActionPerformed
-        String key = txtKey.getText();
-        String input = txtInput.getText();
+        String key = txtKey.getText().trim();
+        String input = txtInput.getText().trim();
                 
+        if (key.length() == 0){
+            JOptionPane.showMessageDialog(null, "Key length must > 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         switch (tabAlgorithm.getSelectedIndex()){
             case 0:{
                 
@@ -324,6 +358,69 @@ public class FrmMain extends javax.swing.JFrame {
             }break;
         }
     }//GEN-LAST:event_btnDecryptActionPerformed
+
+    private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)", "txt", "text"));
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+            try {
+                List<String> content = Files.readAllLines(Paths.get(fc.getSelectedFile().getPath()), Charset.defaultCharset());
+                txtInput.setText("");
+                for (String line : content) {
+                    txtInput.append(line);
+                    txtInput.append("\n");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnOpenActionPerformed
+
+    private void btnOpen1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpen1ActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)", "txt", "text"));
+        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            String saveLocation = fc.getSelectedFile().getPath();
+            if (!saveLocation.endsWith(".txt")) saveLocation += ".txt";
+            
+            try {
+                Files.write(Paths.get(saveLocation),txtOutput.getText().trim().getBytes());
+            } catch (IOException ex) {
+                Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnOpen1ActionPerformed
+
+    private void btnVigEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVigEncryptActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        String key = txtKey.getText().trim();
+                
+        if (key.length() == 0){
+            JOptionPane.showMessageDialog(null, "Key length must > 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Vigenere vig = new Vigenere(key, true, SpacingOption.DEFAULT);
+        
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+            try {
+                
+                byte[] data = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
+                byte[] process;
+                
+                if (evt.getSource().equals(btnVigEncrypt))
+                    process = vig.encrypt(data);
+                else
+                    process = vig.decrypt(data);
+                
+                if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                    Files.write(Paths.get(fc.getSelectedFile().getPath()), process);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnVigEncryptActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,11 +457,11 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JToggleButton btnEncrypt;
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnOpen1;
+    private javax.swing.JButton btnVigDecrypt;
+    private javax.swing.JButton btnVigEncrypt;
     private javax.swing.JCheckBox chkVigExtended;
     private javax.swing.JComboBox<String> cmbSpacingPlayfair;
     private javax.swing.JComboBox<String> cmbSpacingVig;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
