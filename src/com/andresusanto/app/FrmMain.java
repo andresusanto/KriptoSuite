@@ -51,9 +51,9 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Vigenere vig = new Vigenere("KRN", false, SpacingOption.DEFAULT);
-        System.out.println(vig.encrypt("ANDRE SUSANTO"));
-        System.out.println(vig.decrypt("KEQBV FEJNXKB"));
+        Vigenere vig = new Vigenere("KRN", false, SpacingOption.GROUP_5);
+        System.out.println(vig.encrypt("ANDRE SUSANTO ADALAH ANAK YANG PALING KEREN SEDUNIA COY"));
+        System.out.println(vig.decrypt("KEQBV FEJNXKB KUNVRU KENU PNXX CKCVXX XOIRX JRNLASR PYP"));
         
         /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

@@ -37,6 +37,14 @@ public class Vigenere {
             }
             j = ++j % key.length();
         }
+        
+        if (spacing == SpacingOption.GROUP_5){
+            int sumSpace = res.length() / 5;
+            for (int k = 1; k <= sumSpace; k++){
+                res.insert(k * 5 + (k - 1), ' ');
+            }
+        }
+        
         return res.toString();
     }
 
