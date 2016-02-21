@@ -13,7 +13,7 @@ public class Picture {
     public static final char PICTURE_PNG = 'P';
     public static final char PICTURE_BMP = 'B';
     
-    private char pictureType;
+    public char pictureType;
     private int[] pixels; // 4 byte data - A R G B
     
     public Picture(String address){ // handle file type dan serahkan ke loader khusus
@@ -27,6 +27,18 @@ public class Picture {
     
     // fungsi loader file Png
     private void loadPng(String address){
+        
+    }
+    
+    public void save(String address){ // handle file type dan save ke format tersebut
+        
+    }
+    
+    private void saveBmp(String address){
+        
+    }
+    
+    private void savePng(String address){
         
     }
 }
