@@ -29,7 +29,9 @@ public class Picture {
     public int height;
     
     public Picture(String address) throws IOException { // handle file type dan serahkan ke loader khusus
-        BufferedImage img = ImageIO.read(new File(address));
+        BufferedImage original = ImageIO.read(new File(address));
+        BufferedImage img = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        img.getGraphics().drawImage(original, 0, 0, null);
         
         width = img.getWidth();
         height = img.getHeight();
@@ -43,6 +45,10 @@ public class Picture {
         
     }
     
+    public int getTotalRegions(){
+        return (this.width / 8) * ((int)(this.height / 8));
+    }
+    
     // mengambil bitplane pada region tertentu dan pada layer tertentu
     public boolean[] getBitPlane(int region, int layer, char colorCode){
         // region dimulai dari kiri atas = region 0
@@ -52,6 +58,7 @@ public class Picture {
         int regionsPerLine = this.width / 8;
         int regionX = region % regionsPerLine;
         int regionY = region / regionsPerLine;
+        
         
         int Xconstant = regionX * 8;
         int Yconstant = regionY * 8 * this.width;
@@ -63,18 +70,28 @@ public class Picture {
             
             for (int x = 0; x < 8; x++){
                 int pixel = this.pixels[Xconstant + x + Ypos];
-                this.pixels[Xconstant + x + Ypos] = intFromRGB(0,0,0);
-                /*byte colorByte;
+                byte colorByte = 0;
                 
+                // geser warna, format warna pada int (4 byte) adalah: A R G B, masing2 1 byte
                 switch (colorCode){
                     case COLOR_RED:
-                        
+                        colorByte = (byte)((pixel >> 16 ) & 0xFF); // geser 2 byte, lalu ambil 1 byte
                         break;
                     case COLOR_GREEN:
+                        colorByte = (byte)((pixel >> 8 ) & 0xFF); // geser 1 byte, lalu ambil 1 byte
                         break;
                     case COLOR_BLUE:
+                        colorByte = (byte)((pixel ) & 0xFF); // gak geser, lalu ambil 1 byte saja
                         break;
-                }*/
+                }
+                
+                result[y * 8 + x] = ((colorByte >> layer) & 1) == 1;
+                
+                // Fungsi ini untuk testing (format ke boolean image)
+//                if (((colorByte >> layer) & 1) == 1)
+//                    this.pixels[Xconstant + x + Ypos] = intFromRGB(0, 0, 0);
+//                else
+//                    this.pixels[Xconstant + x + Ypos] = intFromRGB(255, 255, 255);
             }
         }
         
@@ -86,7 +103,13 @@ public class Picture {
     }
     
     public void save(String address) throws IOException{ // handle file type dan save ke format tersebut
-        BufferedImage bi = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bi;
+        
+        if (pictureType == PICTURE_PNG)
+            bi = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+        else
+            bi = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+        
         int[] a = ( (DataBufferInt) bi.getRaster().getDataBuffer() ).getData();
         System.arraycopy(pixels, 0, a, 0, pixels.length);
         
