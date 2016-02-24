@@ -20,6 +20,11 @@ public class Picture {
         
     }
     
+    // mengambil bitplane pada region tertentu dan pada layer tertentu
+    public boolean[] getBitPlane(int region, int layer){
+        return null;
+    }
+    
     // fungsi loader file bitmap
     private void loadBmp(String address){
         

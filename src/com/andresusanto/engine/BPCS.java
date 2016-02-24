@@ -53,7 +53,9 @@ public class BPCS {
         return null;
     }
     
-    
+    public int calculateSpace(){
+        return 0;
+    }
     
     
     // ---
