@@ -83,11 +83,11 @@ public class BPCS {
         return complexity / 112.0f; // maks kompleksitas adl:  ((nrows-1)*ncols) + ((ncols-1)*nrows)
     }
     
-    private void convertToCGC(int region){
+    private void convertToCGC(int region, int layer){
         
     }
     
-    private void convertToPBC(int region){
+    private void convertToPBC(int region, int layer){
         
     }
 }
