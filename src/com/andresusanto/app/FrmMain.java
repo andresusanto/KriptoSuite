@@ -5,6 +5,7 @@
  */
 package com.andresusanto.app;
 
+import com.andresusanto.engine.Picture;
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.Vigenere;
@@ -441,6 +442,12 @@ public class FrmMain extends javax.swing.JFrame {
 //        } catch (IOException ex) {
 //            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+
+        Picture pic = new Picture("D:\\pengcit\\sampel1.bmp");
+        for (int i = 0; i < 5251; i++)
+            pic.getBitPlane(i, 0, Picture.COLOR_BLUE);
+        pic.save("D:\\pengcit\\sampel1_edit.bmp");
+
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
