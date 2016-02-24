@@ -49,6 +49,7 @@ public class Picture {
         return (this.width / 8) * ((int)(this.height / 8));
     }
     
+    
     // mengambil bitplane pada region tertentu dan pada layer tertentu
     public boolean[] getBitPlane(int region, int layer, char colorCode){
         // region dimulai dari kiri atas = region 0
@@ -96,6 +97,62 @@ public class Picture {
         }
         
         return result;
+    }
+    
+    
+    public void setBitPlane(int region, int layer, char colorCode, boolean[] bitPlane){
+        int regionsPerLine = this.width / 8;
+        int regionX = region % regionsPerLine;
+        int regionY = region / regionsPerLine;
+        
+        
+        int Xconstant = regionX * 8;
+        int Yconstant = regionY * 8 * this.width;
+        
+        for (int y = 0; y < 8; y++){
+            int Ypos = Yconstant + y * this.width;
+            
+            for (int x = 0; x < 8; x++){
+                int pixel = this.pixels[Xconstant + x + Ypos];
+                byte colorByte = 0;
+                byte colorPlane = (byte) ((bitPlane[y * 8 + x] ? 1 : 0) << layer); // memposisikan bit sesuai layer
+                
+                // ambil warna dari pixel
+                switch (colorCode){
+                    case COLOR_RED:
+                        colorByte = (byte)((pixel >> 16 ) & 0xFF); // geser 2 byte, lalu ambil 1 byte
+                        break;
+                    case COLOR_GREEN:
+                        colorByte = (byte)((pixel >> 8 ) & 0xFF); // geser 1 byte, lalu ambil 1 byte
+                        break;
+                    case COLOR_BLUE:
+                        colorByte = (byte)((pixel ) & 0xFF); // gak geser, lalu ambil 1 byte saja
+                        break;
+                }
+                
+                // buat bit pada layer menjadi 0
+                colorByte = (byte) (colorByte & (0xFF & (0 << layer)));
+                colorByte = (byte) (colorByte | colorPlane);
+                
+                // kembalikan lagi warna
+                switch (colorCode){
+                    case COLOR_RED:
+                        pixel = pixel & 0xFF00FFFF;
+                        pixel = pixel | (colorByte << 16);
+                        break;
+                    case COLOR_GREEN:
+                        pixel = pixel & 0xFFFF00FF;
+                        pixel = pixel | (colorByte << 8);
+                        break;
+                    case COLOR_BLUE:
+                        pixel = pixel & 0xFFFFFF00;
+                        pixel = pixel | (colorByte);
+                        break;
+                }
+                
+                this.pixels[Xconstant + x + Ypos] = pixel;
+            }
+        }
     }
     
     private int intFromRGB(int r, int g, int b){
