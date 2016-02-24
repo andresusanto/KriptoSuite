@@ -5,6 +5,7 @@
  */
 package com.andresusanto.app;
 
+import com.andresusanto.engine.BPCS;
 import com.andresusanto.engine.Picture;
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Tools;
@@ -444,9 +445,24 @@ public class FrmMain extends javax.swing.JFrame {
 //        }
 
         Picture pic = new Picture("D:\\pengcit\\sampel1.bmp");
-        for (int i = 0; i < 5251; i++)
-            pic.getBitPlane(i, 0, Picture.COLOR_BLUE);
-        pic.save("D:\\pengcit\\sampel1_edit.bmp");
+        //for (int i = 0; i < 5251; i++)
+        //    pic.getBitPlane(i, 0, Picture.COLOR_BLUE);
+        //pic.save("D:\\pengcit\\sampel1_edit.bmp");
+        
+        boolean plane[] = pic.getBitPlane(5, 1, Picture.COLOR_RED);
+        
+        for (int y = 0; y < 8; y++){
+            for (int x = 0; x < 8; x++){
+                if (plane[x + y * 8])
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        BPCS bpcs = new BPCS("ANDRE", pic, 0.3f);
+        System.out.println(bpcs.calculateComplexity(5, 1, Picture.COLOR_RED));
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable() {

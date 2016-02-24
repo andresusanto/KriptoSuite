@@ -38,9 +38,12 @@ public class BPCS {
     
     private Picture picture;
     private float threshold;
+    private String key;
     
     public BPCS(String key, Picture picture, float threshold){ // key menjadi seed dari random number generator tempat menyimpan data
-        
+        this.key = key;
+        this.picture = picture;
+        this.threshold = threshold;
     }
     
     // sisipkan data ke pic
@@ -63,8 +66,21 @@ public class BPCS {
     // catatan: semua manipulasi terhadap gambar langsung kepada objek picture
     // ---
     
-    private int calculateComplexity(int region){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
-        return 0;
+    public float calculateComplexity(int region, int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
+        boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
+        float complexity = 0;
+        
+        for (int y = 0; y < 8; y++){
+            for (int x = 0; x < 8; x++){
+                if (!bitPlane[y * 8 + x]) continue;
+                
+                if (y > 0 && !bitPlane[(y - 1) * 8 + x]) complexity++;
+                if (x > 0 && !bitPlane[y * 8 + (x - 1)]) complexity++;
+                if (y + 1 < 8 && !bitPlane[(y + 1) * 8 + x]) complexity++;
+                if (x + 1 < 8 && !bitPlane[y * 8 + (x + 1)]) complexity++;
+            }
+        }
+        return complexity / 112.0f; // maks kompleksitas adl:  ((nrows-1)*ncols) + ((ncols-1)*nrows)
     }
     
     private void convertToCGC(int region){
