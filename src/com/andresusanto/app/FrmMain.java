@@ -478,7 +478,7 @@ public class FrmMain extends javax.swing.JFrame {
         }
         System.out.println();
         BPCS bpcs = new BPCS("ANDRE", pic, 0.3f);
-        System.out.println(bpcs.calculateComplexity(5, 1, Picture.COLOR_RED));
+        //System.out.println(bpcs.calculateComplexity(plane, 1, Picture.COLOR_RED));
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable() {

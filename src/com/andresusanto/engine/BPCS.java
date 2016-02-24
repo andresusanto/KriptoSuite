@@ -60,14 +60,9 @@ public class BPCS {
         return 0;
     }
     
-    
-    // ---
-    // BPCS
-    // catatan: semua manipulasi terhadap gambar langsung kepada objek picture
-    // ---
-    
-    public float calculateComplexity(int region, int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
-        boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
+    // fungsi untuk menghitung komplesitas suatu bitplane
+    private float calculateComplexity(boolean bitPlane[], int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
+        //boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
         float complexity = 0;
         
         for (int y = 0; y < 8; y++){
@@ -82,6 +77,12 @@ public class BPCS {
         }
         return complexity / 112.0f; // maks kompleksitas adl:  ((nrows-1)*ncols) + ((ncols-1)*nrows)
     }
+    
+    
+    // ---
+    // CGC PBC
+    // catatan: semua manipulasi terhadap gambar langsung kepada objek picture
+    // ---
     
     private void convertToCGC(int region, int layer){
         
