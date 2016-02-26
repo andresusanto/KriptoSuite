@@ -62,3 +62,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /dist/
+
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/

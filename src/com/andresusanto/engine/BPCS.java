@@ -21,16 +21,16 @@ public class BPCS {
     // class payload data yang disimpan ke picture
     public static class BPCSPayload{
         public int size;
-        public String extention;
+        public String filename; // jadi filename karena ketika save as, defaultnya nama filenya adalah nama file asli
         public byte data[];
         
         public byte[] createPayload(){ // fungsi untuk mengkonstruk konten menjadi data dengan header
             return null;
         }
         
-        public BPCSPayload(int size, String extention, byte data[]){
+        public BPCSPayload(int size, String filename, byte data[]){
             this.size = size;
-            this.extention = extention;
+            this.filename = filename;
             this.data = data;
         }
         
