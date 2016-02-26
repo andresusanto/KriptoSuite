@@ -429,6 +429,19 @@ public class FrmMain extends javax.swing.JFrame {
      */
     public static void main(String[] args) throws Exception {
         
+        // CONTOH SEEDED GENERATOR
+        // ---------------------------
+        
+        // ini adalah contoh ngacak2 dari angka 0 sd 999 (jumlah region = 1000). Nanti yang diacak pasti adalah 0 sd jumlah region yang tersedia - 1 ( diambil dari Picture.getTotalRegions() )
+        int acakAcak[] = Tools.getShuffledInts("BPJS", 0, 999); 
+        for (int i : acakAcak){
+            System.out.print(i);
+            System.out.print(" ");
+            
+        }
+        System.out.println();
+        // CONTOH VIGENERE
+        // ===============
 //        Vigenere vig = new Vigenere("KRN", false, SpacingOption.GROUP_5);
 //        System.out.println(vig.encrypt("ANDRE SUSANTO ADALAH ANAK YANG PALING KEREN SEDUNIA COY"));
 //        System.out.println(vig.decrypt("KEQBV FEJNXKB KUNVRU KENU PNXX CKCVXX XOIRX JRNLASR PYP"));
@@ -444,40 +457,42 @@ public class FrmMain extends javax.swing.JFrame {
 //            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
-        Picture pic = new Picture("D:\\pengcit\\sampel1.bmp");
-        boolean testing[] = new boolean[64];
+          // CONTOH Bitplane
+          // =============
+//        Picture pic = new Picture("D:\\pengcit\\sampel1.bmp");
+//        boolean testing[] = new boolean[64];
+//        
+//        for (int y = 0; y < 8; y++){
+//            for (int x = 0; x < 8; x++){
+//                if (x % 2 == 0 && y % 2 == 0){
+//                    testing[x + y * 8] = true;
+//                }else if(x % 2 != 0 && y % 2 != 0){
+//                    testing[x + y * 8] = true;
+//                }else{
+//                    testing[x + y * 8] = false;
+//                }
+//            }
+//        }
         
-        for (int y = 0; y < 8; y++){
-            for (int x = 0; x < 8; x++){
-                if (x % 2 == 0 && y % 2 == 0){
-                    testing[x + y * 8] = true;
-                }else if(x % 2 != 0 && y % 2 != 0){
-                    testing[x + y * 8] = true;
-                }else{
-                    testing[x + y * 8] = false;
-                }
-            }
-        }
-        
-        pic.setBitPlane(5, 1, Picture.COLOR_RED, testing);
+        //pic.setBitPlane(5, 1, Picture.COLOR_RED, testing);
         //for (int i = 0; i < 5251; i++)
-        //    pic.getBitPlane(i, 0, Picture.COLOR_BLUE);
+        //    pic.getBitPlane(i, 5, Picture.COLOR_BLUE);
         //pic.save("D:\\pengcit\\sampel1_edit.bmp");
         
         
-        boolean plane[] = pic.getBitPlane(5, 1, Picture.COLOR_RED);
+        //boolean plane[] = pic.getBitPlane(5, 1, Picture.COLOR_RED);
         
-        for (int y = 0; y < 8; y++){
-            for (int x = 0; x < 8; x++){
-                if (plane[x + y * 8])
-                    System.out.print("1 ");
-                else
-                    System.out.print("0 ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        BPCS bpcs = new BPCS("ANDRE", pic, 0.3f);
+//        for (int y = 0; y < 8; y++){
+//            for (int x = 0; x < 8; x++){
+//                if (plane[x + y * 8])
+//                    System.out.print("1 ");
+//                else
+//                    System.out.print("0 ");
+//            }
+//            System.out.println();
+//        }
+        //System.out.println();
+        //BPCS bpcs = new BPCS("ANDRE", pic, 0.3f);
         //System.out.println(bpcs.calculateComplexity(plane, 1, Picture.COLOR_RED));
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
