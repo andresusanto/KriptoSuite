@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.andresusanto.app;
+package com.andresusanto.test;
 
+import com.andresusanto.lib.BitToBoolean;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.util.Arrays;
 
 /**
  *
@@ -15,6 +17,16 @@ import java.awt.image.DataBufferByte;
 public class Test {
     public static void main(String[] args) {
         System.out.println(1 << 3);
+        
+        BitToBoolean converter = new BitToBoolean();
+        System.out.println(Arrays.toString(converter.convert("b".getBytes())));
+        
+        byte [] bytes = converter.convert(converter.convert("b".getBytes()));
+        for(byte b : bytes)
+        {
+            System.out.println(Integer.toHexString(b & 0xFF) + ", ");
+        }
+        
     }
     
     private static int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {

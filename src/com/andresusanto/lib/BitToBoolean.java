@@ -100,14 +100,17 @@ public class BitToBoolean {
 	 * @param args ignored.
 	 */
 	public static void main(String[] args) {
-		byte[] testBytes = new byte[] { (byte) 0xF8, 0x4A };
+		byte[] testBytes = new byte[] { 
+                    (byte) 0xF8, 0x4A 
+                };
 
+                System.out.println(Arrays.toString(testBytes));
 		System.out.println(Arrays.toString(convert(testBytes,3)));
 		
 		boolean[] testBools = new boolean[] {true, false, true, false, false, true, false,true,true};
 		byte[] convertedBools = convert(testBools);
 		for(byte b : convertedBools){
-			System.out.print(Integer.toHexString(b&0xFF) + ", ");
+			System.out.print(Integer.toHexString(b & 0xFF) + ", ");
 		}
 	}
 }
