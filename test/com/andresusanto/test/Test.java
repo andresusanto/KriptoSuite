@@ -28,6 +28,8 @@ public class Test {
 //        Test.generateBC();
 //        Test.testArrayCopy();
         Test.testPayload();
+//        Test.testStringByte();
+//        Test.testNamaFile();
     }
     
     private static void fileLength() throws IOException
@@ -141,14 +143,49 @@ public class Test {
     
     private static void testPayload() throws IOException
     {
-        Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
-        Payload payload = new Payload("test.txt", Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))), 0.1f);
+        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
+        Payload payload = new Payload("test.txt", Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))), 0.2f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
 //        System.err.println("banyaknya segmen = " + Segments.size());
         System.err.println("hasil");
         for(Segmen s : Segments)
         {
-            Tools.printArray(s.getData());
+//            Tools.printArray(s.getData());
+            Tools.printMatriks(s.getData());
+            System.err.println("");
         }
+    }
+    private static void testIntByte()
+    {
+        int a = 3439854;
+        byte [] ab;
+        ab = Tools.intToBytes(a);
+        System.err.println("4 byte = " + Tools.convertToBoolArray(ab).length);
+        System.err.println(ab.length);
+        for (byte b : ab) {
+            System.out.format("0x%x ", b);
+        }
+        System.err.println("from byte " + Tools.bytesToInt(ab));
+    }
+    
+    private static void testStringByte()
+    {
+        String a= "aa";
+        byte[] bytes = Tools.stringToBytes(a);
+        for (byte b : bytes) {
+            System.out.format("0x%x ", b);
+        }
+        
+        System.err.println("string: " + Tools.bytesToString(bytes));
+    }
+    
+    private static void testNamaFile()
+    {
+        boolean[] FileName = Tools.convertToBoolArray(Tools.stringToBytes("sjdwicenice"));
+        System.err.println(FileName.length);
+        byte []filenameLenth = {(byte)("sjdwicenice".length())};
+        boolean [] filenameLenthBool = Tools.convertToBoolArray(filenameLenth);
+        System.out.println((int)filenameLenth[0]);
+        System.err.println(filenameLenthBool.length);
     }
 }
