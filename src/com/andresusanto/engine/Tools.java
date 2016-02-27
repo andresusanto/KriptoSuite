@@ -92,4 +92,23 @@ public class Tools {
         }
         return retVal;
     }
+    
+    public static void printMatriks(boolean [] matriks)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                System.err.print(matriks[i * 8 + j] == true? 1: 0);
+            }
+            System.err.println("");
+        }
+    }
+    
+    public static void printArray(boolean[] array)
+    {
+        for(boolean b : array)
+            System.err.print(b? 1:0);
+        System.err.println("");
+    }
 }

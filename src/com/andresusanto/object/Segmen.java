@@ -5,20 +5,23 @@
  */
 package com.andresusanto.object;
 
+import com.andresusanto.engine.Tools;
+
 /**
  *
  * @author akhfa
  */
 // Segmen adalah array of boolean berukuran 8x8 dimana sisi kiri atas merupakan boolean konjugasi
 public class Segmen {
-    private boolean [] data; //kompleksitas dari data ini sudah pasti > threshold karena 
+    private final boolean [] data; //kompleksitas dari data ini sudah pasti > threshold karena 
                             //sudah diatur di constructor jika masih kurang kompleks
     
     /**
      * Membuat sebuah segmen of data yang sisi kiri atasnya adalah konjugasi, 
      * dan sisanya data (63 bit)
-     * @param konjugasi
-     * @param data 63 bit data
+     * @param konjugasi konjugasi 
+     * @param datasource Data 63 bit yang akan dijadikan segmen
+     * @param threshold Threshold kompleksitas
      */
     public Segmen(boolean konjugasi, boolean [] datasource, float threshold)
     {
@@ -30,7 +33,10 @@ public class Segmen {
             this.data[i] = datasource[i-1];
         }
         
+//        System.err.println("64 bit segmen sebelum konjugasi");
+//        Tools.printArray(this.data);
         //cek kompleksitas, jika < threshold, conjugate
+//        System.err.println("kompleksitas = " + this.getComplexity());
         if(this.getComplexity() < threshold)
             this.conjugate();
     }
@@ -41,25 +47,29 @@ public class Segmen {
     }
     
     /**
-     * Men-generate papan catur WC
+     * Men-generate papan catur BC
      * @return Papan catur wc dalam boolean
      */
-    private boolean [] getWC()
+    private boolean [] getBC()
     {
-        boolean [] wc = new boolean[64];
-        boolean initBaris = false;
-        boolean kolom = false;
+        boolean [] bc = new boolean[64];
+        boolean initBaris = true;
+        boolean kolom = true;
         for(int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                wc[i * 8 + j] = kolom;
+                bc[i * 8 + j] = kolom;
                 kolom = !kolom;
             }
             initBaris = !initBaris;
             kolom = initBaris;
         }
-        return wc;
+        
+//        System.err.println("BC");
+//        Tools.printMatriks(bc);
+        
+        return bc;
     }
     
     /**
@@ -89,15 +99,11 @@ public class Segmen {
      */
     private void conjugate()
     {
-        boolean [] wc = this.getWC();
+        boolean [] bc = this.getBC();
         
-        //set index pertama jadi true
-        this.data[0] = true;
-        
-        //conjugate data sisanya
-        for(int i = 1; i < this.data.length; i++)
+        for(int i = 0; i < this.data.length; i++)
         {
-            this.data[i] = this.data[i] ^ wc[i];
+            this.data[i] = this.data[i] ^ bc[i];
         }
     }
 }
