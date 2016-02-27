@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.andresusanto.engine;
+package com.andresusanto.object;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;

@@ -5,6 +5,8 @@
  */
 package com.andresusanto.engine;
 
+import com.andresusanto.object.Picture;
+import com.andresusanto.object.Payload;
 import java.io.IOException;
 
 /**
@@ -18,24 +20,6 @@ public class BPCS {
     // 3. N byte (N ditentukan oleh panjang ekstensi) = ekstensi file
     // Sehingga payload yang disisipkan : [4 bytes | 1 byte | N byte | KONTEN]
     
-    // class payload data yang disimpan ke picture
-    public static class BPCSPayload{
-        public int size;
-        public String extention;
-        public byte data[];
-        
-        public byte[] createPayload(){ // fungsi untuk mengkonstruk konten menjadi data dengan header
-            return null;
-        }
-        
-        public BPCSPayload(int size, String extention, byte data[]){
-            this.size = size;
-            this.extention = extention;
-            this.data = data;
-        }
-        
-    }
-    
     private Picture picture;
     private float threshold;
     private String key;
@@ -47,12 +31,12 @@ public class BPCS {
     }
     
     // sisipkan data ke pic
-    public void embed(BPCSPayload data) throws IOException{ // throw exception jika data > payload
+    public void embed(Payload data) throws IOException{ // throw exception jika data > payload
         
     }
     
     // ekstrak data ke pic
-    public BPCSPayload extract(){
+    public Payload extract(){
         return null;
     }
     

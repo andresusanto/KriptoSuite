@@ -5,6 +5,7 @@
  */
 package com.andresusanto.engine;
 
+import com.andresusanto.object.Picture;
 import com.andresusanto.option.SpacingOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,5 +48,48 @@ public class Tools {
     
     public static float calculatePSNR(Picture picture1, Picture picture2){
         return 0;
+    }
+    
+    // Konversi Boolean >< Byte
+    public static boolean[] convertToBoolArray(byte[] bytes) {
+        return Tools.convert(bytes, bytes.length * 8);
+    }
+    
+    public static byte[] convertToByte(boolean[] booleanOfData) {
+        int length = booleanOfData.length / 8;
+        int mod = booleanOfData.length % 8;
+        if(mod != 0){
+                ++length;
+        }
+        byte[] retVal = new byte[length];
+        int boolIndex = 0;
+        for (int byteIndex = 0; byteIndex < retVal.length; ++byteIndex) {
+                for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
+                        // Another bad idea
+                        if (boolIndex >= booleanOfData.length) {
+                                return retVal;
+                        }
+                        if (booleanOfData[boolIndex++]) {
+                                retVal[byteIndex] |= (byte) (1 << bitIndex);
+                        }
+                }
+        }
+        return retVal;
+    }
+    private static boolean[] convert(byte[] bits, int significantBits) {
+        boolean[] retVal = new boolean[significantBits];
+        int boolIndex = 0;
+        for (int byteIndex = 0; byteIndex < bits.length; ++byteIndex) {
+                for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
+                        if (boolIndex >= significantBits) {
+                                // Bad to return within a loop, but it's the easiest way
+                                return retVal;
+                        }
+
+                        retVal[boolIndex++] = (bits[byteIndex] >> bitIndex & 0x01) == 1 ? true
+                                        : false;
+                }
+        }
+        return retVal;
     }
 }
