@@ -112,7 +112,7 @@ public class Tools {
         System.err.println("");
     }
     
-    public static final byte[] intToByteArray(int value) {
+    public static byte[] intToBytes(int value) {
     return new byte[] {
             (byte)(value >> 24),
             (byte)(value >> 16),
@@ -120,7 +120,17 @@ public class Tools {
             (byte)value};
     }
     
-    public static int fromByteArray(byte[] bytes) {
+    public static int bytesToInt(byte[] bytes) {
         return bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+    }
+    
+    public static String bytesToString(byte [] bytes)
+    {
+        return new String(bytes);
+    }
+    
+    public static byte [] stringToBytes(String string)
+    {
+        return string.getBytes();
     }
 }
