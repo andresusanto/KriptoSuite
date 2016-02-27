@@ -36,8 +36,9 @@ public class Payload{
 
     /**
      * Menyimpan payload dalam bentuk boolean array
-     * @param filename Nama file
-     * @param data 
+     * @param filename Nama file 
+     * @param datasource Data awal dalam byte
+     * @param threshold Threshold kompleksitas
      */
     public Payload(String filename, byte datasource[], float threshold){
         this.size = datasource.length;
@@ -45,52 +46,33 @@ public class Payload{
         this.dataAwal = Tools.convertToBoolArray(datasource);
         this.threshold = threshold;
         this.generateArrayOfSegments();
-//        boolean [] dataArray = Tools.convertToBoolArray(datasource);
-//        int jumlahSegmen;
-//        if(datasource.length % 63 == 0)
-//            jumlahSegmen = (data.length / 63);
-//        else
-//            jumlahSegmen = (data.length / 63) + 1;
-//        
-//        this.data = new boolean[64 * jumlahSegmen]; // 64 karena digunakan untuk menampung konjugasi map
-//        for (int i = 0; i < data.length; i += 63)
-//        {
-//            // inisialisasi mapping konjugasi jadi false
-//            this.data[i] = false;
-//            
-//            //copy 63 datasource ke this.data
-//            System.arraycopy(data, i, this.data, i+1, 63);
-//        }
-        
-        
     }
 
     /**
      * Menyimpan payload dalam bentuk boolean array
      * @param filename Nama file
      * @param data Data yang sudah dalam bentuk boolean
+     * @param threshold Threshold untuk kompleksitas
      */
-    public Payload(String filename, boolean data[]){
+    public Payload(String filename, boolean data[], float threshold){
         this.size = data.length;
         this.filename = filename;
         this.dataAwal = data;
+        this.threshold = threshold;
+        this.generateArrayOfSegments();
     }
 
     /**
-     * Menyimpan payload menjadi suatu file
+     * Menyimpan array of segmen menjadi data semula
      * @param savePath
      * @throws FileNotFoundException
      * @throws IOException 
      */
     public void save(String savePath) throws FileNotFoundException, IOException
     {
-        FileOutputStream fos = new FileOutputStream(savePath);
         try
-        {
-            fos.write(Tools.convertToByte(dataAwal));
-        }
-        finally{
-            fos.close();
+        (FileOutputStream fos = new FileOutputStream(savePath)) {
+            fos.write(Tools.convertToByte(this.dataAwal));
         }
     }
 
@@ -122,7 +104,7 @@ public class Payload{
             boolean [] dataSegmen = new boolean[63];
             System.arraycopy(dataGenap63, indeks, dataSegmen, 0, 63);
             Segmen segment = new Segmen(false, dataSegmen, this.threshold);
-            Segments.add(segment);
+            this.Segments.add(segment);
         }
     }
 }
