@@ -27,13 +27,8 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
-<<<<<<< HEAD
 //        Test.testPayload();
           Test.testScramblerDescrambler();
-        
-=======
-        Test.testPayload();
->>>>>>> master
     }
     
     private static void fileLength() throws IOException
@@ -156,7 +151,6 @@ public class Test {
         {
             Tools.printArray(s.getData());
         }
-<<<<<<< HEAD
     }
     
     private static void testScramblerDescrambler() {
@@ -202,7 +196,5 @@ public class Test {
             System.out.print(dataSegmen.get(i) + ", ");
         }
         System.out.println();
-=======
->>>>>>> master
     }
 }
