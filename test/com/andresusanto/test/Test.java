@@ -27,7 +27,13 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
+<<<<<<< HEAD
+//        Test.testPayload();
+          Test.testScramblerDescrambler();
+        
+=======
         Test.testPayload();
+>>>>>>> master
     }
     
     private static void fileLength() throws IOException
@@ -150,5 +156,53 @@ public class Test {
         {
             Tools.printArray(s.getData());
         }
+<<<<<<< HEAD
+    }
+    
+    private static void testScramblerDescrambler() {
+        ArrayList<Integer> dataSegmen = new ArrayList<>();
+        int i;
+        for(i = 0; i < 20; i++) {
+            dataSegmen.add(i*10);
+        }
+        int[] randomizedIndex = Tools.getShuffledInts("ASDF", 0, dataSegmen.size()-1);
+        System.out.println("randomized index: ");
+        for(i=0; i < randomizedIndex.length ; i++) {
+            System.out.print(randomizedIndex[i] + ", ");
+        }
+        System.out.println();
+        ArrayList<Integer> scrambledDataSegmen = new ArrayList<>();
+        for (i=0; i < dataSegmen.size(); i++) {
+            scrambledDataSegmen.add(dataSegmen.get(randomizedIndex[i]));
+        }
+        System.out.println("Scrambled data: ");
+        for(i=0; i < scrambledDataSegmen.size() ; i++) {
+            System.out.print(scrambledDataSegmen.get(i) + ", ");
+        }
+        System.out.println();
+
+        int[] randomizedIndex2 = Tools.getShuffledInts("ASDF", 0, scrambledDataSegmen.size()-1);
+        System.out.println("randomized index2: ");
+        for(i=0; i < randomizedIndex2.length ; i++) {
+            System.out.print(randomizedIndex2[i] + ", ");
+        }
+        System.out.println();
+        ArrayList<Integer> descrambledDataSegmen = new ArrayList<>();
+        while(descrambledDataSegmen.size() < scrambledDataSegmen.size()) descrambledDataSegmen.add(0);
+        for (i=0; i < scrambledDataSegmen.size(); i++) {
+            descrambledDataSegmen.set(randomizedIndex2[i], scrambledDataSegmen.get(i));
+        }
+        System.out.println("Descrambled data: ");
+        for(i=0; i < descrambledDataSegmen.size() ; i++) {
+            System.out.print(descrambledDataSegmen.get(i) + ", ");
+        }
+        System.out.println();
+        System.out.println("Original data: ");
+        for(i=0; i < dataSegmen.size() ; i++) {
+            System.out.print(dataSegmen.get(i) + ", ");
+        }
+        System.out.println();
+=======
+>>>>>>> master
     }
 }
