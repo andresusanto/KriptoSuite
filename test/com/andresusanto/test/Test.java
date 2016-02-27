@@ -5,9 +5,12 @@
  */
 package com.andresusanto.test;
 
-import com.andresusanto.lib.BitToBoolean;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
+import com.andresusanto.engine.Tools;
+import com.andresusanto.object.Payload;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -15,61 +18,109 @@ import java.util.Arrays;
  * @author akhfa
  */
 public class Test {
-    public static void main(String[] args) {
-        System.out.println(1 << 3);
+    public static void main(String[] args) throws IOException {
+//        Test.testFileByteConvertion();
+//        Test.fileLength();
+//        Test.dataComplexity();
+//        Test.generateWC();
+        Test.testArrayCopy();
+    }
+    
+    private static void fileLength() throws IOException
+    {
+        //byte [] file = Files.readAllBytes(Paths.get("test.txt"));
+        byte [] file = Files.readAllBytes(Paths.get("sample.bmp"));
+        System.err.println(file.length);
+    }
+    
+    private static void dataComplexity()
+    {
+        boolean [] data = new boolean[64];
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j=0; j < 8; j++)
+            {
+                data[i * 8 + j] = true;
+            }
+        }
+        data[28] = false;
+        data[30] = false;
+        Payload payload = new Payload();
+//        System.err.println( payload.getComplexity(data));
+    }
+    
+    private static void testBitBoolean()
+    {
+        System.out.println(Arrays.toString(Tools.convertToBoolArray("b".getBytes())));
         
-        BitToBoolean converter = new BitToBoolean();
-        System.out.println(Arrays.toString(converter.convert("b".getBytes())));
-        
-        byte [] bytes = converter.convert(converter.convert("b".getBytes()));
+        byte [] bytes = Tools.convertToByte(Tools.convertToBoolArray("b".getBytes()));
         for(byte b : bytes)
         {
             System.out.println(Integer.toHexString(b & 0xFF) + ", ");
         }
-        
+    }
+    private static void printXOR()
+    {
+        System.err.println("true ^ true = " + (true ^ true));
+        System.err.println("true ^ false = " + (true ^ false));
+        System.err.println("false ^ true = " + (false ^ true));
+        System.err.println("false ^ false = " + (false ^ false));
     }
     
-    private static int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
-
-      final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-      final int width = image.getWidth();
-      final int height = image.getHeight();
-      final boolean hasAlphaChannel = image.getAlphaRaster() != null;
-
-      int[][] result = new int[height][width];
-      if (hasAlphaChannel) {
-         final int pixelLength = 4;
-         for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
-            int argb = 0;
-            argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
-            argb += ((int) pixels[pixel + 1] & 0xff); // blue
-            argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
-            argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
-            result[row][col] = argb;
-            col++;
-            if (col == width) {
-               col = 0;
-               row++;
-            }
-         }
-      } else {
-         final int pixelLength = 3;
-         for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
-            int argb = 0;
-            argb += -16777216; // 255 alpha
-            argb += ((int) pixels[pixel] & 0xff); // blue
-            argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
-            argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-            result[row][col] = argb;
-            col++;
-            if (col == width) {
-               col = 0;
-               row++;
-            }
-         }
-      }
-
-      return result;
-   }
+    private static void testFileByteConvertion() throws IOException
+    {
+        byte [] file = Files.readAllBytes(Paths.get("sample.bmp"));
+        FileOutputStream fos = new FileOutputStream("image/sample1.bmp");
+        try
+        {
+            fos.write(file);
+        }
+        finally{
+            fos.close();
+        }
+    }
     
+    private static boolean [] generateWC()
+    {
+        boolean [] wc = new boolean[64];
+        boolean initBaris = false;
+        boolean kolom = false;
+        for(int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                wc[i * 8 + j] = kolom;
+                kolom = !kolom;
+            }
+            initBaris = !initBaris;
+            kolom = initBaris;
+        }
+        
+        // print wc
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                System.err.print(wc[i * 8 + j] == true? 1: 0);
+            }
+            System.err.println("");
+        }
+        return wc;
+    }
+    
+    private static void testArrayCopy()
+    {
+        int arr1[] = { 0, 1, 2, 3, 4, 5, 6, 7};
+        int arr2[] = { 0, 10, 20, 30, 40, 50 };
+
+        // copies an array from the specified source array
+        System.arraycopy(arr1, 0, arr2, 0, 7);
+        
+        System.out.print("array2 = ");
+        System.out.print(arr2[0] + " ");
+        System.out.print(arr2[1] + " ");
+        System.out.print(arr2[2] + " ");
+        System.out.print(arr2[3] + " ");
+        System.out.print(arr2[4] + " ");
+    }
 }
