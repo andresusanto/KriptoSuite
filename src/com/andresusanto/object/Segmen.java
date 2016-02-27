@@ -5,6 +5,8 @@
  */
 package com.andresusanto.object;
 
+import com.andresusanto.engine.Tools;
+
 /**
  *
  * @author akhfa
@@ -31,7 +33,10 @@ public class Segmen {
             this.data[i] = datasource[i-1];
         }
         
+//        System.err.println("64 bit segmen sebelum konjugasi");
+//        Tools.printArray(this.data);
         //cek kompleksitas, jika < threshold, conjugate
+//        System.err.println("kompleksitas = " + this.getComplexity());
         if(this.getComplexity() < threshold)
             this.conjugate();
     }
@@ -60,6 +65,10 @@ public class Segmen {
             initBaris = !initBaris;
             kolom = initBaris;
         }
+        
+//        System.err.println("BC");
+//        Tools.printMatriks(bc);
+        
         return bc;
     }
     
@@ -92,7 +101,7 @@ public class Segmen {
     {
         boolean [] bc = this.getBC();
         
-        for(int i = 1; i < this.data.length; i++)
+        for(int i = 0; i < this.data.length; i++)
         {
             this.data[i] = this.data[i] ^ bc[i];
         }

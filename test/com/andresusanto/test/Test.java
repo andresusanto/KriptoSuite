@@ -7,10 +7,13 @@ package com.andresusanto.test;
 
 import com.andresusanto.engine.Tools;
 import com.andresusanto.object.Payload;
+import com.andresusanto.object.Segmen;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -22,8 +25,9 @@ public class Test {
 //        Test.testFileByteConvertion();
 //        Test.fileLength();
 //        Test.dataComplexity();
-        Test.generateBC();
+//        Test.generateBC();
 //        Test.testArrayCopy();
+        Test.testPayload();
     }
     
     private static void fileLength() throws IOException
@@ -97,30 +101,54 @@ public class Test {
         }
         
         // print wc
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                System.err.print(bc[i * 8 + j] == true? 1: 0);
-            }
-            System.err.println("");
-        }
+        Tools.printMatriks(bc);
         return bc;
     }
     
     private static void testArrayCopy()
     {
-        int arr1[] = { 0, 1, 2, 3, 4, 5, 6, 7};
-        int arr2[] = { 0, 10, 20, 30, 40, 50 };
+        int arr1[] = { 0, 1, 2,};
+        int arr2[] = { 3, 4, 5};
+        int [] arrGabung = {6,7,8,9,10,11};
 
         // copies an array from the specified source array
-        System.arraycopy(arr1, 0, arr2, 0, 7);
+//        System.arraycopy(arr1, 0, arrGabung, 0, 3);
+//        System.arraycopy(arr2, 0, arrGabung, 3, 3);
+//        System.arraycopy(arrGabung, 0, arr1, 0, 3);
+//        System.arraycopy(arrGabung, 3, arr2, 0, 3);
+        for(int in = 0; in < arrGabung.length; in+=3)
+        {
+            int [] newArr = new int[3];
+            System.arraycopy(arrGabung, in, newArr, 0, 3);
+            for (int i : newArr)
+                System.err.println(i + " ");
+        }
         
-        System.out.print("array2 = ");
-        System.out.print(arr2[0] + " ");
-        System.out.print(arr2[1] + " ");
-        System.out.print(arr2[2] + " ");
-        System.out.print(arr2[3] + " ");
-        System.out.print(arr2[4] + " ");
+//        for (int i : arrGabung)
+//            System.err.print(i + " ");
+//        for (int i : arr1)
+//            System.err.print(i + " ");
+//        for (int i : arr2)
+//            System.err.print(i + " ");
+//        System.out.print("array2 = ");
+//        System.out.print(arr2[0] + " ");
+//        System.out.print(arr2[1] + " ");
+//        System.out.print(arr2[2] + " ");
+//        System.out.print(arr2[3] + " ");
+//        System.out.print(arr2[4] + " ");
+//        System.out.print(arr2[5] + " ");
+    }
+    
+    private static void testPayload() throws IOException
+    {
+        Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
+        Payload payload = new Payload("test.txt", Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))), 0.1f);
+        ArrayList<Segmen> Segments = payload.getAllSegments();
+//        System.err.println("banyaknya segmen = " + Segments.size());
+        System.err.println("hasil");
+        for(Segmen s : Segments)
+        {
+            Tools.printArray(s.getData());
+        }
     }
 }
