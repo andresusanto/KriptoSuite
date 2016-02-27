@@ -63,13 +63,17 @@ public class Payload{
     }
 
     /**
-     * Menyimpan array of segmen menjadi data semula
+     * Menyimpan array of segmen menjadi data semula. 
      * @param savePath
      * @throws FileNotFoundException
      * @throws IOException 
      */
     public void save(String savePath) throws FileNotFoundException, IOException
     {
+        for(Segmen s : Segments)
+        {
+            
+        }
         try
         (FileOutputStream fos = new FileOutputStream(savePath)) {
             fos.write(Tools.convertToByte(this.dataAwal));
@@ -92,19 +96,31 @@ public class Payload{
         //data ini sudah dalam boolean array dengan panjang % 63 == 0
         
         //inisialisasi dengan 0
+//        System.err.println("data.length = " + this.dataAwal.length);
         Arrays.fill(dataGenap63, false);
+//        System.err.println("datagenap63.length = " + dataGenap63.length);
+//        System.err.println("init data genap 63 false: "); Tools.printArray(dataGenap63);
         
         //copy semua data ke data63
         System.arraycopy(this.dataAwal, 0, dataGenap63, 0, dataAwal.length);
+//        System.err.println("dataAwal genap 63 false: "); Tools.printArray(dataGenap63);
         
         Segments = new ArrayList<>();
-        int indeks = 0;
+        
         for(int i = 0; i < dataGenap63.length; i+=63)
         {
+//            System.err.println("i = " + i);
             boolean [] dataSegmen = new boolean[63];
-            System.arraycopy(dataGenap63, indeks, dataSegmen, 0, 63);
+            System.arraycopy(dataGenap63, i, dataSegmen, 0, 63);
+//            System.err.println("63 bit dataSegmen ke " + i);
+//            Tools.printArray(dataSegmen);
             Segmen segment = new Segmen(false, dataSegmen, this.threshold);
+//            System.err.println("64 bit segmen ke " + i);Tools.printArray(segment.getData());
             this.Segments.add(segment);
         }
+    }
+    public ArrayList<Segmen> getAllSegments()
+    {
+        return Segments;
     }
 }
