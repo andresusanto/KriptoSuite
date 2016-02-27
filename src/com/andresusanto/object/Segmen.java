@@ -11,14 +11,15 @@ package com.andresusanto.object;
  */
 // Segmen adalah array of boolean berukuran 8x8 dimana sisi kiri atas merupakan boolean konjugasi
 public class Segmen {
-    private boolean [] data; //kompleksitas dari data ini sudah pasti > threshold karena 
+    private final boolean [] data; //kompleksitas dari data ini sudah pasti > threshold karena 
                             //sudah diatur di constructor jika masih kurang kompleks
     
     /**
      * Membuat sebuah segmen of data yang sisi kiri atasnya adalah konjugasi, 
      * dan sisanya data (63 bit)
-     * @param konjugasi
-     * @param data 63 bit data
+     * @param konjugasi konjugasi 
+     * @param datasource Data 63 bit yang akan dijadikan segmen
+     * @param threshold Threshold kompleksitas
      */
     public Segmen(boolean konjugasi, boolean [] datasource, float threshold)
     {
@@ -91,10 +92,6 @@ public class Segmen {
     {
         boolean [] bc = this.getBC();
         
-        //set index pertama jadi true
-        this.data[0] = true;
-        
-        //conjugate data sisanya
         for(int i = 1; i < this.data.length; i++)
         {
             this.data[i] = this.data[i] ^ bc[i];
