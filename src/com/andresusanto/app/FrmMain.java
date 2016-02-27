@@ -6,7 +6,7 @@
 package com.andresusanto.app;
 
 import com.andresusanto.engine.BPCS;
-import com.andresusanto.engine.Picture;
+import com.andresusanto.object.Picture;
 import com.andresusanto.engine.Playfair;
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.Vigenere;
