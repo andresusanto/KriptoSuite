@@ -41,25 +41,25 @@ public class Segmen {
     }
     
     /**
-     * Men-generate papan catur WC
+     * Men-generate papan catur BC
      * @return Papan catur wc dalam boolean
      */
-    private boolean [] getWC()
+    private boolean [] getBC()
     {
-        boolean [] wc = new boolean[64];
-        boolean initBaris = false;
-        boolean kolom = false;
+        boolean [] bc = new boolean[64];
+        boolean initBaris = true;
+        boolean kolom = true;
         for(int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                wc[i * 8 + j] = kolom;
+                bc[i * 8 + j] = kolom;
                 kolom = !kolom;
             }
             initBaris = !initBaris;
             kolom = initBaris;
         }
-        return wc;
+        return bc;
     }
     
     /**
@@ -89,7 +89,7 @@ public class Segmen {
      */
     private void conjugate()
     {
-        boolean [] wc = this.getWC();
+        boolean [] bc = this.getBC();
         
         //set index pertama jadi true
         this.data[0] = true;
@@ -97,7 +97,7 @@ public class Segmen {
         //conjugate data sisanya
         for(int i = 1; i < this.data.length; i++)
         {
-            this.data[i] = this.data[i] ^ wc[i];
+            this.data[i] = this.data[i] ^ bc[i];
         }
     }
 }
