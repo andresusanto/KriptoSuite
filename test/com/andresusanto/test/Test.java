@@ -26,12 +26,18 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
-        Test.testPayload();
+//        Test.testPayload();
 //        Test.testStringByte();
 //        Test.testNamaFile();
 //        Test.testPayload();
 //        Test.testScramblerDescrambler();
 //        Test.testFloatByte();
+
+        Test.bitPlane();
+    }
+    
+    public static void bitPlane(){
+        Picture pic = new Picture("");
     }
     
     private static void fileLength() throws IOException
