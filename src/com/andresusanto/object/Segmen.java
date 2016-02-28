@@ -38,15 +38,24 @@ public class Segmen {
 //        Tools.printArray(this.data);
         //cek kompleksitas, jika < threshold, conjugate
 //        System.err.println("kompleksitas = " + this.getComplexity());
+//        System.err.println(this.getComplexity() < threshold);
         if(this.getComplexity() < threshold)
             this.conjugate();
+//        System.err.println("setelah konjugasi");
+//        Tools.printArray(data);
     }
     
     public boolean [] getData()
     {
-        if(this.data[0])
+        if(this.data[0]) //jika data[0] = true -> konjugate
+        {
+//            System.err.println("Sebelum konjugasi");
+//            Tools.printArray(this.data);
             this.conjugate();
-        return data;
+//            System.err.println("Setelah konjugasi");
+//            Tools.printArray(this.data);
+        }
+        return this.data;
     }
     
     public boolean isConjugate()

@@ -145,13 +145,10 @@ public class Test {
     
     private static void testPayload() throws IOException
     {
-        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
-        Payload payload = new Payload(false, "key","test.txt", Files.readAllBytes(Paths.get("test.txt")), 0.2f);
+//        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
+        Payload payload = new Payload(false, "key","sample.bmp", Files.readAllBytes(Paths.get("sample.bmp")), 0.3f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
-        
-        Payload payload2 = new Payload(Segments);
-        payload2.save("testpayloadsave.txt");
-        
+
 //        System.err.println("banyaknya segmen = " + Segments.size());
 //        System.err.println("hasil");
 //        for(Segmen s : Segments)
@@ -160,6 +157,11 @@ public class Test {
 //            Tools.printMatriks(s.getData());
 //            System.err.println("");
 //        }
+        
+        Payload payload2 = new Payload(Segments);
+        payload2.save("testpayloadsave.bmp");
+        
+
     }
     private static void testIntByte()
     {
