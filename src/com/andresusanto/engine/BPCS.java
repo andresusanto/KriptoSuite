@@ -26,6 +26,7 @@ public class BPCS {
     private Picture picture;
     private float threshold;
     private String key;
+    private int capacity; //capacity in bit, intialized after embed process
     
     public BPCS(String key, Picture picture, float threshold){ // key menjadi seed dari random number generator tempat menyimpan data
         this.key = key;
@@ -83,6 +84,7 @@ public class BPCS {
          * and counting the insertable size vs payload size
          */
         ArrayList<Segmen> dataSegmen = data.getAllSegments();
+        this.capacity = insertableBitplaneLoc.size() * 64;
         if(insertableBitplaneLoc.size() < dataSegmen.size()) {
             //Inserted data too big, refusing
             throw new IOException("Data yang akan dimasukkan terlalu besar!");
@@ -103,7 +105,7 @@ public class BPCS {
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
             boolean[] currentData = currentSegmen.getData();
-            picture.setBitPlane(region, layer, colorCode, currentData);
+            //picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
         /**
@@ -218,6 +220,10 @@ public class BPCS {
         return ret;
     }
     
+    public int calculateSpace(){
+        return capacity;
+    }
+    
     // fungsi untuk menghitung komplesitas suatu bitplane
     private float calculateComplexity(boolean bitPlane[], int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
         //boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
@@ -256,6 +262,18 @@ public class BPCS {
                 i++;
             }
         }
+        
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("Before CGC Conversion Matrix: ");
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -274,6 +292,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
@@ -296,6 +315,17 @@ public class BPCS {
                 i++;
             }
         }
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("After CGC Conversion Matrix: ");
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -306,6 +336,18 @@ public class BPCS {
                 }
             }
         }
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("After PBC Conversion Matrix: ");
+        for (y=0; y < convertedBitplane.length; y++) {
+            for (x=0; x < convertedBitplane.length; x++) {
+                System.out.print(convertedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
+        
         /**
          * Retransform back to 1D array
          */
@@ -314,6 +356,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
