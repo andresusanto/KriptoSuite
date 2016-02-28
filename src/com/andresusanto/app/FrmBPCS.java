@@ -545,11 +545,15 @@ public class FrmBPCS extends javax.swing.JFrame {
             else
                 fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
             
-            float psnrValue = Tools.calculatePSNR(this.original_picture, this.picture);
-            lblPSNR.setText(String.valueOf(psnrValue));
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                 picture.save(fc.getSelectedFile().getPath());
+                
+                float psnrValue = Tools.calculatePSNR(this.original_picture, this.picture);
+                lblPSNR.setText(String.valueOf(psnrValue));
+            
+                Tools.showImage(this.picture, "Embeded Image");
+                Tools.showImage(this.original_picture, "Original Image");
             }
             
         } catch (IOException ex) {
