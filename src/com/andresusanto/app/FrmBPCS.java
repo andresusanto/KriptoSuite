@@ -9,6 +9,7 @@ import com.andresusanto.engine.BPCS;
 import com.andresusanto.engine.Tools;
 import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class FrmBPCS extends javax.swing.JFrame {
     private byte[] steganoObject;
     private Picture picture; // picture murni / cover object (embed)
+    private Picture original_picture; // karena perubahan langsung pada objek picture, maka originalnya dibuat juga (untuk calc PSNR)
     private Picture embededPicture; // picture yang sudah diembed (extract)
     private BPCS bpcs;
     
@@ -36,6 +38,7 @@ public class FrmBPCS extends javax.swing.JFrame {
     public FrmBPCS() {
         initComponents();
         
+        this.original_picture = null;
         this.embededPicture = null;
         this.picture = null;
         this.bpcs = null;
@@ -73,6 +76,8 @@ public class FrmBPCS extends javax.swing.JFrame {
         lblObjectSize = new java.awt.Label();
         lblObjectName = new java.awt.Label();
         cmdEmbed = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        lblPSNR = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         label10 = new java.awt.Label();
@@ -83,6 +88,8 @@ public class FrmBPCS extends javax.swing.JFrame {
         cmdExtract = new javax.swing.JButton();
         label12 = new java.awt.Label();
         txtKeyExtract = new java.awt.TextField();
+        label13 = new java.awt.Label();
+        txtThresholdExtract = new java.awt.TextField();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -229,28 +236,37 @@ public class FrmBPCS extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("PSNR (db):");
+
+        lblPSNR.setText("(please embed)");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmdEmbed, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(51, 51, 51)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtKeyEmbed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtThreshold, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
-                                .addComponent(toggleEncrypt)))
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPSNR, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmdEmbed, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtKeyEmbed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtThreshold, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                            .addComponent(toggleEncrypt)))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -273,7 +289,10 @@ public class FrmBPCS extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmdEmbed, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmdEmbed, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblPSNR))
                 .addContainerGap())
         );
 
@@ -341,6 +360,8 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         label12.setText("Key");
 
+        label13.setText("Threshold");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -352,11 +373,15 @@ public class FrmBPCS extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(label13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
-                        .addComponent(txtKeyExtract, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtKeyExtract, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtThresholdExtract, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(31, 31, 31))
         );
         jPanel2Layout.setVerticalGroup(
@@ -368,9 +393,13 @@ public class FrmBPCS extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtKeyExtract, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(label13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtThresholdExtract, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdExtract, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Extract", jPanel2);
@@ -422,6 +451,7 @@ public class FrmBPCS extends javax.swing.JFrame {
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
                 this.picture = new Picture(fc.getSelectedFile().getPath());
+                this.original_picture = new Picture(fc.getSelectedFile().getPath());
                 
                 resBuffer.append(this.picture.width);
                 resBuffer.append(" x ");
@@ -515,6 +545,9 @@ public class FrmBPCS extends javax.swing.JFrame {
             else
                 fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
             
+            float psnrValue = Tools.calculatePSNR(this.original_picture, this.picture);
+            lblPSNR.setText(String.valueOf(psnrValue));
+            
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                 picture.save(fc.getSelectedFile().getPath());
             }
@@ -537,22 +570,25 @@ public class FrmBPCS extends javax.swing.JFrame {
                 return;
             }
             
-            bpcs = new BPCS(txtKeyExtract.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
+            bpcs = new BPCS(txtKeyExtract.getText(), this.picture, Float.parseFloat(txtThresholdExtract.getText()));
             
-            Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
-            
-            bpcs.embed(payload);
+            Payload payload = bpcs.extract();
             
             if (picture.pictureType == Picture.PICTURE_PNG)
                 fc.setFileFilter(new FileNameExtensionFilter("PNG File", "png"));
             else
                 fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
             
+            File file = new File("C:/" + payload.getFileName()); // default file name di java
+            fc.setCurrentDirectory(file);
+            
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                 picture.save(fc.getSelectedFile().getPath());
             }
             
         } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdExtractActionPerformed
@@ -599,6 +635,7 @@ public class FrmBPCS extends javax.swing.JFrame {
     private javax.swing.JButton cmdLoadEmbed;
     private javax.swing.JButton cmdLoadObject;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -609,6 +646,7 @@ public class FrmBPCS extends javax.swing.JFrame {
     private java.awt.Label label10;
     private java.awt.Label label11;
     private java.awt.Label label12;
+    private java.awt.Label label13;
     private java.awt.Label label2;
     private java.awt.Label label3;
     private java.awt.Label label4;
@@ -623,9 +661,11 @@ public class FrmBPCS extends javax.swing.JFrame {
     private java.awt.Label lblEmbedType;
     private java.awt.Label lblObjectName;
     private java.awt.Label lblObjectSize;
+    private javax.swing.JLabel lblPSNR;
     private javax.swing.JToggleButton toggleEncrypt;
     private java.awt.TextField txtKeyEmbed;
     private java.awt.TextField txtKeyExtract;
     private java.awt.TextField txtThreshold;
+    private java.awt.TextField txtThresholdExtract;
     // End of variables declaration//GEN-END:variables
 }
