@@ -574,16 +574,11 @@ public class FrmBPCS extends javax.swing.JFrame {
             
             Payload payload = bpcs.extract();
             
-            if (picture.pictureType == Picture.PICTURE_PNG)
-                fc.setFileFilter(new FileNameExtensionFilter("PNG File", "png"));
-            else
-                fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
-            
             File file = new File("C:/" + payload.getFileName()); // default file name di java
             fc.setCurrentDirectory(file);
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                picture.save(fc.getSelectedFile().getPath());
+                payload.save(fc.getSelectedFile().getPath());
             }
             
         } catch (IOException ex) {
