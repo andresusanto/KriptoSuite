@@ -118,11 +118,11 @@ public class Payload{
                         this.dataAwal, 0, fileSizeInt);
         
         // cetak array yang udah di copy
-        Tools.printArray(thresholdBoolArray);
-        Tools.printArray(fileSize);
-        Tools.printArray(nFileName);
-        Tools.printArray(FileNameBoolean);
-        Tools.printArray(this.dataAwal);
+//        Tools.printArray(thresholdBoolArray);
+//        Tools.printArray(fileSize);
+//        Tools.printArray(nFileName);
+//        Tools.printArray(FileNameBoolean);
+//        Tools.printArray(this.dataAwal);
         
 //        this.threshold = Tools.bytesToFloat(Tools.convertToByte(headerAndData))
     }
@@ -155,19 +155,19 @@ public class Payload{
         boolean[] fileName = Tools.convertToBoolArray(Tools.stringToBytes(this.filename));
         byte [] fileNameLengthByte = {(byte)fileName.length};
         boolean[] nFileName = Tools.convertToBoolArray(fileNameLengthByte);
-        System.err.println("bool encrypt");
-        System.err.println(this.encrypt? 1: 0);
-        System.err.println("threshold");
-        Tools.printArray(thresholdBoolArray);
+//        System.err.println("bool encrypt");
+//        System.err.println(this.encrypt? 1: 0);
+//        System.err.println("threshold");
+//        Tools.printArray(thresholdBoolArray);
 //        System.err.println("bitFileSize = " + fileSize.length);
-        System.err.println("fileSize = " + this.size);
-        Tools.printArray(fileSize);
-        System.err.println("nFileName = " + nFileName.length + " bit");
-        Tools.printArray(nFileName);
-        System.err.println("bitFileName = " + fileName.length);
-        Tools.printArray(fileName);
-        System.err.println("nDataAwal = " + this.dataAwal.length);
-        Tools.printArray(dataAwal);
+//        System.err.println("fileSize = " + this.size);
+//        Tools.printArray(fileSize);
+//        System.err.println("nFileName = " + nFileName.length + " bit");
+//        Tools.printArray(nFileName);
+//        System.err.println("bitFileName = " + fileName.length);
+//        Tools.printArray(fileName);
+//        System.err.println("nDataAwal = " + this.dataAwal.length);
+//        Tools.printArray(dataAwal);
         
         //Gabungkan header dengan data menjadi data baru
         //1 bit pertama adalah encrypt
@@ -178,7 +178,7 @@ public class Payload{
                                                 fileName.length +
                                                 this.dataAwal.length];
         
-        System.err.println("panjang headerAndData = "+headerAndData.length);
+//        System.err.println("panjang headerAndData = "+headerAndData.length);
         
         headerAndData[0] = this.encrypt;
         System.arraycopy(thresholdBoolArray, 0, headerAndData, 
@@ -215,7 +215,7 @@ public class Payload{
         
         //copy semua data ke data63
         System.arraycopy(headerAndData, 0, dataGenap63, 0, headerAndData.length);
-        System.err.println("headerAndData genap 63 : "); Tools.printArray(dataGenap63);
+//        System.err.println("headerAndData genap 63 : "); Tools.printArray(dataGenap63);
 //        System.err.println("panjang headerAndData = " + dataGenap63.length); 
         
         Segments = new ArrayList<>();
