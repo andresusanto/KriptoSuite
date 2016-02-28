@@ -6,6 +6,7 @@
 package com.andresusanto.app;
 
 import com.andresusanto.engine.BPCS;
+import com.andresusanto.engine.Tools;
 import com.andresusanto.object.Picture;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -401,6 +402,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_toggleEncryptActionPerformed
 
+    
     private void cmdLoadCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoadCoverActionPerformed
         final JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileNameExtensionFilter("Loseless Image File (*.png, *.bmp)", "png", "bmp"));
