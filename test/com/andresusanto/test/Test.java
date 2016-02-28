@@ -7,6 +7,7 @@ package com.andresusanto.test;
 
 import com.andresusanto.engine.Tools;
 import com.andresusanto.object.Payload;
+import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,12 +29,40 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
-        Test.testPayload();
+//        Test.testPayload();
 //        Test.testStringByte();
 //        Test.testNamaFile();
 //        Test.testPayload();
 //        Test.testScramblerDescrambler();
 //        Test.testFloatByte();
+
+        Test.bitPlane();
+    }
+    
+    public static void bitPlane() throws IOException{
+        Picture pic = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        
+        for (int i = 0; i < 10; i++){
+            boolean[] bp = pic.getBitPlane(i, 1, Picture.COLOR_RED);
+            System.out.print("REGION " + 6 + " R: ");
+            for (int j = 0 ; j < 64; j++)
+                System.out.print(bp[j] ? "1 " : "0 ");
+            System.out.println();
+            
+            bp = pic.getBitPlane(i, 1, Picture.COLOR_GREEN);
+            System.out.print("REGION " + 6 + " G: ");
+            for (int j = 0 ; j < 64; j++)
+                System.out.print(bp[j] ? "1 " : "0 ");
+            System.out.println();
+            
+            bp = pic.getBitPlane(i, 1, Picture.COLOR_BLUE);
+            System.out.print("REGION " + 6 + " B: ");
+            for (int j = 0 ; j < 64; j++)
+                System.out.print(bp[j] ? "1 " : "0 ");
+            System.out.println();
+        }
+        
+        
     }
     
     private static void fileLength() throws IOException
