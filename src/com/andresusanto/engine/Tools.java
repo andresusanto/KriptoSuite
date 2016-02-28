@@ -182,7 +182,7 @@ public class Tools {
         return result;
     }
     
-    public static void showImage(Picture picture){
+    public static void showImage(Picture picture, String title){
         final BufferedImage bi = new BufferedImage(picture.width, picture.height, BufferedImage.TYPE_INT_ARGB);
         int[] biData = ( (DataBufferInt) bi.getRaster().getDataBuffer() ).getData();
         System.arraycopy(picture.pixels, 0, biData, 0, picture.pixels.length);
@@ -198,6 +198,7 @@ public class Tools {
         
         
         JFrame frame = new JFrame();
+        frame.setTitle(title);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(panel);
         frame.setSize(picture.width, picture.height);
