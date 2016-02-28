@@ -131,7 +131,8 @@ public class Picture {
                 }
                 
                 // buat bit pada layer menjadi 0
-                colorByte = (byte) (colorByte & (0xFF & (0 << layer)));
+                //colorByte = (byte) (colorByte & (0xFF & (0 << layer)));
+                colorByte = (byte) (colorByte & (~(1<<layer)));
                 colorByte = (byte) (colorByte | colorPlane);
                 
                 // kembalikan lagi warna
