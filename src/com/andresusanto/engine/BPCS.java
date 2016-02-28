@@ -103,7 +103,7 @@ public class BPCS {
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
             boolean[] currentData = currentSegmen.getData();
-            picture.setBitPlane(region, layer, colorCode, currentData);
+            //picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
         /**
@@ -123,7 +123,7 @@ public class BPCS {
                         default: colorCode = 'E'; //actually just to silence the compiler
                             break;
                     }
-                    convertToPBC(i, j, colorCode);
+                    //convertToPBC(i, j, colorCode);
                 }
             }
         }
@@ -244,6 +244,13 @@ public class BPCS {
     
     private void convertToCGC(int region, int layer, char colorCode){
         boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+        if(region < 10 && layer < 7) {
+            System.out.println("Current bitplane: "+ region+" " + layer+" "+ colorCode);
+            for(int a=0; a < 64; a++) {
+                System.out.print(currentBitplane[a] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
         /**
          * Transform to 2D array
          */
@@ -280,7 +287,15 @@ public class BPCS {
         /**
          * Set bitplane
          */
-        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
+        picture.setBitPlane(region, layer, colorCode, currentBitplane);
+        boolean[] afterSetPlane = picture.getBitPlane(region, layer, colorCode);
+        if(region < 10 && layer < 7) {
+            System.out.println("AfterSet bitplane: " + region+" " + layer+" "+ colorCode);
+            for(int a=0; a < 64; a++) {
+                System.out.print(afterSetPlane[a] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
     }
     
     private void convertToPBC(int region, int layer, char colorCode){
