@@ -73,8 +73,9 @@ public class Payload{
         this.generateArrayOfSegments();
     }
     
-    public Payload (ArrayList<Segmen> Segments)
+    public Payload (ArrayList<Segmen> Segments, String key)
     {
+        vigenere = new Vigenere(key);
         this.Segments = Segments;
         
         //extract Segments menjadi header + data
@@ -116,6 +117,13 @@ public class Payload{
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
                         FILESIZE_LENGTH + FILENAME_LENGTH + filenamelength, 
                         this.dataAwal, 0, fileSizeInt);
+        
+        // dekrip
+        if(this.encrypt)
+        {
+            this.dataAwal = Tools.convertToBoolArray(vigenere.decrypt(Tools.convertToByte(this.dataAwal)));
+        }
+            
         
         // cetak array yang udah di copy
 //        Tools.printArray(thresholdBoolArray);

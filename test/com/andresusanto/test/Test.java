@@ -146,7 +146,7 @@ public class Test {
     private static void testPayload() throws IOException
     {
 //        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
-        Payload payload = new Payload(false, "key","sample.bmp", Files.readAllBytes(Paths.get("sample.bmp")), 0.3f);
+        Payload payload = new Payload(true, "key","sample.bmp", Files.readAllBytes(Paths.get("sample.bmp")), 0.3f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
 
 //        System.err.println("banyaknya segmen = " + Segments.size());
@@ -158,7 +158,7 @@ public class Test {
 //            System.err.println("");
 //        }
         
-        Payload payload2 = new Payload(Segments);
+        Payload payload2 = new Payload(Segments, "key");
         payload2.save("testpayloadsave.bmp");
         
 
