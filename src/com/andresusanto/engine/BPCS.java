@@ -71,7 +71,7 @@ public class BPCS {
                     convertToCGC(i, j, colorCode);
                     boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
                     float complexity = calculateComplexity(currentBitplane, j, colorCode);
-                    if (complexity < threshold) {
+                    if (complexity > threshold) {
                         //Insertable bitplane found
                         insertableBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
                     }
