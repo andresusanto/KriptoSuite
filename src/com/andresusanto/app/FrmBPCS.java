@@ -5,20 +5,38 @@
  */
 package com.andresusanto.app;
 
+import com.andresusanto.engine.BPCS;
+import com.andresusanto.object.Picture;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author Andre
  */
 public class FrmBPCS extends javax.swing.JFrame {
-
+    private byte[] steganoObject;
+    private Picture picture; // picture murni / cover object (embed)
+    private Picture embededPicture; // picture yang sudah diembed (extract)
+    private BPCS bpcs;
+    
     /**
      * Creates new form FrmBPCS
      */
     public FrmBPCS() {
         initComponents();
+        
+        this.embededPicture = null;
+        this.picture = null;
+        this.bpcs = null;
     }
 
     /**
@@ -35,7 +53,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         label1 = new java.awt.Label();
         label2 = new java.awt.Label();
         label3 = new java.awt.Label();
-        txtKey = new java.awt.TextField();
+        txtKeyEmbed = new java.awt.TextField();
         txtThreshold = new java.awt.TextField();
         toggleEncrypt = new javax.swing.JToggleButton();
         jPanel3 = new javax.swing.JPanel();
@@ -55,16 +73,14 @@ public class FrmBPCS extends javax.swing.JFrame {
         cmdEmbed = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        label9 = new java.awt.Label();
         label10 = new java.awt.Label();
-        cmdLoadCover1 = new javax.swing.JButton();
+        cmdLoadEmbed = new javax.swing.JButton();
         label11 = new java.awt.Label();
-        lblCoverRes1 = new java.awt.Label();
-        lblCoverCap1 = new java.awt.Label();
-        lblCoverType1 = new java.awt.Label();
-        cmdEmbed1 = new javax.swing.JButton();
+        lblEmbedRes = new java.awt.Label();
+        lblEmbedType = new java.awt.Label();
+        cmdExtract = new javax.swing.JButton();
         label12 = new java.awt.Label();
-        txtKey1 = new java.awt.TextField();
+        txtKeyExtract = new java.awt.TextField();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,6 +110,11 @@ public class FrmBPCS extends javax.swing.JFrame {
         label4.setText("Resolution");
 
         cmdLoadCover.setText("Load Cover Image");
+        cmdLoadCover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdLoadCoverActionPerformed(evt);
+            }
+        });
 
         label6.setText("Type");
 
@@ -151,6 +172,11 @@ public class FrmBPCS extends javax.swing.JFrame {
         label8.setText("Filename");
 
         cmdLoadObject.setText("Load Object");
+        cmdLoadObject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdLoadObjectActionPerformed(evt);
+            }
+        });
 
         lblObjectSize.setText("(please load object)");
 
@@ -214,7 +240,7 @@ public class FrmBPCS extends javax.swing.JFrame {
                             .addGap(51, 51, 51)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtKey, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtKeyEmbed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtThreshold, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                                 .addComponent(toggleEncrypt)))
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -226,7 +252,7 @@ public class FrmBPCS extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtKeyEmbed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -248,19 +274,20 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Embeded Image"));
 
-        label9.setText("Capacity");
-
         label10.setText("Resolution");
 
-        cmdLoadCover1.setText("Load Embeded Image");
+        cmdLoadEmbed.setText("Load Embeded Image");
+        cmdLoadEmbed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdLoadEmbedActionPerformed(evt);
+            }
+        });
 
         label11.setText("Type");
 
-        lblCoverRes1.setText("(please load image)");
+        lblEmbedRes.setText("(please load image)");
 
-        lblCoverCap1.setText("(please load image)");
-
-        lblCoverType1.setText("(please load image)");
+        lblEmbedType.setText("(please load image)");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -270,41 +297,35 @@ public class FrmBPCS extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(label11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(lblCoverRes1, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                        .addComponent(lblEmbedRes, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmdLoadCover1))
-                    .addComponent(lblCoverCap1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblCoverType1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cmdLoadEmbed))
+                    .addComponent(lblEmbedType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmdLoadCover1)
+                    .addComponent(cmdLoadEmbed)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCoverRes1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCoverCap1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblEmbedRes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCoverType1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblEmbedType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        cmdEmbed1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        cmdEmbed1.setText("Extract");
+        cmdExtract.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        cmdExtract.setText("Extract");
 
         label12.setText("Key");
 
@@ -314,7 +335,7 @@ public class FrmBPCS extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(162, 162, 162)
-                .addComponent(cmdEmbed1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmdExtract, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
@@ -322,7 +343,7 @@ public class FrmBPCS extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
-                        .addComponent(txtKey1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtKeyExtract, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(31, 31, 31))
         );
@@ -334,9 +355,9 @@ public class FrmBPCS extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtKey1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtKeyExtract, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19)
-                .addComponent(cmdEmbed1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmdExtract, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(86, Short.MAX_VALUE))
         );
 
@@ -380,6 +401,79 @@ public class FrmBPCS extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_toggleEncryptActionPerformed
 
+    private void cmdLoadCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoadCoverActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Loseless Image File (*.png, *.bmp)", "png", "bmp"));
+        
+        try {
+            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
+                this.picture = new Picture(fc.getSelectedFile().getPath());
+                
+                resBuffer.append(this.picture.width);
+                resBuffer.append(" x ");
+                resBuffer.append(this.picture.height);
+                resBuffer.append(" px");
+                
+                lblCoverRes.setText(resBuffer.toString());
+                lblCoverCap.setText("<TBD>");
+                
+                if (this.picture.pictureType == Picture.PICTURE_BMP)
+                    lblCoverType.setText("Bitmap File (BMP)");
+                else
+                    lblCoverType.setText("PNG File");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error in loading Image\nMessage:" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cmdLoadCoverActionPerformed
+
+    private void cmdLoadObjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoadObjectActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        
+        try {
+            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                this.steganoObject = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
+                
+                StringBuffer sizeBuffer = new StringBuffer(); // string buffer resolusi
+                sizeBuffer.append(this.steganoObject.length);
+                sizeBuffer.append(" bytes");
+                
+                lblObjectSize.setText(sizeBuffer.toString());
+                lblObjectName.setText(fc.getSelectedFile().getName());
+                
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error in loading File\nMessage:" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cmdLoadObjectActionPerformed
+
+    private void cmdLoadEmbedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoadEmbedActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileNameExtensionFilter("Loseless Image File (*.png, *.bmp)", "png", "bmp"));
+        
+        try {
+            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
+                this.embededPicture = new Picture(fc.getSelectedFile().getPath());
+                
+                resBuffer.append(this.embededPicture.width);
+                resBuffer.append(" x ");
+                resBuffer.append(this.embededPicture.height);
+                resBuffer.append(" px");
+                
+                lblEmbedRes.setText(resBuffer.toString());
+                
+                if (this.embededPicture.pictureType == Picture.PICTURE_BMP)
+                    lblEmbedType.setText("Bitmap File (BMP)");
+                else
+                    lblEmbedType.setText("PNG File");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error in loading Image\nMessage:" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cmdLoadEmbedActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -417,9 +511,9 @@ public class FrmBPCS extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdEmbed;
-    private javax.swing.JButton cmdEmbed1;
+    private javax.swing.JButton cmdExtract;
     private javax.swing.JButton cmdLoadCover;
-    private javax.swing.JButton cmdLoadCover1;
+    private javax.swing.JButton cmdLoadEmbed;
     private javax.swing.JButton cmdLoadObject;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -439,18 +533,16 @@ public class FrmBPCS extends javax.swing.JFrame {
     private java.awt.Label label6;
     private java.awt.Label label7;
     private java.awt.Label label8;
-    private java.awt.Label label9;
     private java.awt.Label lblCoverCap;
-    private java.awt.Label lblCoverCap1;
     private java.awt.Label lblCoverRes;
-    private java.awt.Label lblCoverRes1;
     private java.awt.Label lblCoverType;
-    private java.awt.Label lblCoverType1;
+    private java.awt.Label lblEmbedRes;
+    private java.awt.Label lblEmbedType;
     private java.awt.Label lblObjectName;
     private java.awt.Label lblObjectSize;
     private javax.swing.JToggleButton toggleEncrypt;
-    private java.awt.TextField txtKey;
-    private java.awt.TextField txtKey1;
+    private java.awt.TextField txtKeyEmbed;
+    private java.awt.TextField txtKeyExtract;
     private java.awt.TextField txtThreshold;
     // End of variables declaration//GEN-END:variables
 }

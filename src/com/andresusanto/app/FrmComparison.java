@@ -22,6 +22,7 @@ public class FrmComparison extends javax.swing.JFrame {
         this.picture = picture;
         
         // TODO: Gambar Picture
+        
     }
 
     /**
