@@ -11,7 +11,6 @@ import com.andresusanto.object.Segmen;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +30,8 @@ public class Test {
 //        Test.testStringByte();
 //        Test.testNamaFile();
 //        Test.testPayload();
-//          Test.testScramblerDescrambler();
+//        Test.testScramblerDescrambler();
+//        Test.testFloatByte();
     }
     
     private static void fileLength() throws IOException
@@ -53,7 +53,7 @@ public class Test {
         }
         data[28] = false;
         data[30] = false;
-        Payload payload = new Payload();
+//        Payload payload = new Payload();
 //        System.err.println( payload.getComplexity(data));
     }
     
@@ -148,14 +148,18 @@ public class Test {
         System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
         Payload payload = new Payload(false, "key","test.txt", Files.readAllBytes(Paths.get("test.txt")), 0.2f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
+        
+        Payload payload2 = new Payload(Segments);
+        payload2.save("testpayloadsave.txt");
+        
 //        System.err.println("banyaknya segmen = " + Segments.size());
-        System.err.println("hasil");
-        for(Segmen s : Segments)
-        {
+//        System.err.println("hasil");
+//        for(Segmen s : Segments)
+//        {
 //            Tools.printArray(s.getData());
-            Tools.printMatriks(s.getData());
-            System.err.println("");
-        }
+//            Tools.printMatriks(s.getData());
+//            System.err.println("");
+//        }
     }
     private static void testIntByte()
     {
@@ -234,5 +238,12 @@ public class Test {
             System.out.print(dataSegmen.get(i) + ", ");
         }
         System.out.println();
+    }
+    
+    private static void testFloatByte()
+    {
+        float a = 0.3f;
+        Tools.printArray(Tools.convertToBoolArray(Tools.floatToByte(a)));
+        System.err.println(Tools.bytesToFloat(Tools.convertToByte(Tools.convertToBoolArray(Tools.floatToByte(a)))));
     }
 }
