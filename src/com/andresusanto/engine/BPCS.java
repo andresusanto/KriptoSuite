@@ -91,7 +91,7 @@ public class BPCS {
         /**
          * Proceeding to insert the data
          */
-        int[] randomizedIndex = Tools.getShuffledInts(key, 0, dataSegmen.size());
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, dataSegmen.size()-1);
         ArrayList<Segmen> scrambledDataSegmen = new ArrayList<>();
         for (i=0; i < dataSegmen.size(); i++) {
             scrambledDataSegmen.add(dataSegmen.get(randomizedIndex[i]));
@@ -176,7 +176,7 @@ public class BPCS {
         /**
          * Proceeding to insert the data
          */
-        int[] randomizedIndex = Tools.getShuffledInts(key, 0, messageBitplaneLoc.size());
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, messageBitplaneLoc.size()-1);
         ArrayList<boolean[]> descrambledDataSegmen = new ArrayList<>();
         while(descrambledDataSegmen.size() < messageBitplaneLoc.size()) descrambledDataSegmen.add(null);
         for (i=0; i < messageBitplaneLoc.size(); i++) {
