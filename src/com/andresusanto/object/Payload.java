@@ -35,14 +35,15 @@ public class Payload{
     public static final int FILESIZE_LENGTH = 32;
     public static final int FILENAME_LENGTH = 8;
     
-    private Vigenere vigenere;
     private boolean encrypt;
+    private float threshold;
     private int size;
     private String filename; // jadi filename karena ketika save as, defaultnya nama filenya adalah nama file asli
     private boolean dataAwal[]; // pesan awal yang sudah diubah dari byte ke boolean
     private ArrayList<Segmen> Segments; // data awal yang sudah diolah sehingga menjadi bagian bagian (segmen)
                                         //yang sudah berupa 1 bit map konjugasi + 63 bit data
-    private float threshold;
+    
+    private Vigenere vigenere;
 
     public byte[] createPayload(){ // fungsi untuk mengkonstruk konten menjadi data dengan header
         return null;
@@ -93,22 +94,26 @@ public class Payload{
                         thresholdBoolArray, 0, 
                         THRESHOLD_LENGTH);
         
+        this.threshold = Tools.bytesToFloat(Tools.convertToByte(thresholdBoolArray));
+        
         boolean [] fileSize = new boolean[FILESIZE_LENGTH];
         System.arraycopy(headerAndData, 
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
                         fileSize, 0, FILESIZE_LENGTH);
+        this.size = Tools.bytesToInt(Tools.convertToByte(fileSize));
         
         boolean [] nFileName = new boolean[FILENAME_LENGTH];
         System.arraycopy(headerAndData, 
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
                         nFileName, 0, FILENAME_LENGTH);
         
-        int filenamelength = Tools.oneByteToInt(nFileName);
+        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
         boolean [] FileNameBoolean = new boolean[filenamelength];
         System.arraycopy(headerAndData, 
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
                         FILESIZE_LENGTH + FILENAME_LENGTH, 
                         FileNameBoolean, 0, filenamelength);
+        this.filename = Tools.bytesToString(Tools.convertToByte(FileNameBoolean));
 //        
         int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
         this.dataAwal = new boolean[fileSizeInt];
@@ -131,8 +136,6 @@ public class Payload{
 //        Tools.printArray(nFileName);
 //        Tools.printArray(FileNameBoolean);
 //        Tools.printArray(this.dataAwal);
-        
-//        this.threshold = Tools.bytesToFloat(Tools.convertToByte(headerAndData))
     }
 
     /**
@@ -240,6 +243,14 @@ public class Payload{
             this.Segments.add(segment);
         }
     }
+    private void generatePayloadAttribut(ArrayList<boolean []> bitplanes) throws Exception
+    {
+        for(boolean [] bitplane: bitplanes)
+        {
+            if(bitplane.length != 64)
+                throw new Exception("bitplane harus berukuran 64");
+        }
+    }
     public ArrayList<Segmen> getAllSegments()
     {
         return Segments;
@@ -247,5 +258,9 @@ public class Payload{
     public boolean [] getSegmenData(int index)
     {
         return Segments.get(index).getData();
+    }
+    public String getFileName()
+    {
+        return this.filename;
     }
 }
