@@ -7,6 +7,7 @@ package com.andresusanto.app;
 
 import com.andresusanto.engine.BPCS;
 import com.andresusanto.engine.Tools;
+import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -222,6 +223,11 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         cmdEmbed.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         cmdEmbed.setText("Embed");
+        cmdEmbed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEmbedActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -408,7 +414,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         fc.setFileFilter(new FileNameExtensionFilter("Loseless Image File (*.png, *.bmp)", "png", "bmp"));
         
         try {
-            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
                 this.picture = new Picture(fc.getSelectedFile().getPath());
                 
@@ -434,7 +440,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         final JFileChooser fc = new JFileChooser();
         
         try {
-            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 this.steganoObject = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
                 
                 StringBuffer sizeBuffer = new StringBuffer(); // string buffer resolusi
@@ -455,7 +461,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         fc.setFileFilter(new FileNameExtensionFilter("Loseless Image File (*.png, *.bmp)", "png", "bmp"));
         
         try {
-            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
                 this.embededPicture = new Picture(fc.getSelectedFile().getPath());
                 
@@ -470,11 +476,49 @@ public class FrmBPCS extends javax.swing.JFrame {
                     lblEmbedType.setText("Bitmap File (BMP)");
                 else
                     lblEmbedType.setText("PNG File");
+                
+                
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error in loading Image\nMessage:" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdLoadEmbedActionPerformed
+
+    private void cmdEmbedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEmbedActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        
+        try {
+            if (txtKeyEmbed.getText().length() == 0){
+                JOptionPane.showMessageDialog(null, "Please insert key!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }else if (this.picture == null){
+                JOptionPane.showMessageDialog(null, "Please select cover image!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }else if (this.steganoObject == null){
+                JOptionPane.showMessageDialog(null, "Please select stegano object!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            bpcs = new BPCS(txtKeyEmbed.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
+            
+            Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
+            
+            bpcs.embed(payload);
+            
+            if (picture.pictureType == Picture.PICTURE_PNG)
+                fc.setFileFilter(new FileNameExtensionFilter("PNG File", "png"));
+            else
+                fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
+            
+            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                picture.save(fc.getSelectedFile().getPath());
+            }
+            
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_cmdEmbedActionPerformed
 
     /**
      * @param args the command line arguments
