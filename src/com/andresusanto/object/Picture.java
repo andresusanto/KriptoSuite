@@ -89,10 +89,10 @@ public class Picture {
                 result[y * 8 + x] = ((colorByte >> layer) & 1) == 1;
                 
                 // Fungsi ini untuk testing (format ke boolean image)
-                if (((colorByte >> layer) & 1) == 1)
-                    this.pixels[Xconstant + x + Ypos] = intFromRGB(0, 0, 0);
-                else
-                    this.pixels[Xconstant + x + Ypos] = intFromRGB(255, 255, 255);
+//                if (((colorByte >> layer) & 1) == 1)
+//                    this.pixels[Xconstant + x + Ypos] = intFromRGB(0, 0, 0);
+//                else
+//                    this.pixels[Xconstant + x + Ypos] = intFromRGB(255, 255, 255);
             }
         }
         
