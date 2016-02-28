@@ -353,6 +353,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Embed"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdEmbedActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -497,6 +500,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Extract"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdExtractActionPerformed"/>
+              </Events>
             </Component>
             <Component class="java.awt.Label" name="label12">
               <Properties>
