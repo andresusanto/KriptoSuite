@@ -130,7 +130,7 @@ public class BPCS {
     }
     
     // ekstrak data ke pic
-    public Payload extract(){
+    public Payload extract() throws Exception{
         /**
          * 1. Ambil jumlah blok pixel
          * 2. Ubah setiap bitplane menjadi CGC sambil menyimpan letak koordinat pesan
@@ -186,9 +186,13 @@ public class BPCS {
             char colorCode = currentCoordinate.getColor();
             boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
             descrambledDataSegmen.set(randomizedIndex[i], currentBitplane);
-            //descrambledDataSegmen.add(dataSegmen.get(randomizedIndex[i]));
         }
-        //Tinggal gmn caranya dia bikin payload
+        
+        /**
+         * Put bitplane to new payload for return
+         */
+        
+        Payload ret = new Payload(descrambledDataSegmen, key);
         
         /**
          * Turn back coding to PBC (cleanup)
@@ -211,7 +215,7 @@ public class BPCS {
                 }
             }
         }
-        return null;
+        return ret;
     }
     
     // fungsi untuk menghitung komplesitas suatu bitplane
@@ -239,7 +243,19 @@ public class BPCS {
     // ---
     
     private void convertToCGC(int region, int layer, char colorCode){
-        
+        boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+        /**
+         * Transform to 2D array
+         */
+        int x,y,i;
+        i = 0;
+        boolean[][] transformedBitplane = new boolean[8][8];
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                transformedBitplane[x][y] = currentBitplane[i];
+                i++;
+            }
+        }
     }
     
     private void convertToPBC(int region, int layer, char colorCode){
