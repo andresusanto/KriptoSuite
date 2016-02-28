@@ -74,69 +74,26 @@ public class Payload{
         this.generateArrayOfSegments();
     }
     
-    public Payload (ArrayList<Segmen> Segments, String key)
+    public Payload (ArrayList<boolean []> bitplanes, String key) throws Exception
     {
+        for(boolean [] bitplane: bitplanes)
+        {
+            if(bitplane.length != 64)
+                throw new Exception("bitplane harus berukuran 64");
+        }
+        
         vigenere = new Vigenere(key);
-        this.Segments = Segments;
         
-        //extract Segments menjadi header + data
-        boolean [] headerAndData = new boolean[Segments.size() * (Segmen.SEGMEN_SIZE - 1)];
-        for(int i = 0; i < Segments.size(); i++)
-        {
-            Segmen segmen = Segments.get(i);
-            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
-        }
-        this.encrypt = headerAndData[0];
-        
-        boolean [] thresholdBoolArray = new boolean[THRESHOLD_LENGTH];
-        System.arraycopy(headerAndData, 
-                        BOOL_ENCRYPT_LENGTH, 
-                        thresholdBoolArray, 0, 
-                        THRESHOLD_LENGTH);
-        
-        this.threshold = Tools.bytesToFloat(Tools.convertToByte(thresholdBoolArray));
-        
-        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
-        System.arraycopy(headerAndData, 
-                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
-                        fileSize, 0, FILESIZE_LENGTH);
-        this.size = Tools.bytesToInt(Tools.convertToByte(fileSize));
-        
-        boolean [] nFileName = new boolean[FILENAME_LENGTH];
-        System.arraycopy(headerAndData, 
-                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
-                        nFileName, 0, FILENAME_LENGTH);
-        
-        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
-        boolean [] FileNameBoolean = new boolean[filenamelength];
-        System.arraycopy(headerAndData, 
-                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
-                        FILESIZE_LENGTH + FILENAME_LENGTH, 
-                        FileNameBoolean, 0, filenamelength);
-        this.filename = Tools.bytesToString(Tools.convertToByte(FileNameBoolean));
-//        
-        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
-        this.dataAwal = new boolean[fileSizeInt];
-//        System.err.println(fileSizeInt);
-        System.arraycopy(headerAndData, 
-                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
-                        FILESIZE_LENGTH + FILENAME_LENGTH + filenamelength, 
-                        this.dataAwal, 0, fileSizeInt);
-        
-        // dekrip
-        if(this.encrypt)
-        {
-            this.dataAwal = Tools.convertToBoolArray(vigenere.decrypt(Tools.convertToByte(this.dataAwal)));
-        }
-            
-        
-        // cetak array yang udah di copy
-//        Tools.printArray(thresholdBoolArray);
-//        Tools.printArray(fileSize);
-//        Tools.printArray(nFileName);
-//        Tools.printArray(FileNameBoolean);
-//        Tools.printArray(this.dataAwal);
+        this.generatePayloadAttribut(bitplanes);
     }
+    
+//    public Payload (ArrayList<Segmen> Segments, String key)
+//    {
+//        vigenere = new Vigenere(key);
+//        this.Segments = Segments;
+//        
+//        this.generatePayloadAttribut();
+//    }
 
     /**
      * Menyimpan array of segmen menjadi data semula. 
@@ -243,12 +200,117 @@ public class Payload{
             this.Segments.add(segment);
         }
     }
-    private void generatePayloadAttribut(ArrayList<boolean []> bitplanes) throws Exception
+    private void generatePayloadAttribut()
     {
-        for(boolean [] bitplane: bitplanes)
+        //extract Segments menjadi header + data
+        boolean [] headerAndData = new boolean[Segments.size() * (Segmen.SEGMEN_SIZE - 1)];
+        for(int i = 0; i < Segments.size(); i++)
         {
-            if(bitplane.length != 64)
-                throw new Exception("bitplane harus berukuran 64");
+            Segmen segmen = Segments.get(i);
+            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
+        }
+        this.encrypt = headerAndData[0];
+        
+        boolean [] thresholdBoolArray = new boolean[THRESHOLD_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH, 
+                        thresholdBoolArray, 0, 
+                        THRESHOLD_LENGTH);
+        
+        this.threshold = Tools.bytesToFloat(Tools.convertToByte(thresholdBoolArray));
+        
+        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
+                        fileSize, 0, FILESIZE_LENGTH);
+        this.size = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        
+        boolean [] nFileName = new boolean[FILENAME_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
+                        nFileName, 0, FILENAME_LENGTH);
+        
+        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
+        boolean [] FileNameBoolean = new boolean[filenamelength];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH, 
+                        FileNameBoolean, 0, filenamelength);
+        this.filename = Tools.bytesToString(Tools.convertToByte(FileNameBoolean));
+//        
+        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        this.dataAwal = new boolean[fileSizeInt];
+//        System.err.println(fileSizeInt);
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH + filenamelength, 
+                        this.dataAwal, 0, fileSizeInt);
+        
+        // dekrip
+        if(this.encrypt)
+        {
+            this.dataAwal = Tools.convertToBoolArray(vigenere.decrypt(Tools.convertToByte(this.dataAwal)));
+        }
+            
+        
+        // cetak array yang udah di copy
+//        Tools.printArray(thresholdBoolArray);
+//        Tools.printArray(fileSize);
+//        Tools.printArray(nFileName);
+//        Tools.printArray(FileNameBoolean);
+//        Tools.printArray(this.dataAwal);
+    }
+    
+    private void generatePayloadAttribut(ArrayList<boolean []> bitplanes)
+    {
+        //extract Segments menjadi header + data
+        boolean [] headerAndData = new boolean[Segments.size() * (Segmen.SEGMEN_SIZE - 1)];
+        for(int i = 0; i < bitplanes.size(); i++)
+        {
+            Segmen segmen = Segments.get(i);
+            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
+        }
+        this.encrypt = headerAndData[0];
+        
+        boolean [] thresholdBoolArray = new boolean[THRESHOLD_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH, 
+                        thresholdBoolArray, 0, 
+                        THRESHOLD_LENGTH);
+        
+        this.threshold = Tools.bytesToFloat(Tools.convertToByte(thresholdBoolArray));
+        
+        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
+                        fileSize, 0, FILESIZE_LENGTH);
+        this.size = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        
+        boolean [] nFileName = new boolean[FILENAME_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
+                        nFileName, 0, FILENAME_LENGTH);
+        
+        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
+        boolean [] FileNameBoolean = new boolean[filenamelength];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH, 
+                        FileNameBoolean, 0, filenamelength);
+        this.filename = Tools.bytesToString(Tools.convertToByte(FileNameBoolean));
+//        
+        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        this.dataAwal = new boolean[fileSizeInt];
+//        System.err.println(fileSizeInt);
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH + filenamelength, 
+                        this.dataAwal, 0, fileSizeInt);
+        
+        // dekrip
+        if(this.encrypt)
+        {
+            this.dataAwal = Tools.convertToBoolArray(vigenere.decrypt(Tools.convertToByte(this.dataAwal)));
         }
     }
     public ArrayList<Segmen> getAllSegments()

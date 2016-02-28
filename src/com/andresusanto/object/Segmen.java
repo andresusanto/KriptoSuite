@@ -45,6 +45,12 @@ public class Segmen {
 //        Tools.printArray(data);
     }
     
+    public Segmen(boolean [] datasource, float threshold)
+    {
+        this.data = datasource;
+        if(this.getComplexity() < threshold)
+            this.conjugate();
+    }
     public boolean [] getData()
     {
         if(this.data[0]) //jika data[0] = true -> konjugate
