@@ -36,8 +36,9 @@ public class Test {
 //        Test.testScramblerDescrambler();
 //        Test.testFloatByte();
 
-        Test.bitPlane();
+//        Test.bitPlane();
 //        Test.psnr();
+          Test.resetBitplane();
     }
     
     public static void psnr() throws IOException{
@@ -307,5 +308,32 @@ public class Test {
         float a = 0.3f;
         Tools.printArray(Tools.convertToBoolArray(Tools.floatToByte(a)));
         System.err.println(Tools.bytesToFloat(Tools.convertToByte(Tools.convertToBoolArray(Tools.floatToByte(a)))));
+    }
+    
+    private static void resetBitplane() throws IOException
+    {
+        Picture pic = new Picture("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample.bmp");
+        int i,j,k;
+        int bitplaneCount = pic.getTotalRegions();
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    boolean[] currentBitplane = pic.getBitPlane(i, j, colorCode);
+                    pic.setBitPlane(i, j, colorCode, currentBitplane);
+                }
+            }
+        }
+        pic.save("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample_result.bmp");
     }
 }

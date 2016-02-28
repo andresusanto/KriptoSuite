@@ -105,7 +105,7 @@ public class BPCS {
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
             boolean[] currentData = currentSegmen.getData();
-            //picture.setBitPlane(region, layer, colorCode, currentData);
+            picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
         /**
@@ -221,6 +221,42 @@ public class BPCS {
     }
     
     public int calculateSpace(){
+        int bitplaneCount = picture.getTotalRegions();
+        ArrayList<BitCoordinate> insertableBitplaneLoc = new ArrayList<>();
+        int i,j,k;
+        /**
+         * Following parts will only convert (and convert back) and count insertable bitplane location
+         * i = region
+         * j = layer
+         * k = color code
+         */
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    //Convert to CGC while counting insertable bitplane, then add to insertableBitplaneLoc
+                    convertToCGC(i, j, colorCode);
+                    boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
+                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
+                    if (complexity > threshold) {
+                        //Insertable bitplane found
+                        insertableBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
+                    }
+                    convertToPBC(i,j,colorCode);
+                }
+            }
+        }
+        this.capacity = insertableBitplaneLoc.size() * 64;
         return capacity;
     }
     
@@ -263,17 +299,6 @@ public class BPCS {
             }
         }
         
-        //DEBUG
-        if (region == 5 && layer == 0 && colorCode == 'R') {
-        System.out.println("Before CGC Conversion Matrix: ");
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
-            }
-            System.out.println();
-        }
-        }
-        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -284,6 +309,8 @@ public class BPCS {
                 }
             }
         }
+        
+        
         /**
          * Retransform back to 1D array
          */
@@ -315,16 +342,6 @@ public class BPCS {
                 i++;
             }
         }
-        //DEBUG
-        if (region == 5 && layer == 0 && colorCode == 'R') {
-        System.out.println("After CGC Conversion Matrix: ");
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
-            }
-            System.out.println();
-        }
-        }
         
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
@@ -336,17 +353,6 @@ public class BPCS {
                 }
             }
         }
-        //DEBUG
-        if (region == 5 && layer == 0 && colorCode == 'R') {
-        System.out.println("After PBC Conversion Matrix: ");
-        for (y=0; y < convertedBitplane.length; y++) {
-            for (x=0; x < convertedBitplane.length; x++) {
-                System.out.print(convertedBitplane[x][y] ? "1 " : "0 ");
-            }
-            System.out.println();
-        }
-        }
-        
         
         /**
          * Retransform back to 1D array
