@@ -264,11 +264,16 @@ public class Payload{
     private void generatePayloadAttribut(ArrayList<boolean []> bitplanes)
     {
         //extract Segments menjadi header + data
-        boolean [] headerAndData = new boolean[Segments.size() * (Segmen.SEGMEN_SIZE - 1)];
+        boolean [] headerAndData = new boolean[bitplanes.size() * (Segmen.SEGMEN_SIZE - 1)];
         for(int i = 0; i < bitplanes.size(); i++)
         {
-            Segmen segmen = Segments.get(i);
-            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
+            boolean [] bitplane = bitplanes.get(i);
+//            Segmen segmen = new ;
+            if(bitplane[0]) //jika perlu dikonjugasi
+            {
+                bitplane = Segmen.conjugate(bitplane);
+            }
+            System.arraycopy(bitplane, 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
         }
         this.encrypt = headerAndData[0];
         

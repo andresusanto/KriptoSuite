@@ -96,6 +96,32 @@ public class Segmen {
     }
     
     /**
+     * Men-generate papan catur BC
+     * @return Papan catur wc dalam boolean
+     */
+    private static boolean [] getBCStatic()
+    {
+        boolean [] bc = new boolean[64];
+        boolean initBaris = true;
+        boolean kolom = true;
+        for(int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                bc[i * 8 + j] = kolom;
+                kolom = !kolom;
+            }
+            initBaris = !initBaris;
+            kolom = initBaris;
+        }
+        
+//        System.err.println("BC");
+//        Tools.printMatriks(bc);
+        
+        return bc;
+    }
+    
+    /**
      * Menghitung complexity dari byte pesan
      * @param data Data berupa segmen dari pesan berukuran exactly 8x8 dan kiri atasnya sudah berupa konjugation map
      * @return kompleksitas pesan dalam float
@@ -128,5 +154,17 @@ public class Segmen {
         {
             this.data[i] = this.data[i] ^ bc[i];
         }
+    }
+    
+    public static boolean [] conjugate(boolean [] data)
+    {
+        boolean [] bc = getBCStatic();
+        
+        for(int i = 0; i < data.length; i++)
+        {
+            data[i] = data[i] ^ bc[i];
+        }
+        
+        return data;
     }
 }
