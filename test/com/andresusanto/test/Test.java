@@ -146,7 +146,7 @@ public class Test {
     private static void testPayload() throws IOException
     {
         System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
-        Payload payload = new Payload("test.txt", Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))), 0.2f);
+        Payload payload = new Payload(false, "key","test.txt", Files.readAllBytes(Paths.get("test.txt")), 0.2f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
 //        System.err.println("banyaknya segmen = " + Segments.size());
         System.err.println("hasil");

@@ -23,6 +23,11 @@ public class Vigenere {
         this.spacing = spacing;
     }
     
+    public Vigenere(String key)
+    {
+        this.key = key;
+    }
+    
     // fungsi enkripsi untuk tipe byte
     public byte[] encrypt(byte data[]){
         ByteArrayOutputStream res = new ByteArrayOutputStream();
