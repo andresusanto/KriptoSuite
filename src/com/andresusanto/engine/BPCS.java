@@ -256,9 +256,70 @@ public class BPCS {
                 i++;
             }
         }
+        boolean[][] convertedBitplane = new boolean[8][8];
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                if (x==0) {
+                    convertedBitplane[x][y] = transformedBitplane[x][y];
+                } else {
+                    convertedBitplane[x][y] = transformedBitplane[x-1][y] ^ transformedBitplane[x][y];
+                }
+            }
+        }
+        /**
+         * Retransform back to 1D array
+         */
+        boolean[] currentConvertedBitplane = new boolean[currentBitplane.length];
+        i = 0;
+        for (y=0; y < convertedBitplane.length; y++) {
+            for (x=0; x < convertedBitplane.length; x++) {
+                currentConvertedBitplane[i] = convertedBitplane[x][y];
+            }
+        }
+        /**
+         * Set bitplane
+         */
+        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
     }
     
     private void convertToPBC(int region, int layer, char colorCode){
+        boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+        /**
+         * Transform to 2D array
+         */
+        int x,y,i;
+        i = 0;
+        boolean[][] transformedBitplane = new boolean[8][8];
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                transformedBitplane[x][y] = currentBitplane[i];
+                i++;
+            }
+        }
+        boolean[][] convertedBitplane = new boolean[8][8];
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                if (x==0) {
+                    convertedBitplane[x][y] = transformedBitplane[x][y];
+                } else {
+                    convertedBitplane[x][y] = convertedBitplane[x-1][y] ^ transformedBitplane[x][y];
+                }
+            }
+        }
+        /**
+         * Retransform back to 1D array
+         */
+        boolean[] currentConvertedBitplane = new boolean[currentBitplane.length];
+        i = 0;
+        for (y=0; y < convertedBitplane.length; y++) {
+            for (x=0; x < convertedBitplane.length; x++) {
+                currentConvertedBitplane[i] = convertedBitplane[x][y];
+            }
+        }
+        /**
+         * Set bitplane
+         */
+        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
         
     }
 }
