@@ -44,7 +44,14 @@ public class Segmen {
     
     public boolean [] getData()
     {
+        if(this.data[0])
+            this.conjugate();
         return data;
+    }
+    
+    public boolean isConjugate()
+    {
+        return this.data[0];
     }
     
     /**

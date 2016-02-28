@@ -144,4 +144,15 @@ public class Tools {
     {
         return ByteBuffer.wrap(value).getFloat();
     }
+    
+    public static int oneByteToInt(boolean [] value)
+    {
+        int result = 0;
+        for(int i = value.length - 1; i >= 0; i--)
+        {
+            if(value[i])
+                result += Math.pow(2, 7 - i);
+        }
+        return result;
+    }
 }

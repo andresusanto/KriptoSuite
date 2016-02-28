@@ -78,14 +78,47 @@ public class Payload{
         this.Segments = Segments;
         
         //extract Segments menjadi header + data
-        boolean [] headerAndData = new boolean[Segments.size() * Segmen.SEGMEN_SIZE];
+        boolean [] headerAndData = new boolean[Segments.size() * (Segmen.SEGMEN_SIZE - 1)];
         for(int i = 0; i < Segments.size(); i++)
         {
             Segmen segmen = Segments.get(i);
-            System.arraycopy(segmen.getData(), 0, headerAndData, i * Segmen.SEGMEN_SIZE, Segmen.SEGMEN_SIZE);
+            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
         }
         this.encrypt = headerAndData[0];
         
+        boolean [] thresholdBoolArray = new boolean[THRESHOLD_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH, 
+                        thresholdBoolArray, 0, 
+                        THRESHOLD_LENGTH);
+        
+        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
+                        fileSize, 0, FILESIZE_LENGTH);
+        
+        boolean [] nFileName = new boolean[FILENAME_LENGTH];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
+                        nFileName, 0, FILENAME_LENGTH);
+        
+        int filenamelength = Tools.oneByteToInt(nFileName);
+        boolean [] FileNameBoolean = new boolean[filenamelength];
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH, 
+                        FileNameBoolean, 0, filenamelength);
+//        
+//        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
+//        System.arraycopy(headerAndData, size, this.dataAwal, 0, fileSizeInt);
+        
+        // cetak array yang udah di copy
+        Tools.printArray(thresholdBoolArray);
+        Tools.printArray(fileSize);
+        Tools.printArray(nFileName);
+        Tools.printArray(FileNameBoolean);
+        
+//        this.threshold = Tools.bytesToFloat(Tools.convertToByte(headerAndData))
     }
 
     /**
@@ -124,7 +157,7 @@ public class Payload{
         System.err.println(this.encrypt? 1: 0);
         System.err.println("threshold");
         Tools.printArray(thresholdBoolArray);
-        System.err.println("bitFileSize = " + fileSize.length);
+//        System.err.println("bitFileSize = " + fileSize.length);
         System.err.println("fileSize = " + this.size);
         Tools.printArray(fileSize);
         System.err.println("nFileName = " + nFileName.length + " bit");
