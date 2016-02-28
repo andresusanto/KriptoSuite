@@ -36,18 +36,13 @@ public class BPCS {
     // sisipkan data ke pic
     public void embed(Payload data) throws IOException{ // throw exception jika data > payload
         /**
-         * 1. Bagi image jadi 8x8 pixel (done by Picture class), getTotalRegions()
-         * 2. Ubah data jadi segmen, Segmen class
-         * 3. Compare size dan segmen muat apa gk
-         * 2. getBitPlane() itu PBC
-         * 3. ubah jadi CGC
-         * 4. Tentukan kompleksitas, calculateComplexity()
-         * 5. if noise like (< threshold) 
-         *  cek complexity message, kalau kurang, konjugasi dulu
-         *  if passed threshold then
-         *  replace bitplane pakai setBitPlane()
-         * 6. else ignore
-         * 7. di akhir ubah setiap bitplane yg tadi jadi CGC jadi PBC
+         * 1. Ambil total blok-blok piksel 8x8
+         * 2. Ubah setiap bitplane menjadi CGC sambil menghitung dan menyimpan
+         *      posisi dimana pesan bisa dimasukkan
+         * 3. Bandingkan ukuran pesan dengan jumlah bitplane yang bisa dimasukkan
+         * 4. Jika memungkinkan, acak segmen segmen pesan
+         * 5. Masukkan segmen yang telah diacak ke dalam bitplane
+         * 6. Lakukan konversi balik dari CGC menjadi PBC
          */
         int bitplaneCount = picture.getTotalRegions();
         ArrayList<BitCoordinate> insertableBitplaneLoc = new ArrayList<>();
@@ -136,11 +131,87 @@ public class BPCS {
     
     // ekstrak data ke pic
     public Payload extract(){
+        /**
+         * 1. Ambil jumlah blok pixel
+         * 2. Ubah setiap bitplane menjadi CGC sambil menyimpan letak koordinat pesan
+         * 3. Susun kembali semua pesan yang sudah diacak sebelumnya ketika embed
+         * 4. Bentuk payload baru
+         * 5. Ubah kembali ke PBC (cleanup)
+         */
+        int bitplaneCount = picture.getTotalRegions();
+        ArrayList<BitCoordinate> messageBitplaneLoc = new ArrayList<>();
+        int i,j,k;
+        /**
+         * Ubah coding jadi CGC sambil simpan letak koordinat
+         * i = region
+         * j = layer
+         * k = color code
+         */
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    //Convert to CGC while counting message bitplane, then add to messageBitplaneLoc
+                    convertToCGC(i, j, colorCode);
+                    boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
+                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
+                    if (complexity > threshold) {
+                        //Pesan found
+                        messageBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Proceeding to insert the data
+         */
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, messageBitplaneLoc.size());
+        ArrayList<boolean[]> descrambledDataSegmen = new ArrayList<>();
+        while(descrambledDataSegmen.size() < messageBitplaneLoc.size()) descrambledDataSegmen.add(null);
+        for (i=0; i < messageBitplaneLoc.size(); i++) {
+            BitCoordinate currentCoordinate = messageBitplaneLoc.get(i);
+            int region = currentCoordinate.getRegion();
+            int layer = currentCoordinate.getBitplane();
+            char colorCode = currentCoordinate.getColor();
+            boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+            descrambledDataSegmen.set(randomizedIndex[i], currentBitplane);
+            //descrambledDataSegmen.add(dataSegmen.get(randomizedIndex[i]));
+        }
+        //Tinggal gmn caranya dia bikin payload
+        
+        /**
+         * Turn back coding to PBC (cleanup)
+         */
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    convertToPBC(i, j, colorCode);
+                }
+            }
+        }
         return null;
-    }
-    
-    public int calculateSpace(){
-        return 0;
     }
     
     // fungsi untuk menghitung komplesitas suatu bitplane

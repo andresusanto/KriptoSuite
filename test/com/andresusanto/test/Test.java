@@ -27,11 +27,11 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
-        Test.testPayload();
+//        Test.testPayload();
 //        Test.testStringByte();
 //        Test.testNamaFile();
 //        Test.testPayload();
-//          Test.testScramblerDescrambler();
+          Test.testScramblerDescrambler();
     }
     
     private static void fileLength() throws IOException
@@ -220,7 +220,7 @@ public class Test {
         }
         System.out.println();
         ArrayList<Integer> descrambledDataSegmen = new ArrayList<>();
-        while(descrambledDataSegmen.size() < scrambledDataSegmen.size()) descrambledDataSegmen.add(0);
+        while(descrambledDataSegmen.size() < scrambledDataSegmen.size()) descrambledDataSegmen.add(null);
         for (i=0; i < scrambledDataSegmen.size(); i++) {
             descrambledDataSegmen.set(randomizedIndex2[i], scrambledDataSegmen.get(i));
         }
