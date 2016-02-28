@@ -105,7 +105,7 @@ public class BPCS {
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
             boolean[] currentData = currentSegmen.getData();
-            picture.setBitPlane(region, layer, colorCode, currentData);
+            //picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
         /**
@@ -262,6 +262,18 @@ public class BPCS {
                 i++;
             }
         }
+        
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("Before CGC Conversion Matrix: ");
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -286,7 +298,7 @@ public class BPCS {
         /**
          * Set bitplane
          */
-        picture.setBitPlane(region, layer, colorCode, currentBitplane);
+        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
     }
     
     private void convertToPBC(int region, int layer, char colorCode){
@@ -303,6 +315,17 @@ public class BPCS {
                 i++;
             }
         }
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("After CGC Conversion Matrix: ");
+        for (y=0; y < transformedBitplane.length; y++) {
+            for (x=0; x < transformedBitplane.length; x++) {
+                System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -313,6 +336,18 @@ public class BPCS {
                 }
             }
         }
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("After PBC Conversion Matrix: ");
+        for (y=0; y < convertedBitplane.length; y++) {
+            for (x=0; x < convertedBitplane.length; x++) {
+                System.out.print(convertedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
+        
+        
         /**
          * Retransform back to 1D array
          */
