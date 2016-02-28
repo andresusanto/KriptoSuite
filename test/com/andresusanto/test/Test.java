@@ -36,7 +36,18 @@ public class Test {
 //        Test.testScramblerDescrambler();
 //        Test.testFloatByte();
 
-        Test.bitPlane();
+//        Test.bitPlane();
+        Test.psnr();
+    }
+    
+    public static void psnr() throws IOException{
+        Picture pic1 = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        Picture pic2 = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        
+        boolean[] bp = pic1.getBitPlane(9, 1, Picture.COLOR_RED);
+        pic2.setBitPlane(0, 0, Picture.COLOR_BLUE, bp);
+        
+        System.out.println(Tools.calculatePSNR(pic1, pic2));
     }
     
     public static void bitPlane() throws IOException{

@@ -53,8 +53,28 @@ public class Tools {
         return shuffledInts;
     }
     
-    public static float calculatePSNR(Picture picture1, Picture picture2){
-        return 0;
+    public static float calculatePSNR(Picture picture1, Picture picture2){ 
+        float sumDifference = 0;
+        float rms = 0;
+        
+        for (int i = 0; i < picture1.pixels.length; i++){
+            byte r1 = (byte)((picture1.pixels[i] >> 16 ) & 0xFF);
+            byte g1 = (byte)((picture1.pixels[i] >> 8 ) & 0xFF);
+            byte b1 = (byte)((picture1.pixels[i]) & 0xFF);
+         
+            byte r2 = (byte)((picture2.pixels[i] >> 16 ) & 0xFF);
+            byte g2 = (byte)((picture2.pixels[i] >> 8 ) & 0xFF);
+            byte b2 = (byte)((picture2.pixels[i]) & 0xFF);
+            
+            sumDifference += Math.pow(r2 - r1, 2);
+            sumDifference += Math.pow(g2 - g1, 2);
+            sumDifference += Math.pow(b2 - b1, 2);
+            
+        }
+        
+        sumDifference /= 3; // karena RGB
+        rms = (float) Math.pow(sumDifference / (picture1.width * picture1.height), 0.5);
+        return (float) (20 * Math.log10(255 / rms));
     }
     
     // Konversi Boolean >< Byte
