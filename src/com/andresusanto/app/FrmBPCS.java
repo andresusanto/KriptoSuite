@@ -333,6 +333,11 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         cmdExtract.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         cmdExtract.setText("Extract");
+        cmdExtract.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdExtractActionPerformed(evt);
+            }
+        });
 
         label12.setText("Key");
 
@@ -519,6 +524,38 @@ public class FrmBPCS extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_cmdEmbedActionPerformed
+
+    private void cmdExtractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdExtractActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        
+        try {
+            if (txtKeyExtract.getText().length() == 0){
+                JOptionPane.showMessageDialog(null, "Please insert key!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }else if (this.embededPicture == null){
+                JOptionPane.showMessageDialog(null, "Please select embeded image!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            bpcs = new BPCS(txtKeyExtract.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
+            
+            Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
+            
+            bpcs.embed(payload);
+            
+            if (picture.pictureType == Picture.PICTURE_PNG)
+                fc.setFileFilter(new FileNameExtensionFilter("PNG File", "png"));
+            else
+                fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
+            
+            if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                picture.save(fc.getSelectedFile().getPath());
+            }
+            
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cmdExtractActionPerformed
 
     /**
      * @param args the command line arguments
