@@ -11,7 +11,6 @@ import com.andresusanto.object.Segmen;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +26,12 @@ public class Test {
 //        Test.dataComplexity();
 //        Test.generateBC();
 //        Test.testArrayCopy();
-//        Test.testPayload();
+        Test.testPayload();
 //        Test.testStringByte();
 //        Test.testNamaFile();
 //        Test.testPayload();
-          Test.testScramblerDescrambler();
+//        Test.testScramblerDescrambler();
+//        Test.testFloatByte();
     }
     
     private static void fileLength() throws IOException
@@ -53,7 +53,7 @@ public class Test {
         }
         data[28] = false;
         data[30] = false;
-        Payload payload = new Payload();
+//        Payload payload = new Payload();
 //        System.err.println( payload.getComplexity(data));
     }
     
@@ -145,17 +145,23 @@ public class Test {
     
     private static void testPayload() throws IOException
     {
-        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
-        Payload payload = new Payload(false, "key","test.txt", Files.readAllBytes(Paths.get("test.txt")), 0.2f);
+//        System.err.println("data awal");Tools.printArray(Tools.convertToBoolArray(Files.readAllBytes(Paths.get("test.txt"))));
+        Payload payload = new Payload(true, "key","sample.bmp", Files.readAllBytes(Paths.get("sample.bmp")), 0.3f);
         ArrayList<Segmen> Segments = payload.getAllSegments();
+
 //        System.err.println("banyaknya segmen = " + Segments.size());
-        System.err.println("hasil");
-        for(Segmen s : Segments)
-        {
+//        System.err.println("hasil");
+//        for(Segmen s : Segments)
+//        {
 //            Tools.printArray(s.getData());
-            Tools.printMatriks(s.getData());
-            System.err.println("");
-        }
+//            Tools.printMatriks(s.getData());
+//            System.err.println("");
+//        }
+        
+        Payload payload2 = new Payload(Segments, "key");
+        payload2.save("testpayloadsave.bmp");
+        
+
     }
     private static void testIntByte()
     {
@@ -220,7 +226,7 @@ public class Test {
         }
         System.out.println();
         ArrayList<Integer> descrambledDataSegmen = new ArrayList<>();
-        while(descrambledDataSegmen.size() < scrambledDataSegmen.size()) descrambledDataSegmen.add(null);
+        while(descrambledDataSegmen.size() < scrambledDataSegmen.size()) descrambledDataSegmen.add(0);
         for (i=0; i < scrambledDataSegmen.size(); i++) {
             descrambledDataSegmen.set(randomizedIndex2[i], scrambledDataSegmen.get(i));
         }
@@ -234,5 +240,12 @@ public class Test {
             System.out.print(dataSegmen.get(i) + ", ");
         }
         System.out.println();
+    }
+    
+    private static void testFloatByte()
+    {
+        float a = 0.3f;
+        Tools.printArray(Tools.convertToBoolArray(Tools.floatToByte(a)));
+        System.err.println(Tools.bytesToFloat(Tools.convertToByte(Tools.convertToBoolArray(Tools.floatToByte(a)))));
     }
 }

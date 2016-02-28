@@ -13,6 +13,7 @@ import com.andresusanto.engine.Tools;
  */
 // Segmen adalah array of boolean berukuran 8x8 dimana sisi kiri atas merupakan boolean konjugasi
 public class Segmen {
+    public static final int SEGMEN_SIZE = 64;
     private final boolean [] data; //kompleksitas dari data ini sudah pasti > threshold karena 
                             //sudah diatur di constructor jika masih kurang kompleks
     
@@ -37,13 +38,29 @@ public class Segmen {
 //        Tools.printArray(this.data);
         //cek kompleksitas, jika < threshold, conjugate
 //        System.err.println("kompleksitas = " + this.getComplexity());
+//        System.err.println(this.getComplexity() < threshold);
         if(this.getComplexity() < threshold)
             this.conjugate();
+//        System.err.println("setelah konjugasi");
+//        Tools.printArray(data);
     }
     
     public boolean [] getData()
     {
-        return data;
+        if(this.data[0]) //jika data[0] = true -> konjugate
+        {
+//            System.err.println("Sebelum konjugasi");
+//            Tools.printArray(this.data);
+            this.conjugate();
+//            System.err.println("Setelah konjugasi");
+//            Tools.printArray(this.data);
+        }
+        return this.data;
+    }
+    
+    public boolean isConjugate()
+    {
+        return this.data[0];
     }
     
     /**

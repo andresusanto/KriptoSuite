@@ -7,6 +7,7 @@ package com.andresusanto.engine;
 
 import com.andresusanto.object.Picture;
 import com.andresusanto.option.SpacingOption;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -132,5 +133,26 @@ public class Tools {
     public static byte [] stringToBytes(String string)
     {
         return string.getBytes();
+    }
+    
+    public static byte [] floatToByte(float value)
+    {
+        return ByteBuffer.allocate(4).putFloat(value).array();
+    }
+    
+    public static float bytesToFloat(byte [] value)
+    {
+        return ByteBuffer.wrap(value).getFloat();
+    }
+    
+    public static int oneByteToInt(boolean [] value)
+    {
+        int result = 0;
+        for(int i = value.length - 1; i >= 0; i--)
+        {
+            if(value[i])
+                result += Math.pow(2, 7 - i);
+        }
+        return result;
     }
 }
