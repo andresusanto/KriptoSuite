@@ -66,7 +66,7 @@ public class Payload{
             this.dataAwal = Tools.convertToBoolArray(datasource);
         this.encrypt = encrypt;
         
-        this.size = datasource.length;
+        this.size = this.dataAwal.length; //convert dari byte ke bit
         this.filename = filename;
         
         this.threshold = threshold;
@@ -109,14 +109,20 @@ public class Payload{
                         FILESIZE_LENGTH + FILENAME_LENGTH, 
                         FileNameBoolean, 0, filenamelength);
 //        
-//        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
-//        System.arraycopy(headerAndData, size, this.dataAwal, 0, fileSizeInt);
+        int fileSizeInt = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        this.dataAwal = new boolean[fileSizeInt];
+//        System.err.println(fileSizeInt);
+        System.arraycopy(headerAndData, 
+                        BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + 
+                        FILESIZE_LENGTH + FILENAME_LENGTH + filenamelength, 
+                        this.dataAwal, 0, fileSizeInt);
         
         // cetak array yang udah di copy
         Tools.printArray(thresholdBoolArray);
         Tools.printArray(fileSize);
         Tools.printArray(nFileName);
         Tools.printArray(FileNameBoolean);
+        Tools.printArray(this.dataAwal);
         
 //        this.threshold = Tools.bytesToFloat(Tools.convertToByte(headerAndData))
     }
@@ -129,10 +135,6 @@ public class Payload{
      */
     public void save(String savePath) throws FileNotFoundException, IOException
     {
-        for(Segmen s : Segments)
-        {
-            
-        }
         try
         (FileOutputStream fos = new FileOutputStream(savePath)) {
             fos.write(Tools.convertToByte(this.dataAwal));

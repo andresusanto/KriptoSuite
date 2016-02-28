@@ -150,7 +150,7 @@ public class Test {
         ArrayList<Segmen> Segments = payload.getAllSegments();
         
         Payload payload2 = new Payload(Segments);
-//        payload2.save("");
+        payload2.save("testpayloadsave.txt");
         
 //        System.err.println("banyaknya segmen = " + Segments.size());
 //        System.err.println("hasil");
