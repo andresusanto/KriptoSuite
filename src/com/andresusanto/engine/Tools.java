@@ -7,11 +7,17 @@ package com.andresusanto.engine;
 
 import com.andresusanto.object.Picture;
 import com.andresusanto.option.SpacingOption;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -154,5 +160,27 @@ public class Tools {
                 result += Math.pow(2, 7 - i);
         }
         return result;
+    }
+    
+    public static void showImage(Picture picture){
+        final BufferedImage bi = new BufferedImage(picture.width, picture.height, BufferedImage.TYPE_INT_ARGB);
+        int[] biData = ( (DataBufferInt) bi.getRaster().getDataBuffer() ).getData();
+        System.arraycopy(picture.pixels, 0, biData, 0, picture.pixels.length);
+        
+        
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(bi, 0, 0, null);
+            }
+        };
+        
+        
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.add(panel);
+        frame.setSize(picture.width, picture.height);
+        frame.setVisible(true);
     }
 }
