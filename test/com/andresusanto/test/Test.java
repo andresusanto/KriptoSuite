@@ -40,23 +40,23 @@ public class Test {
     }
     
     public static void bitPlane() throws IOException{
-        Picture pic = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        Picture pic = new Picture("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample.bmp");
         
         for (int i = 0; i < 10; i++){
-            boolean[] bp = pic.getBitPlane(i, 1, Picture.COLOR_RED);
-            System.out.print("REGION " + 6 + " R: ");
+            boolean[] bp = pic.getBitPlane(i, 6, Picture.COLOR_RED);
+            System.out.print("REGION " + i + " R: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
             System.out.println();
             
-            bp = pic.getBitPlane(i, 1, Picture.COLOR_GREEN);
-            System.out.print("REGION " + 6 + " G: ");
+            bp = pic.getBitPlane(i, 6, Picture.COLOR_GREEN);
+            System.out.print("REGION " + i + " G: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
             System.out.println();
             
-            bp = pic.getBitPlane(i, 1, Picture.COLOR_BLUE);
-            System.out.print("REGION " + 6 + " B: ");
+            bp = pic.getBitPlane(i, 6, Picture.COLOR_BLUE);
+            System.out.print("REGION " + i + " B: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
             System.out.println();

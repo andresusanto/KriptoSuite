@@ -274,6 +274,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
@@ -314,6 +315,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
