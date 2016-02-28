@@ -81,6 +81,11 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         toggleEncrypt.setSelected(true);
         toggleEncrypt.setText("ON");
+        toggleEncrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleEncryptActionPerformed(evt);
+            }
+        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Cover Image"));
 
@@ -365,6 +370,15 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void toggleEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleEncryptActionPerformed
+        // Kode untuk mengubah teks toggle sesuai kondisi
+        if (toggleEncrypt.isSelected()){
+            toggleEncrypt.setText("ON");
+        }else{
+            toggleEncrypt.setText("OFF");
+        }
+    }//GEN-LAST:event_toggleEncryptActionPerformed
 
     /**
      * @param args the command line arguments
