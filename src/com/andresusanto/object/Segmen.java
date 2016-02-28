@@ -45,6 +45,12 @@ public class Segmen {
 //        Tools.printArray(data);
     }
     
+    public Segmen(boolean [] datasource, float threshold)
+    {
+        this.data = datasource;
+        if(this.getComplexity() < threshold)
+            this.conjugate();
+    }
     public boolean [] getData()
     {
         if(this.data[0]) //jika data[0] = true -> konjugate
@@ -68,6 +74,32 @@ public class Segmen {
      * @return Papan catur wc dalam boolean
      */
     private boolean [] getBC()
+    {
+        boolean [] bc = new boolean[64];
+        boolean initBaris = true;
+        boolean kolom = true;
+        for(int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                bc[i * 8 + j] = kolom;
+                kolom = !kolom;
+            }
+            initBaris = !initBaris;
+            kolom = initBaris;
+        }
+        
+//        System.err.println("BC");
+//        Tools.printMatriks(bc);
+        
+        return bc;
+    }
+    
+    /**
+     * Men-generate papan catur BC
+     * @return Papan catur wc dalam boolean
+     */
+    private static boolean [] getBCStatic()
     {
         boolean [] bc = new boolean[64];
         boolean initBaris = true;
@@ -122,5 +154,17 @@ public class Segmen {
         {
             this.data[i] = this.data[i] ^ bc[i];
         }
+    }
+    
+    public static boolean [] conjugate(boolean [] data)
+    {
+        boolean [] bc = getBCStatic();
+        
+        for(int i = 0; i < data.length; i++)
+        {
+            data[i] = data[i] ^ bc[i];
+        }
+        
+        return data;
     }
 }

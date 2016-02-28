@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -157,9 +159,16 @@ public class Test {
 //            Tools.printMatriks(s.getData());
 //            System.err.println("");
 //        }
+        ArrayList <boolean []> bitplanes = new ArrayList<>();
+        for(Segmen segmen : Segments)
+            bitplanes.add(segmen.getData());
         
-        Payload payload2 = new Payload(Segments, "key");
-        payload2.save("testpayloadsave.bmp");
+        try {
+            Payload payload2 = new Payload(bitplanes, "key");
+            payload2.save("testpayloadsave.bmp");
+        } catch (Exception ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
 
     }
