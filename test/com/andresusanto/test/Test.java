@@ -37,25 +37,47 @@ public class Test {
 //        Test.testFloatByte();
 
         Test.bitPlane();
+//        Test.psnr();
+    }
+    
+    public static void psnr() throws IOException{
+        Picture pic1 = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        Picture pic2 = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        
+        boolean[] bp = pic1.getBitPlane(9, 1, Picture.COLOR_RED);
+        pic2.setBitPlane(0, 0, Picture.COLOR_BLUE, bp);
+        
+        System.out.println(Tools.calculatePSNR(pic1, pic2));
     }
     
     public static void bitPlane() throws IOException{
-        Picture pic = new Picture("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample.bmp");
+        Picture pic = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sample.bmp");
+        
+        boolean bool[] = new boolean[64];
+        for (int i = 0 ; i < 64; i++){
+            if (i % 2 == 0) bool[i] = true; else bool[i] = false;
+        }
+        
+        pic.setBitPlane(0, 3, Picture.COLOR_RED, bool);
+        pic.setBitPlane(0, 3, Picture.COLOR_GREEN, bool);
+        pic.setBitPlane(0, 3, Picture.COLOR_BLUE, bool);
+        
+        pic.setBitPlane(1, 3, Picture.COLOR_GREEN, bool);
         
         for (int i = 0; i < 10; i++){
-            boolean[] bp = pic.getBitPlane(i, 6, Picture.COLOR_RED);
+            boolean[] bp = pic.getBitPlane(i, 3, Picture.COLOR_RED);
             System.out.print("REGION " + i + " R: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
             System.out.println();
             
-            bp = pic.getBitPlane(i, 6, Picture.COLOR_GREEN);
+            bp = pic.getBitPlane(i, 3, Picture.COLOR_GREEN);
             System.out.print("REGION " + i + " G: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
             System.out.println();
             
-            bp = pic.getBitPlane(i, 6, Picture.COLOR_BLUE);
+            bp = pic.getBitPlane(i, 3, Picture.COLOR_BLUE);
             System.out.print("REGION " + i + " B: ");
             for (int j = 0 ; j < 64; j++)
                 System.out.print(bp[j] ? "1 " : "0 ");
