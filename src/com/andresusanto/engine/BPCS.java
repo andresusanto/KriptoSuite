@@ -69,8 +69,11 @@ public class BPCS {
                             break;
                     }
                     //Convert to CGC while counting insertable bitplane, then add to insertableBitplaneLoc
-                    convertToCGC(i, j, colorCode);
+                    //convertToCGC(i, j, colorCode);
+                    //convertToPBC(i, j, colorCode);
+                    
                     boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
+                    picture.setBitPlane(i, j, colorCode, currentBitplane);
                     float complexity = calculateComplexity(currentBitplane, j, colorCode);
                     if (complexity > threshold) {
                         //Insertable bitplane found
@@ -125,7 +128,7 @@ public class BPCS {
                         default: colorCode = 'E'; //actually just to silence the compiler
                             break;
                     }
-                    convertToPBC(i, j, colorCode);
+                    //convertToPBC(i, j, colorCode);
                 }
             }
         }
@@ -284,6 +287,17 @@ public class BPCS {
                 }
             }
         }
+        
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+        System.out.println("After CGC Conversion Matrix (output): ");
+        for (y=0; y < convertedBitplane.length; y++) {
+            for (x=0; x < convertedBitplane.length; x++) {
+                System.out.print(convertedBitplane[x][y] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
+        }
         /**
          * Retransform back to 1D array
          */
@@ -298,11 +312,36 @@ public class BPCS {
         /**
          * Set bitplane
          */
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+            System.out.println("After CGC Conversion Bitplane (output): ");
+            for (int a=0; a < currentConvertedBitplane.length; a++) {
+                System.out.print(currentConvertedBitplane[a] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
         picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+            boolean[] afterSet = picture.getBitPlane(region, layer, colorCode);
+            System.out.println("After SetBitplane CGC Conversion Bitplane (output): ");
+            for (int a=0; a < afterSet.length; a++) {
+                System.out.print(afterSet[a] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
     }
     
     private void convertToPBC(int region, int layer, char colorCode){
         boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+        //DEBUG
+        if (region == 5 && layer == 0 && colorCode == 'R') {
+            System.out.println("Input CGC Bitplane: ");
+            for (int a=0; a < currentBitplane.length; a++) {
+                System.out.print(currentBitplane[a] ? "1 " : "0 ");
+            }
+            System.out.println();
+        }
         /**
          * Transform to 2D array
          */
@@ -317,7 +356,7 @@ public class BPCS {
         }
         //DEBUG
         if (region == 5 && layer == 0 && colorCode == 'R') {
-        System.out.println("After CGC Conversion Matrix: ");
+        System.out.println("After CGC Conversion Matrix (input of PBC): ");
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
                 System.out.print(transformedBitplane[x][y] ? "1 " : "0 ");
