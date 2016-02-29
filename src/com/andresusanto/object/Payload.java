@@ -196,7 +196,7 @@ public class Payload{
 //            System.err.println("63 bit dataSegmen ke " + i);
 //            Tools.printArray(dataSegmen);
             Segmen segment = new Segmen(false, dataSegmen, this.threshold);
-//            System.err.println("64 bit segmen ke " + i);Tools.printArray(segment.getData());
+//            System.err.println("64 bit segmen ke " + i);Tools.printArray(segment.getDataForExtract());
             this.Segments.add(segment);
         }
     }
@@ -207,7 +207,7 @@ public class Payload{
         for(int i = 0; i < Segments.size(); i++)
         {
             Segmen segmen = Segments.get(i);
-            System.arraycopy(segmen.getData(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
+            System.arraycopy(segmen.getDataForExtract(), 1, headerAndData, i * (Segmen.SEGMEN_SIZE - 1), Segmen.SEGMEN_SIZE - 1);
         }
         this.encrypt = headerAndData[0];
         
@@ -224,7 +224,7 @@ public class Payload{
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH, 
                         fileSize, 0, FILESIZE_LENGTH);
         this.size = Tools.bytesToInt(Tools.convertToByte(fileSize));
-        
+                
         boolean [] nFileName = new boolean[FILENAME_LENGTH];
         System.arraycopy(headerAndData, 
                         BOOL_ENCRYPT_LENGTH + THRESHOLD_LENGTH + FILESIZE_LENGTH, 
@@ -324,7 +324,7 @@ public class Payload{
     }
     public boolean [] getSegmenData(int index)
     {
-        return Segments.get(index).getData();
+        return Segments.get(index).getDataForExtract();
     }
     public String getFileName()
     {
