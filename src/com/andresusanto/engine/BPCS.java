@@ -93,6 +93,7 @@ public class BPCS {
         /**
          * Proceeding to insert the data
          */
+        /*
         int[] randomizedIndex = Tools.getShuffledInts(key, 0, dataSegmen.size()-1);
         ArrayList<Segmen> scrambledDataSegmen = new ArrayList<>();
         for (i=0; i < dataSegmen.size(); i++) {
@@ -105,6 +106,36 @@ public class BPCS {
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
             boolean[] currentData = currentSegmen.getData();
+            picture.setBitPlane(region, layer, colorCode, currentData);
+        }
+        */
+        //Set array data
+        ArrayList<boolean[]> dataToInsert = new ArrayList<>();
+        for (i=0; i < dataSegmen.size(); i++) {
+            Segmen currentSegmen = dataSegmen.get(i);
+            dataToInsert.add(currentSegmen.getData());
+        }
+        for (i=dataSegmen.size(); i < insertableBitplaneLoc.size(); i++) {
+            BitCoordinate currentCoordinate = insertableBitplaneLoc.get(i);
+            int region = currentCoordinate.getRegion();
+            int layer = currentCoordinate.getBitplane();
+            char colorCode = currentCoordinate.getColor();
+            dataToInsert.add(picture.getBitPlane(region, layer, colorCode));
+        }
+        //init randomizer
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, dataToInsert.size()-1);
+        //scramble all dataToInsert
+        ArrayList<boolean[]> scrambledDataInsert = new ArrayList<>();
+        for (i=0; i < dataSegmen.size(); i++) {
+            scrambledDataInsert.add(dataToInsert.get(randomizedIndex[i]));
+        }
+        //put data
+        for (i=0; i < scrambledDataInsert.size(); i++) {
+            BitCoordinate currentCoordinate = insertableBitplaneLoc.get(i);
+            int region = currentCoordinate.getRegion();
+            int layer = currentCoordinate.getBitplane();
+            char colorCode = currentCoordinate.getColor();
+            boolean[] currentData = scrambledDataInsert.get(i);
             picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
