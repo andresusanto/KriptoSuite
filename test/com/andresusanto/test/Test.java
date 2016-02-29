@@ -312,7 +312,7 @@ public class Test {
     
     private static void resetBitplane() throws IOException
     {
-        Picture pic = new Picture("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample.bmp");
+        Picture pic = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sampel1.bmp");
         int i,j,k;
         int bitplaneCount = pic.getTotalRegions();
         for (i=0; i < bitplaneCount; i++) {
@@ -329,11 +329,42 @@ public class Test {
                         default: colorCode = 'E'; //actually just to silence the compiler
                             break;
                     }
-                    boolean[] currentBitplane = pic.getBitPlane(i, j, colorCode);
-                    pic.setBitPlane(i, j, colorCode, currentBitplane);
+                    //j = 3;
+                    
+                    boolean bitplanes[][] = new boolean[8][];
+                    boolean mbitplanes[][] = new boolean[8][];
+                    
+                    
+                    for (int x = 0; x < 8; x++)
+                        bitplanes[x] = pic.getBitPlane(i, x, colorCode);
+                    //if (i == 1)
+                    pic.setBitPlane(i, j, colorCode, bitplanes[j]);
+                    
+                    for (int x = 0; x < 8; x++)
+                        mbitplanes[x] = pic.getBitPlane(i, x, colorCode);
+                    
+                    
+                    boolean equals = true;
+                    for (int z = 0; z < 64 && equals; z++){
+                        for (int x = 0; x < 8 && equals; x++){
+                            if (bitplanes[x][z] != mbitplanes[x][z]) equals = false;
+                        }
+                        
+                    }
+                    equals = true;
+                    if (!equals){
+                        System.out.println("ERR " + i + " " + j + " " + k + " ");
+                        for (int z = 0; z < 64; z++)
+                            System.out.print(bitplanes[j][z] ? "1 " : "0 ");
+                        System.out.println();
+                        for (int z = 0; z < 64; z++)
+                            System.out.print(mbitplanes[j][z] ? "1 " : "0 ");
+                        System.out.println();
+                        
+                    }
                 }
             }
         }
-        pic.save("C:\\Users\\Michael\\Documents\\GitHub\\KriptoSuite\\sample_result.bmp");
+        pic.save("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sampel1_result.bmp");
     }
 }

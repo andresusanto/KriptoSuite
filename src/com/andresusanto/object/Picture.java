@@ -105,7 +105,6 @@ public class Picture {
         int regionX = region % regionsPerLine;
         int regionY = region / regionsPerLine;
         
-        
         int Xconstant = regionX * 8;
         int Yconstant = regionY * 8 * this.width;
         
@@ -116,6 +115,7 @@ public class Picture {
                 int pixel = this.pixels[Xconstant + x + Ypos];
                 byte colorByte = 0;
                 byte colorPlane = (byte) ((bitPlane[y * 8 + x] ? 1 : 0) << layer); // memposisikan bit sesuai layer
+                
                 
                 // ambil warna dari pixel
                 switch (colorCode){
@@ -132,22 +132,26 @@ public class Picture {
                 
                 // buat bit pada layer menjadi 0
                 //colorByte = (byte) (colorByte & (0xFF & (0 << layer)));
-                colorByte = (byte) (colorByte & (~(1<<layer)));
+                colorByte = (byte) (colorByte & (~( 1 << layer)));
                 colorByte = (byte) (colorByte | colorPlane);
                 
+                int tmpColor = 0;
                 // kembalikan lagi warna
                 switch (colorCode){
                     case COLOR_RED:
                         pixel = pixel & 0xFF00FFFF;
-                        pixel = pixel | (colorByte << 16);
+                        tmpColor = (colorByte << 16) & 0x00FF0000; // bug java, harus diginiin dulu
+                        pixel = pixel | tmpColor;
                         break;
                     case COLOR_GREEN:
                         pixel = pixel & 0xFFFF00FF;
-                        pixel = pixel | (colorByte << 8);
+                        tmpColor = (colorByte << 8) & 0x0000FF00; // bug java, harus diginiin dulu
+                        pixel = pixel | tmpColor;
                         break;
                     case COLOR_BLUE:
                         pixel = pixel & 0xFFFFFF00;
-                        pixel = pixel | (colorByte);
+                        tmpColor = (colorByte) & 0x000000FF; // bug java, harus diginiin dulu
+                        pixel = pixel | tmpColor;
                         break;
                 }
                 
