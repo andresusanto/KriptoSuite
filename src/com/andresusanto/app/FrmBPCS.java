@@ -582,12 +582,10 @@ public class FrmBPCS extends javax.swing.JFrame {
                 return;
             }
             
-            //bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
+            bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
+            Payload payload = bpcs.extract();
             
-            //Payload payload = bpcs.extract();
-            
-            File file = new File("C:/tes.txt");// + payload.getFileName()); // default file name di java
-            fc.setCurrentDirectory(file);
+            fc.setSelectedFile(new File(payload.getFileName()));
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                 //payload.save(fc.getSelectedFile().getPath());
