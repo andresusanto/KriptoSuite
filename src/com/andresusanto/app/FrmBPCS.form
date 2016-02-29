@@ -547,6 +547,9 @@
               </Properties>
             </Component>
             <Component class="java.awt.TextField" name="txtThresholdExtract">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="0.3"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

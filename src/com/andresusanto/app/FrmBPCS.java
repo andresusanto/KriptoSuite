@@ -362,6 +362,8 @@ public class FrmBPCS extends javax.swing.JFrame {
 
         label13.setText("Threshold");
 
+        txtThresholdExtract.setText("0.3");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -574,7 +576,7 @@ public class FrmBPCS extends javax.swing.JFrame {
                 return;
             }
             
-            bpcs = new BPCS(txtKeyExtract.getText(), this.picture, Float.parseFloat(txtThresholdExtract.getText()));
+            bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
             
             Payload payload = bpcs.extract();
             
@@ -585,9 +587,10 @@ public class FrmBPCS extends javax.swing.JFrame {
                 payload.save(fc.getSelectedFile().getPath());
             }
             
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        //} catch (IOException ex) {
+        //    JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdExtractActionPerformed
