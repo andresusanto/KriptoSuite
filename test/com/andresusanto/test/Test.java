@@ -36,8 +36,9 @@ public class Test {
 //        Test.testScramblerDescrambler();
 //        Test.testFloatByte();
 
-        Test.bitPlane();
+//        Test.bitPlane();
 //        Test.psnr();
+          Test.resetBitplane();
     }
     
     public static void psnr() throws IOException{
@@ -307,5 +308,63 @@ public class Test {
         float a = 0.3f;
         Tools.printArray(Tools.convertToBoolArray(Tools.floatToByte(a)));
         System.err.println(Tools.bytesToFloat(Tools.convertToByte(Tools.convertToBoolArray(Tools.floatToByte(a)))));
+    }
+    
+    private static void resetBitplane() throws IOException
+    {
+        Picture pic = new Picture("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sampel1.bmp");
+        int i,j,k;
+        int bitplaneCount = pic.getTotalRegions();
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    //j = 3;
+                    
+                    boolean bitplanes[][] = new boolean[8][];
+                    boolean mbitplanes[][] = new boolean[8][];
+                    
+                    
+                    for (int x = 0; x < 8; x++)
+                        bitplanes[x] = pic.getBitPlane(i, x, colorCode);
+                    //if (i == 1)
+                    pic.setBitPlane(i, j, colorCode, bitplanes[j]);
+                    
+                    for (int x = 0; x < 8; x++)
+                        mbitplanes[x] = pic.getBitPlane(i, x, colorCode);
+                    
+                    
+                    boolean equals = true;
+                    for (int z = 0; z < 64 && equals; z++){
+                        for (int x = 0; x < 8 && equals; x++){
+                            if (bitplanes[x][z] != mbitplanes[x][z]) equals = false;
+                        }
+                        
+                    }
+                    equals = true;
+                    if (!equals){
+                        System.out.println("ERR " + i + " " + j + " " + k + " ");
+                        for (int z = 0; z < 64; z++)
+                            System.out.print(bitplanes[j][z] ? "1 " : "0 ");
+                        System.out.println();
+                        for (int z = 0; z < 64; z++)
+                            System.out.print(mbitplanes[j][z] ? "1 " : "0 ");
+                        System.out.println();
+                        
+                    }
+                }
+            }
+        }
+        pic.save("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sampel1_result.bmp");
     }
 }

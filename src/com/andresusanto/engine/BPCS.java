@@ -26,6 +26,7 @@ public class BPCS {
     private Picture picture;
     private float threshold;
     private String key;
+    private int capacity; //capacity in bit, intialized after embed process
     
     public BPCS(String key, Picture picture, float threshold){ // key menjadi seed dari random number generator tempat menyimpan data
         this.key = key;
@@ -83,6 +84,7 @@ public class BPCS {
          * and counting the insertable size vs payload size
          */
         ArrayList<Segmen> dataSegmen = data.getAllSegments();
+        this.capacity = insertableBitplaneLoc.size() * 64;
         if(insertableBitplaneLoc.size() < dataSegmen.size()) {
             //Inserted data too big, refusing
             throw new IOException("Data yang akan dimasukkan terlalu besar!");
@@ -218,6 +220,46 @@ public class BPCS {
         return ret;
     }
     
+    public int calculateSpace(){
+        int bitplaneCount = picture.getTotalRegions();
+        ArrayList<BitCoordinate> insertableBitplaneLoc = new ArrayList<>();
+        int i,j,k;
+        /**
+         * Following parts will only convert (and convert back) and count insertable bitplane location
+         * i = region
+         * j = layer
+         * k = color code
+         */
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    //Convert to CGC while counting insertable bitplane, then add to insertableBitplaneLoc
+                    convertToCGC(i, j, colorCode);
+                    boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
+                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
+                    if (complexity > threshold) {
+                        //Insertable bitplane found
+                        insertableBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
+                    }
+                    convertToPBC(i,j,colorCode);
+                }
+            }
+        }
+        this.capacity = insertableBitplaneLoc.size() * 64;
+        return capacity;
+    }
+    
     // fungsi untuk menghitung komplesitas suatu bitplane
     private float calculateComplexity(boolean bitPlane[], int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
         //boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
@@ -256,6 +298,7 @@ public class BPCS {
                 i++;
             }
         }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -266,6 +309,8 @@ public class BPCS {
                 }
             }
         }
+        
+        
         /**
          * Retransform back to 1D array
          */
@@ -274,6 +319,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
@@ -296,6 +342,7 @@ public class BPCS {
                 i++;
             }
         }
+        
         boolean[][] convertedBitplane = new boolean[8][8];
         for (y=0; y < transformedBitplane.length; y++) {
             for (x=0; x < transformedBitplane.length; x++) {
@@ -306,6 +353,7 @@ public class BPCS {
                 }
             }
         }
+        
         /**
          * Retransform back to 1D array
          */
@@ -314,6 +362,7 @@ public class BPCS {
         for (y=0; y < convertedBitplane.length; y++) {
             for (x=0; x < convertedBitplane.length; x++) {
                 currentConvertedBitplane[i] = convertedBitplane[x][y];
+                i++;
             }
         }
         /**
