@@ -18,6 +18,14 @@ public class Segmen {
                             //sudah diatur di constructor jika masih kurang kompleks
     
     /**
+     * Constructor untuk create segmen tanpa melakukan pengecekan konjugasi
+     */
+    public Segmen ()
+    {
+        this.data = new boolean[64];
+    }
+    
+    /**
      * Membuat sebuah segmen of data yang sisi kiri atasnya adalah konjugasi, 
      * dan sisanya data (63 bit)
      * @param konjugasi konjugasi 
@@ -52,6 +60,11 @@ public class Segmen {
             this.conjugate();
     }
     public boolean [] getData()
+    {
+        return this.data;
+    }
+    
+    public boolean [] getDataForExtract()
     {
         if(this.data[0]) //jika data[0] = true -> konjugate
         {
