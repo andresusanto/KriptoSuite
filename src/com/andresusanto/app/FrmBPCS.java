@@ -576,7 +576,7 @@ public class FrmBPCS extends javax.swing.JFrame {
                 return;
             }
             
-            bpcs = new BPCS(txtKeyExtract.getText(), this.picture, Float.parseFloat(txtThresholdExtract.getText()));
+            bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
             
             Payload payload = bpcs.extract();
             
@@ -590,6 +590,7 @@ public class FrmBPCS extends javax.swing.JFrame {
         //} catch (IOException ex) {
         //    JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdExtractActionPerformed
