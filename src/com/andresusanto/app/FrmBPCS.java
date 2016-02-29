@@ -543,15 +543,21 @@ public class FrmBPCS extends javax.swing.JFrame {
             Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
 
             bpcs.embed(payload);
+            String fileExt = "";
             
-            if (picture.pictureType == Picture.PICTURE_PNG)
+            if (picture.pictureType == Picture.PICTURE_PNG){
                 fc.setFileFilter(new FileNameExtensionFilter("PNG File", "png"));
-            else
+                fileExt = ".png";
+            }else{
                 fc.setFileFilter(new FileNameExtensionFilter("BMP File", "bmp"));
-            
+                fileExt = ".bmp";
+            }
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                picture.save(fc.getSelectedFile().getPath());
+                String fileLocation = fc.getSelectedFile().getPath();
+                if (!fileLocation.endsWith(fileExt)) fileLocation += fileExt;
+                
+                picture.save(fileLocation);
                 
                 float psnrValue = Tools.calculatePSNR(this.original_picture, this.picture);
                 lblPSNR.setText(String.valueOf(psnrValue));
@@ -579,14 +585,12 @@ public class FrmBPCS extends javax.swing.JFrame {
             }
             
             bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
-            
             Payload payload = bpcs.extract();
             
-            File file = new File("C:/" + payload.getFileName()); // default file name di java
-            fc.setCurrentDirectory(file);
+            fc.setSelectedFile(new File(payload.getFileName()));
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                payload.save(fc.getSelectedFile().getPath());
+                //payload.save(fc.getSelectedFile().getPath());
             }
             
         //} catch (IOException ex) {
