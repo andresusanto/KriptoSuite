@@ -38,7 +38,8 @@ public class Test {
 
 //        Test.bitPlane();
 //        Test.psnr();
-          Test.resetBitplane();
+//        Test.resetBitplane();
+        Test.randomizer();
     }
     
     public static void psnr() throws IOException{
@@ -366,5 +367,22 @@ public class Test {
             }
         }
         pic.save("D:\\Tugas Sekolah\\Kriptografi\\KriptoSuite\\sampel1_result.bmp");
+    }
+    
+    private static void randomizer() {
+        String strSeed = "KUNCI";
+        int len1 = 5;
+        int len2 = 12;
+        int[] arr1 = Tools.getShuffledInts(strSeed, 0, len1-1);
+        int[] arr2 = Tools.getShuffledInts(strSeed, 0, len2-1);
+        int i;
+        System.out.print("arr1: ");
+        for (i=0;i<arr1.length;i++)
+            System.out.print(arr1[i] + " ");
+        System.out.println();
+        System.out.print("arr2: ");
+        for (i=0;i<arr2.length;i++)
+            System.out.print(arr2[i] + " ");
+        System.out.println();
     }
 }

@@ -462,6 +462,8 @@ public class FrmBPCS extends javax.swing.JFrame {
                 
                 lblCoverRes.setText(resBuffer.toString());
                 lblCoverCap.setText("<TBD>");
+                int space = BPCS.sCalculateSpace(this.picture, Float.parseFloat(txtThreshold.getText()));
+                lblCoverCap.setText(Integer.toString(space) + " bytes");
                 
                 if (this.picture.pictureType == Picture.PICTURE_BMP)
                     lblCoverType.setText("Bitmap File (BMP)");
@@ -539,8 +541,7 @@ public class FrmBPCS extends javax.swing.JFrame {
             bpcs = new BPCS(txtKeyEmbed.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
             
             Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
-            int space = bpcs.calculateSpace();
-            lblCoverCap.setText(Integer.toString(space) + " bytes");
+
             bpcs.embed(payload);
             
             if (picture.pictureType == Picture.PICTURE_PNG)
