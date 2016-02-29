@@ -26,7 +26,7 @@ public class BPCS {
     private Picture picture;
     private float threshold;
     private String key;
-    private int capacity; //capacity in bit, intialized after embed process
+    private int capacity; //capacity in byte
     
     public BPCS(String key, Picture picture, float threshold){ // key menjadi seed dari random number generator tempat menyimpan data
         this.key = key;
@@ -84,7 +84,7 @@ public class BPCS {
          * and counting the insertable size vs payload size
          */
         ArrayList<Segmen> dataSegmen = data.getAllSegments();
-        this.capacity = insertableBitplaneLoc.size() * 64;
+        //this.capacity = insertableBitplaneLoc.size() * 64/8;
         if(insertableBitplaneLoc.size() < dataSegmen.size()) {
             //Inserted data too big, refusing
             throw new IOException("Data yang akan dimasukkan terlalu besar!");
@@ -256,7 +256,7 @@ public class BPCS {
                 }
             }
         }
-        this.capacity = insertableBitplaneLoc.size() * 64;
+        this.capacity = insertableBitplaneLoc.size() * 64/8;
         return capacity;
     }
     
