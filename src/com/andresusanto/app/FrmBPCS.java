@@ -590,7 +590,7 @@ public class FrmBPCS extends javax.swing.JFrame {
             fc.setSelectedFile(new File(payload.getFileName()));
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                //payload.save(fc.getSelectedFile().getPath());
+                payload.save(fc.getSelectedFile().getPath());
             }
             
         //} catch (IOException ex) {
