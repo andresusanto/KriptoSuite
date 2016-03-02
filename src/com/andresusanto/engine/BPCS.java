@@ -188,22 +188,33 @@ public class BPCS {
         System.out.println("Len: "+messageBitplaneLoc.size());
         System.out.print("Randomized array: ");
         for(i = 0; i < randomizedIndex.length; i++) {
-            System.out.print(randomizedIndex[i] + " ");
+//            System.out.print(randomizedIndex[i] + " ");
         }
         System.out.println();
-        System.exit(1);
+        //Get 1st block
         BitCoordinate ptrToFirstBlock = messageBitplaneLoc.get(randomizedIndex[0]);
         int firstBlockRegion = ptrToFirstBlock.getRegion();
         int firstBlockLayer = ptrToFirstBlock.getBitplane();
         char firstBlockColor = ptrToFirstBlock.getColor();
         boolean[] firstBlockData = picture.getBitPlane(firstBlockRegion, firstBlockLayer, firstBlockColor);
-        int payloadNumOfBlocks = 0; // should be number of blocks
+        Segmen firstSegmen = new Segmen(firstBlockData, threshold);
+        //Get 2nd block
+        BitCoordinate ptrToSecondBlock = messageBitplaneLoc.get(randomizedIndex[1]);
+        int secondBlockRegion = ptrToSecondBlock.getRegion();
+        int secondBlockLayer = ptrToSecondBlock.getBitplane();
+        char secondBlockColor = ptrToSecondBlock.getColor();
+        boolean[] secondBlockData = picture.getBitPlane(secondBlockRegion, secondBlockLayer, secondBlockColor);
+        Segmen secondSegmen = new Segmen(secondBlockData, threshold);
+        
+        int payloadNumOfBlocks = Payload.getNumOfSegmensFromHeader(firstSegmen, secondSegmen);
+        System.out.println("Jumlah Segmen: " + payloadNumOfBlocks);
         //Tools or anything get payload length 
         ArrayList<boolean[]> payloadData = new ArrayList<>();
         
-        //Add first block and fetch the rest of payload block
+        //Add first block, second block and fetch the rest of payload block
         payloadData.add(firstBlockData);
-        for (i=1; i < payloadNumOfBlocks; i++) {
+        payloadData.add(secondBlockData);
+        for (i=2; i < payloadNumOfBlocks; i++) {
             BitCoordinate currentCoordinate = messageBitplaneLoc.get(randomizedIndex[i]);
             int region = currentCoordinate.getRegion();
             int layer = currentCoordinate.getBitplane();

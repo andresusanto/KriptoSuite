@@ -171,6 +171,8 @@ public class Payload{
         else
             jumlahSegmen = (headerAndData.length / 63) + 1;
         
+        System.out.println("Jumlah segmen: " + jumlahSegmen);
+        
         boolean [] dataGenap63 = new boolean[jumlahSegmen * 63]; 
         //data63 adalah data yang akan disisipkan ke pic 
         //data ini sudah dalam boolean array dengan panjang % 63 == 0
@@ -329,5 +331,41 @@ public class Payload{
     public String getFileName()
     {
         return this.filename;
+    }
+    
+    public static int getNumOfSegmensFromHeader(Segmen firstSegmen, Segmen secondSegmen) {
+        int ret = 0;
+        boolean[] data = firstSegmen.getDataForExtract();
+        boolean[] data2 = secondSegmen.getDataForExtract();
+        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
+        System.out.print ("Data 1: "); Tools.printArray(data);
+        System.out.println(); System.out.print("Data 2: "); Tools.printArray(data2);
+        System.arraycopy(data, 33, 
+                        fileSize, 0,
+                        30);
+        Tools.printArray(fileSize);
+        System.arraycopy(data2, 1,
+                        fileSize, 30,
+                        2);
+        Tools.printArray(fileSize);
+        int size = Tools.bytesToInt(Tools.convertToByte(fileSize));
+        System.out.println("size in byte: " + size/8);
+        boolean [] nFileName = new boolean[FILENAME_LENGTH];
+        System.arraycopy(data2, 3, 
+                        nFileName, 0, FILENAME_LENGTH);
+        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
+        
+        int totalLen = BOOL_ENCRYPT_LENGTH + 
+                        THRESHOLD_LENGTH + 
+                        FILENAME_LENGTH +
+                        FILESIZE_LENGTH + 
+                        filenamelength +
+                        size;
+        if (totalLen % 63 == 0) {
+            ret = totalLen / 63;
+        } else {
+            ret = (totalLen / 63) + 1;
+        }
+        return ret;
     }
 }
