@@ -330,4 +330,38 @@ public class Payload{
     {
         return this.filename;
     }
+    
+    public static int getNumOfSegmensFromHeader(Segmen firstSegmen, Segmen secondSegmen) {
+        int ret = 0;
+        boolean[] data = firstSegmen.getDataForExtract();
+        boolean[] data2 = secondSegmen.getDataForExtract();
+        boolean [] fileSize = new boolean[FILESIZE_LENGTH];
+        System.arraycopy(data, 34, 
+                        fileSize, 0,
+                        30);
+        Tools.printArray(fileSize);
+        System.arraycopy(data2, 1,
+                        fileSize, 30,
+                        2);
+        Tools.printArray(fileSize);
+        int size = Tools.bytesToInt(Tools.convertToByte(fileSize));
+
+        boolean [] nFileName = new boolean[FILENAME_LENGTH];
+        System.arraycopy(data2, 3, 
+                        nFileName, 0, FILENAME_LENGTH);
+        int filenamelength = Tools.oneByteToInt(nFileName); //filename length dalam bit
+        
+        int totalLen = BOOL_ENCRYPT_LENGTH + 
+                        THRESHOLD_LENGTH + 
+                        FILENAME_LENGTH +
+                        FILESIZE_LENGTH + 
+                        filenamelength +
+                        size;
+        if (totalLen % 63 == 0) {
+            ret = totalLen / 63;
+        } else {
+            ret = (totalLen / 63) + 1;
+        }
+        return ret;
+    }
 }
