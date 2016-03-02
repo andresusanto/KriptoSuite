@@ -339,11 +339,9 @@ public class Payload{
         System.arraycopy(data, 34, 
                         fileSize, 0,
                         30);
-        Tools.printArray(fileSize);
         System.arraycopy(data2, 1,
                         fileSize, 30,
                         2);
-        Tools.printArray(fileSize);
         int size = Tools.bytesToInt(Tools.convertToByte(fileSize));
 
         boolean [] nFileName = new boolean[FILENAME_LENGTH];
