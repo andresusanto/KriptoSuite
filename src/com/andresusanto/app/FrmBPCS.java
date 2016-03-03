@@ -31,6 +31,7 @@ public class FrmBPCS extends javax.swing.JFrame {
     private Picture original_picture; // karena perubahan langsung pada objek picture, maka originalnya dibuat juga (untuk calc PSNR)
     private Picture embededPicture; // picture yang sudah diembed (extract)
     private BPCS bpcs;
+    private String picturePath; //path picture
     
     /**
      * Creates new form FrmBPCS
@@ -452,7 +453,8 @@ public class FrmBPCS extends javax.swing.JFrame {
         try {
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 StringBuffer resBuffer = new StringBuffer(); // string buffer resolusi
-                this.picture = new Picture(fc.getSelectedFile().getPath());
+                picturePath = fc.getSelectedFile().getPath();
+                this.picture = new Picture(picturePath);
                 this.original_picture = new Picture(fc.getSelectedFile().getPath());
                 
                 resBuffer.append(this.picture.width);
@@ -461,8 +463,9 @@ public class FrmBPCS extends javax.swing.JFrame {
                 resBuffer.append(" px");
                 
                 lblCoverRes.setText(resBuffer.toString());
-                lblCoverCap.setText("<TBD>");
-                int space = BPCS.sCalculateSpace(this.picture, Float.parseFloat(txtThreshold.getText()));
+                lblCoverCap.setText("Calculating...");
+                bpcs = new BPCS(this.picture, Float.parseFloat(txtThreshold.getText()));
+                int space = bpcs.getCapacity();
                 lblCoverCap.setText(Integer.toString(space) + " bytes");
                 
                 if (this.picture.pictureType == Picture.PICTURE_BMP)
@@ -538,7 +541,13 @@ public class FrmBPCS extends javax.swing.JFrame {
                 return;
             }
             
-            bpcs = new BPCS(txtKeyEmbed.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
+            if (bpcs.isDidOnce()) {
+                //picture was modified, making new instance
+                this.picture = new Picture(picturePath);
+                bpcs = new BPCS(txtKeyEmbed.getText(), this.picture, Float.parseFloat(txtThreshold.getText()));
+            } else {
+                bpcs.setKey(txtKeyEmbed.getText());
+            }
             
             Payload payload = new Payload(toggleEncrypt.isSelected(), txtKeyEmbed.getText(), lblObjectName.getText(), this.steganoObject , Float.parseFloat(txtThreshold.getText()));
 
@@ -585,19 +594,21 @@ public class FrmBPCS extends javax.swing.JFrame {
             }
             
             bpcs = new BPCS(txtKeyExtract.getText(), this.embededPicture, Float.parseFloat(txtThresholdExtract.getText()));
+
             Payload payload = bpcs.extract();
-            
+  
             fc.setSelectedFile(new File(payload.getFileName()));
             
             if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                 payload.save(fc.getSelectedFile().getPath());
             }
             
+            
         //} catch (IOException ex) {
         //    JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Exception:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Kunci atau Threshold salah!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdExtractActionPerformed
 
