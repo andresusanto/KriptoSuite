@@ -27,11 +27,35 @@ public class BPCS {
     private float threshold;
     private String key;
     private int capacity; //capacity in byte
+    private int capacityBlock; //capacity in blocks
+    private ArrayList<BitCoordinate> taggedBitplane;
+    private boolean didOnce; //Indicator if picture is already manipulated
+    
+    public BPCS(Picture picture, float threshold) {
+        this.picture = picture;
+        this.threshold = threshold;
+        didOnce = false;
+        prepareBPCS();
+    }
     
     public BPCS(String key, Picture picture, float threshold){ // key menjadi seed dari random number generator tempat menyimpan data
         this.key = key;
         this.picture = picture;
         this.threshold = threshold;
+        didOnce = false;
+        prepareBPCS();
+    }
+    
+    public int getCapacity() {
+        return capacity;
+    }
+    
+    public boolean isDidOnce() {
+        return didOnce;
+    }
+    
+    public void setKey(String key) {
+        this.key = key;
     }
     
     // sisipkan data ke pic
@@ -45,62 +69,30 @@ public class BPCS {
          * 5. Masukkan segmen yang telah diacak ke dalam bitplane
          * 6. Lakukan konversi balik dari CGC menjadi PBC
          */
-        int bitplaneCount = picture.getTotalRegions();
-        ArrayList<BitCoordinate> insertableBitplaneLoc = new ArrayList<>();
-        int i,j,k;
+        
+        //Converting to CGC already done on preparation step
+        
         /**
-         * Following parts will only convert and count insertable bitplane location
-         * i = region
-         * j = layer
-         * k = color code
-         */
-        for (i=0; i < bitplaneCount; i++) {
-            for (j=0; j < 8; j++) {
-                for(k=0; k < 3; k++) {
-                    char colorCode;
-                    switch(k) {
-                        case (0): colorCode = 'R';
-                            break;
-                        case (1): colorCode = 'G';
-                            break;
-                        case (2): colorCode = 'B';
-                            break;
-                        default: colorCode = 'E'; //actually just to silence the compiler
-                            break;
-                    }
-                    //Convert to CGC while counting insertable bitplane, then add to insertableBitplaneLoc
-                    convertToCGC(i, j, colorCode);
-                    boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
-                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
-                    if (complexity > threshold) {
-                        //Insertable bitplane found
-                        insertableBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
-                    }
-                }
-            }
-        }
-        /**
-         * Below would be setting up various payload to be inserted to the picture
-         * and counting the insertable size vs payload size
+         * Check if embedding is possible
          */
         ArrayList<Segmen> dataSegmen = data.getAllSegments();
 
-        if(insertableBitplaneLoc.size() < dataSegmen.size()) {
+        if(capacityBlock < dataSegmen.size()) {
             //Inserted data too big, refusing
             throw new IOException("Data yang akan dimasukkan terlalu besar!");
         } 
         
         /**
          * Proceeding to insert the data
+         * Initialize a randomizer which will act as table of placement
          */
-        //Init randomizer, randomizedIndex acts as table of random placement
-        int[] randomizedIndex = Tools.getShuffledInts(key, 0, insertableBitplaneLoc.size()-1);
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, capacityBlock - 1);
 
-        System.out.println();
+        int i;
         //Place the data according to table randomizedIndex
         for (i=0; i < dataSegmen.size(); i++) {
             Segmen currentSegmen = dataSegmen.get(i);
-            BitCoordinate currentCoordinate = insertableBitplaneLoc.get(randomizedIndex[i]);
+            BitCoordinate currentCoordinate = taggedBitplane.get(randomizedIndex[i]);
             int region = currentCoordinate.getRegion();
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
@@ -108,28 +100,8 @@ public class BPCS {
             picture.setBitPlane(region, layer, colorCode, currentData);
         }
         
-       
-        /**
-         * Turn back coding to PBC
-         */
-        for (i=0; i < bitplaneCount; i++) {
-            for (j=0; j < 8; j++) {
-                for(k=0; k < 3; k++) {
-                    char colorCode;
-                    switch(k) {
-                        case (0): colorCode = 'R';
-                            break;
-                        case (1): colorCode = 'G';
-                            break;
-                        case (2): colorCode = 'B';
-                            break;
-                        default: colorCode = 'E'; //actually just to silence the compiler
-                            break;
-                    }
-                    convertToPBC(i, j, colorCode);
-                }
-            }
-        }
+        convertAllBackToPBC();
+        didOnce = true;
     }
     
     // ekstrak data ke pic
@@ -141,56 +113,26 @@ public class BPCS {
          * 4. Bentuk payload baru
          * 5. Ubah kembali ke PBC (cleanup)
          */
-        int bitplaneCount = picture.getTotalRegions();
-        ArrayList<BitCoordinate> messageBitplaneLoc = new ArrayList<>();
-        int i,j,k;
-        /**
-         * Ubah coding jadi CGC sambil simpan letak koordinat
-         * i = region
-         * j = layer
-         * k = color code
-         */
-        for (i=0; i < bitplaneCount; i++) {
-            for (j=0; j < 8; j++) {
-                for(k=0; k < 3; k++) {
-                    char colorCode;
-                    switch(k) {
-                        case (0): colorCode = 'R';
-                            break;
-                        case (1): colorCode = 'G';
-                            break;
-                        case (2): colorCode = 'B';
-                            break;
-                        default: colorCode = 'E'; //actually just to silence the compiler
-                            break;
-                    }
-                    //Convert to CGC while counting message bitplane, then add to messageBitplaneLoc
-                    convertToCGC(i, j, colorCode);
-                    boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
-                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
-                    if (complexity > threshold) {
-                        //Pesan found
-                        messageBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
-                    }
-                }
-            }
-        }
+        
+        int i;
+        
+        // Conversion to CGC and counting already done at preparation step
         
         /**
          * Proceeding to insert the data
          */
         //Generate table of random placement (should be same result with one generated by embed)
-        int[] randomizedIndex = Tools.getShuffledInts(key, 0, messageBitplaneLoc.size()-1);
+        int[] randomizedIndex = Tools.getShuffledInts(key, 0, capacityBlock - 1);
 
         //Get 1st block
-        BitCoordinate ptrToFirstBlock = messageBitplaneLoc.get(randomizedIndex[0]);
+        BitCoordinate ptrToFirstBlock = taggedBitplane.get(randomizedIndex[0]);
         int firstBlockRegion = ptrToFirstBlock.getRegion();
         int firstBlockLayer = ptrToFirstBlock.getBitplane();
         char firstBlockColor = ptrToFirstBlock.getColor();
         boolean[] firstBlockData = picture.getBitPlane(firstBlockRegion, firstBlockLayer, firstBlockColor);
         Segmen firstSegmen = new Segmen(firstBlockData, threshold);
         //Get 2nd block
-        BitCoordinate ptrToSecondBlock = messageBitplaneLoc.get(randomizedIndex[1]);
+        BitCoordinate ptrToSecondBlock = taggedBitplane.get(randomizedIndex[1]);
         int secondBlockRegion = ptrToSecondBlock.getRegion();
         int secondBlockLayer = ptrToSecondBlock.getBitplane();
         char secondBlockColor = ptrToSecondBlock.getColor();
@@ -204,7 +146,7 @@ public class BPCS {
         payloadData.add(firstBlockData);
         payloadData.add(secondBlockData);
         for (i=2; i < payloadNumOfBlocks; i++) {
-            BitCoordinate currentCoordinate = messageBitplaneLoc.get(randomizedIndex[i]);
+            BitCoordinate currentCoordinate = taggedBitplane.get(randomizedIndex[i]);
             int region = currentCoordinate.getRegion();
             int layer = currentCoordinate.getBitplane();
             char colorCode = currentCoordinate.getColor();
@@ -217,27 +159,8 @@ public class BPCS {
          */
         Payload ret = new Payload(payloadData, key);
         
-        /**
-         * Turn back coding to PBC (cleanup)
-         */
-        for (i=0; i < bitplaneCount; i++) {
-            for (j=0; j < 8; j++) {
-                for(k=0; k < 3; k++) {
-                    char colorCode;
-                    switch(k) {
-                        case (0): colorCode = 'R';
-                            break;
-                        case (1): colorCode = 'G';
-                            break;
-                        case (2): colorCode = 'B';
-                            break;
-                        default: colorCode = 'E'; //actually just to silence the compiler
-                            break;
-                    }
-                    convertToPBC(i, j, colorCode);
-                }
-            }
-        }
+        convertAllBackToPBC();
+        
         return ret;
     }
     
@@ -353,10 +276,9 @@ public class BPCS {
         
     }
     
-    //Static methods for size calculation GUI
-        public static int sCalculateSpace(Picture picture, float threshold){
+    public void prepareBPCS(){
         int bitplaneCount = picture.getTotalRegions();
-        ArrayList<BitCoordinate> insertableBitplaneLoc = new ArrayList<>();
+        this.taggedBitplane = new ArrayList<>();
         int i,j,k;
         /**
          * Following parts will only convert (and convert back) and count insertable bitplane location
@@ -378,124 +300,44 @@ public class BPCS {
                         default: colorCode = 'E'; //actually just to silence the compiler
                             break;
                     }
-                    //Convert to CGC while counting insertable bitplane, then add to insertableBitplaneLoc
-                    sConvertToCGC(i, j, colorCode, picture);
+                    //Convert to CGC while counting insertable bitplane, then add to taggedBitplane
+                    convertToCGC(i, j, colorCode);
                     boolean[] currentBitplane = picture.getBitPlane(i, j, colorCode);
-                    float complexity = sCalculateComplexity(currentBitplane, j, colorCode);
+                    float complexity = calculateComplexity(currentBitplane, j, colorCode);
                     if (complexity > threshold) {
                         //Insertable bitplane found
-                        insertableBitplaneLoc.add(new BitCoordinate(i,j,colorCode));
+                        taggedBitplane.add(new BitCoordinate(i,j,colorCode));
                     }
-                    sConvertToPBC(i,j,colorCode, picture);
                 }
             }
         }
-        return insertableBitplaneLoc.size() * 64/8;
+        this.capacityBlock = taggedBitplane.size();
+        this.capacity = (taggedBitplane.size() * 63/8 ) - 16; // total capacity in byte, for display purpose
     }
     
-     private static void sConvertToCGC(int region, int layer, char colorCode, Picture picture){
-        boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
+    private void convertAllBackToPBC() {
         /**
-         * Transform to 2D array
+         * Turn back coding to PBC
          */
-        int x,y,i;
-        i = 0;
-        boolean[][] transformedBitplane = new boolean[8][8];
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                transformedBitplane[x][y] = currentBitplane[i];
-                i++;
-            }
-        }
-        
-        boolean[][] convertedBitplane = new boolean[8][8];
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                if (x==0) {
-                    convertedBitplane[x][y] = transformedBitplane[x][y];
-                } else {
-                    convertedBitplane[x][y] = transformedBitplane[x-1][y] ^ transformedBitplane[x][y];
+        int i,j,k;
+        int bitplaneCount = picture.getTotalRegions();
+        for (i=0; i < bitplaneCount; i++) {
+            for (j=0; j < 8; j++) {
+                for(k=0; k < 3; k++) {
+                    char colorCode;
+                    switch(k) {
+                        case (0): colorCode = 'R';
+                            break;
+                        case (1): colorCode = 'G';
+                            break;
+                        case (2): colorCode = 'B';
+                            break;
+                        default: colorCode = 'E'; //actually just to silence the compiler
+                            break;
+                    }
+                    convertToPBC(i, j, colorCode);
                 }
             }
         }
-        
-        
-        /**
-         * Retransform back to 1D array
-         */
-        boolean[] currentConvertedBitplane = new boolean[currentBitplane.length];
-        i = 0;
-        for (y=0; y < convertedBitplane.length; y++) {
-            for (x=0; x < convertedBitplane.length; x++) {
-                currentConvertedBitplane[i] = convertedBitplane[x][y];
-                i++;
-            }
-        }
-        /**
-         * Set bitplane
-         */
-        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
     }
-    
-    private static void sConvertToPBC(int region, int layer, char colorCode, Picture picture){
-        boolean[] currentBitplane = picture.getBitPlane(region, layer, colorCode);
-        /**
-         * Transform to 2D array
-         */
-        int x,y,i;
-        i = 0;
-        boolean[][] transformedBitplane = new boolean[8][8];
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                transformedBitplane[x][y] = currentBitplane[i];
-                i++;
-            }
-        }
-        
-        boolean[][] convertedBitplane = new boolean[8][8];
-        for (y=0; y < transformedBitplane.length; y++) {
-            for (x=0; x < transformedBitplane.length; x++) {
-                if (x==0) {
-                    convertedBitplane[x][y] = transformedBitplane[x][y];
-                } else {
-                    convertedBitplane[x][y] = convertedBitplane[x-1][y] ^ transformedBitplane[x][y];
-                }
-            }
-        }
-        
-        /**
-         * Retransform back to 1D array
-         */
-        boolean[] currentConvertedBitplane = new boolean[currentBitplane.length];
-        i = 0;
-        for (y=0; y < convertedBitplane.length; y++) {
-            for (x=0; x < convertedBitplane.length; x++) {
-                currentConvertedBitplane[i] = convertedBitplane[x][y];
-                i++;
-            }
-        }
-        /**
-         * Set bitplane
-         */
-        picture.setBitPlane(region, layer, colorCode, currentConvertedBitplane);
-        
-    }
-    // fungsi untuk menghitung komplesitas suatu bitplane
-    private static float sCalculateComplexity(boolean bitPlane[], int layer, char colorCode){ // karena gambar dibagi menjadi 8 x 8 pixel, maka setiap bagian dinyatakan sbg region
-        //boolean[] bitPlane = picture.getBitPlane(region, layer, colorCode);
-        float complexity = 0;
-        
-        for (int y = 0; y < 8; y++){
-            for (int x = 0; x < 8; x++){
-                if (!bitPlane[y * 8 + x]) continue;
-                
-                if (y > 0 && !bitPlane[(y - 1) * 8 + x]) complexity++;
-                if (x > 0 && !bitPlane[y * 8 + (x - 1)]) complexity++;
-                if (y + 1 < 8 && !bitPlane[(y + 1) * 8 + x]) complexity++;
-                if (x + 1 < 8 && !bitPlane[y * 8 + (x + 1)]) complexity++;
-            }
-        }
-        return complexity / 112.0f; // maks kompleksitas adl:  ((nrows-1)*ncols) + ((ncols-1)*nrows)
-    }
-    
 }
