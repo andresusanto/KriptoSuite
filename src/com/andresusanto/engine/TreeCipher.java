@@ -20,14 +20,15 @@ public class TreeCipher {
         for (int j = 0; j < 7; j++){
             Random random = new Random(internalKey[j].sumBits());
             for (int i = 0; i < 15 + random.nextInt(TreeCipherBlock.BLOCK_SIZE); i++){
-                key.cutShuffle(random.nextInt(TreeCipherBlock.BLOCK_SIZE));
+                internalKey[j].cutShuffle(random.nextInt(TreeCipherBlock.BLOCK_SIZE));
             }
             
             if (j < 6) internalKey[j + 1] = new TreeCipherBlock(internalKey[j]);
         }
     }
     
-    public void TreeCipher(TreeCipherBlock key){
+    public TreeCipher(TreeCipherBlock key){
+        internalKey = new TreeCipherBlock[8];
         this.generateInternalKey(key);
     }
     
@@ -35,5 +36,10 @@ public class TreeCipher {
         for (int j = 0; j < 7; j++){
             internalKey[j].printData();
         }
+    }
+    
+    public void doFistel(TreeCipherBlock data, TreeCipherBlock key){
+        data.cutShuffle(TreeCipherBlock.BLOCK_SIZE/2);
+        
     }
 }

@@ -62,8 +62,8 @@ public class Test {
         a.printData();
             
         System.out.println("Internal Key");
-        TreeCipher cip = new TreeCipher();
-        
+        TreeCipher cip = new TreeCipher(a);
+        cip.printInternal();
     }
     
     public static void psnr() throws IOException{
