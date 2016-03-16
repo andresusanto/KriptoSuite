@@ -10,8 +10,9 @@ package com.andresusanto.object;
  * @author power
  */
 public class TreeCipherBlock {
-    public static final int HALF_LEFT = 0;
-    public static final int HALF_RIGHT = 1;
+    public static final int HALF_LEFT = 1;
+    public static final int HALF_RIGHT = 0;
+    
     public static final int BLOCK_SIZE = 128; // dalam satuan bit
     private boolean content[];
     
@@ -37,7 +38,13 @@ public class TreeCipherBlock {
     }
     
     public void halfXor(TreeCipherBlock other, int originalHalf, int otherHalf){
+        int padOriginal = 0; int padOther = 0;
+        if (originalHalf == HALF_LEFT) padOriginal = BLOCK_SIZE/2;
+        if (otherHalf == HALF_LEFT) padOther = BLOCK_SIZE/2;
         
+        for (int i = 0; i < BLOCK_SIZE/2; i++){
+            this.content[i + padOriginal] = other.content[i + padOther] ^ this.content[i + padOriginal];
+        }
     }
     
     public void cutShuffle(int k){

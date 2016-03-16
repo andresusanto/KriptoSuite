@@ -39,7 +39,7 @@ public class TreeCipher {
     }
     
     public void doFistel(TreeCipherBlock data, TreeCipherBlock key){
-        data.cutShuffle(TreeCipherBlock.BLOCK_SIZE/2);
+        data.cutShuffle(TreeCipherBlock.BLOCK_SIZE/2); // tukar kiri menjadi kanan
         
     }
 }

@@ -56,8 +56,12 @@ public class Test {
         TreeCipherBlock b = new TreeCipherBlock(datas);
         b.rotaryShiftLeft(5);
         a.xor(b);
-        a.cutShuffle(3);
+        a.cutShuffle(21);
+        b.xor(a);
+        b.rotaryShiftLeft(12);
         
+        a.halfXor(b, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_RIGHT);
+        a.halfXor(a, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
         System.out.println("Original key");
         a.printData();
             
