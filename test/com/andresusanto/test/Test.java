@@ -6,9 +6,11 @@
 package com.andresusanto.test;
 
 import com.andresusanto.engine.Tools;
+import com.andresusanto.engine.TreeCipher;
 import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
+import com.andresusanto.object.TreeCipherBlock;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,7 +41,29 @@ public class Test {
 //        Test.bitPlane();
 //        Test.psnr();
 //        Test.resetBitplane();
-        Test.randomizer();
+//        Test.randomizer();
+        Test.treeTest();
+    }
+    
+    public static void treeTest(){
+        byte data = 1;
+        byte datas[] = new byte[16];
+        
+        for (int i = 0 ; i < 16; i++)
+            datas[i] = data;
+        
+        TreeCipherBlock a = new TreeCipherBlock(datas);
+        TreeCipherBlock b = new TreeCipherBlock(datas);
+        b.rotaryShiftLeft(5);
+        a.xor(b);
+        a.cutShuffle(3);
+        
+        System.out.println("Original key");
+        a.printData();
+            
+        System.out.println("Internal Key");
+        TreeCipher cip = new TreeCipher(a);
+        cip.printInternal();
     }
     
     public static void psnr() throws IOException{
