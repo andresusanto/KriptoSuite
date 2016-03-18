@@ -20,23 +20,23 @@ public class TreeCipher {
     
     private void generateInternalKey(TreeCipherBlock key){
         internalKey[0] = new TreeCipherBlock(key);
-        for (int j = 0; j < 7; j++){
+        for (int j = 0; j < 15; j++){
             Random random = new Random(internalKey[j].sumBits());
             for (int i = 0; i < 15 + random.nextInt(TreeCipherBlock.BLOCK_SIZE); i++){
                 internalKey[j].cutShuffle(random.nextInt(TreeCipherBlock.BLOCK_SIZE));
             }
             
-            if (j < 6) internalKey[j + 1] = new TreeCipherBlock(internalKey[j]);
+            if (j < 14) internalKey[j + 1] = new TreeCipherBlock(internalKey[j]);
         }
     }
     
     public TreeCipher(TreeCipherBlock key){
-        internalKey = new TreeCipherBlock[8];
+        internalKey = new TreeCipherBlock[15];
         this.generateInternalKey(key);
     }
     
     public void printInternal(){
-        for (int j = 0; j < 7; j++){
+        for (int j = 0; j < 15; j++){
             internalKey[j].printData();
         }
     }

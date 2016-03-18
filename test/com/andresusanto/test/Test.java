@@ -42,11 +42,75 @@ public class Test {
 //        Test.psnr();
 //        Test.resetBitplane();
 //        Test.randomizer();
-        Test.treeTest();
+//        Test.treeTest();
+        Test.treeStructureTest();
+    }
+    
+    public static void treeStructureTest(){
+        byte data = 26;
+        byte datas[] = new byte[16];
+        
+        for (int i = 0 ; i < 16; i++)
+            datas[i] = data;
+        
+        TreeCipherBlock a = new TreeCipherBlock(datas);
+        TreeCipherBlock b = new TreeCipherBlock(datas);
+        TreeCipherBlock c = new TreeCipherBlock(datas);
+        TreeCipherBlock d = new TreeCipherBlock(datas);
+        TreeCipherBlock e = new TreeCipherBlock(datas);
+        TreeCipherBlock f = new TreeCipherBlock(datas);
+        TreeCipherBlock g = new TreeCipherBlock(datas);
+        
+        b.setParent(a);
+        c.setParent(a);
+        d.setParent(b);
+        e.setParent(b);
+        f.setParent(c);
+        g.setParent(c);
+        
+        a.rotaryShiftLeft(2);
+        b.rotaryShiftLeft(5);
+        c.rotaryShiftLeft(6);
+        d.rotaryShiftLeft(9);
+        e.rotaryShiftLeft(10);
+        f.rotaryShiftLeft(15);
+        g.rotaryShiftLeft(1);
+        
+        System.out.print("A : ");
+        a.printData();
+        System.out.print("B : ");
+        b.printData();
+        System.out.print("C : ");
+        c.printData();
+        System.out.print("D : ");
+        d.printData();
+        System.out.print("E : ");
+        e.printData();
+        System.out.print("F : ");
+        f.printData();
+        System.out.print("G : ");
+        g.printData();
+        
+        g.push(new TreeCipherBlock(a));
+        
+        System.out.print("A : ");
+        a.printData();
+        System.out.print("B : ");
+        b.printData();
+        System.out.print("C : ");
+        c.printData();
+        System.out.print("D : ");
+        d.printData();
+        System.out.print("E : ");
+        e.printData();
+        System.out.print("F : ");
+        f.printData();
+        System.out.print("G : ");
+        g.printData();
     }
     
     public static void treeTest(){
-        byte data = 1;
+        byte data = 26;
         byte datas[] = new byte[16];
         
         for (int i = 0 ; i < 16; i++)
@@ -81,6 +145,12 @@ public class Test {
         
         
         a.printData();
+        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
+        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
+        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
+        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
+        
+        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
         cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
         cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
         cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);

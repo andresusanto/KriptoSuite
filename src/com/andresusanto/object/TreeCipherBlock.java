@@ -15,6 +15,7 @@ public class TreeCipherBlock {
     
     public static final int BLOCK_SIZE = 128; // dalam satuan bit
     private boolean content[];
+    private TreeCipherBlock parent; // untuk keperluan membentuk pohon enkripsi
     
     public TreeCipherBlock(byte data[]){
         this.content = new boolean[BLOCK_SIZE];
@@ -29,6 +30,17 @@ public class TreeCipherBlock {
     public TreeCipherBlock(TreeCipherBlock other){
         this.content = new boolean[other.content.length];
         System.arraycopy(other.content, 0, this.content, 0, other.content.length);
+    }
+    
+    public void setParent(TreeCipherBlock parent){
+        this.parent = parent;
+    }
+    
+    public void push(TreeCipherBlock element){
+        if (parent != null){
+            parent.push(this);
+        }
+        this.content = element.content;
     }
     
     public void xor(TreeCipherBlock other){
