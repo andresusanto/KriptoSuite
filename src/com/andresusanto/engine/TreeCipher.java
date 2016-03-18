@@ -37,6 +37,9 @@ public class TreeCipher {
     
     public void printInternal(){
         for (int j = 0; j < 15; j++){
+            System.out.print(j);
+            System.out.print("\t: ");
+            
             internalKey[j].printData();
         }
     }

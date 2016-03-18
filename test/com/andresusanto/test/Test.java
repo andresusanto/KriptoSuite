@@ -11,6 +11,7 @@ import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
+import com.andresusanto.object.TreeCipherStructure;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,11 +44,31 @@ public class Test {
 //        Test.resetBitplane();
 //        Test.randomizer();
 //        Test.treeTest();
-        Test.treeStructureTest();
+//        Test.treeStructureTest();
+        Test.treeGeneratorTest();
+    }
+    
+    public static TreeCipherBlock testKey(){
+        byte data = 13;
+        byte datas[] = new byte[16];
+        
+        for (int i = 0 ; i < 16; i++){
+            datas[i] = (byte)(data + (i % 2) * (i % 4) + i);
+        }
+        
+        return new TreeCipherBlock(datas);
+    }
+    
+    public static void treeGeneratorTest(){
+        TreeCipher cip = new TreeCipher(testKey());
+        cip.printInternal();
+        
+        TreeCipherStructure structure = new TreeCipherStructure(cip.internalKey);
+        
     }
     
     public static void treeStructureTest(){
-        byte data = 26;
+        byte data = 13;
         byte datas[] = new byte[16];
         
         for (int i = 0 ; i < 16; i++)

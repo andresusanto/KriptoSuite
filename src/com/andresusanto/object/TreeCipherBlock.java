@@ -5,6 +5,9 @@
  */
 package com.andresusanto.object;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
  * @author power
@@ -32,8 +35,15 @@ public class TreeCipherBlock {
         System.arraycopy(other.content, 0, this.content, 0, other.content.length);
     }
     
+    private List<TreeCipherBlock> childs = new LinkedList<>();
+    
     public void setParent(TreeCipherBlock parent){
         this.parent = parent;
+        parent.childs.add(this);
+    }
+    
+    public TreeCipherBlock getParent(){
+        return this.parent;
     }
     
     public void push(TreeCipherBlock element){
@@ -41,6 +51,12 @@ public class TreeCipherBlock {
             parent.push(this);
         }
         this.content = element.content;
+    }
+    
+    public void printChilds(){
+        for(TreeCipherBlock child : childs){
+            child.printData();
+        }
     }
     
     public void xor(TreeCipherBlock other){
