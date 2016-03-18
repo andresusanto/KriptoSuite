@@ -6,7 +6,11 @@
 package com.andresusanto.engine;
 
 import com.andresusanto.object.TreeCipherBlock;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -17,6 +21,12 @@ public class TreeCipher {
     public static final char DIRECTION_DOWN = 'D';
     
     public TreeCipherBlock[] internalKey;
+    public List<TreeCipherBlock[]> encryptionLine; // dari leaf sampai ke root untuk semua jalur pohon
+    
+    public TreeCipher(TreeCipherBlock key){
+        internalKey = new TreeCipherBlock[15];
+        this.generateInternalKey(key);
+    }
     
     private void generateInternalKey(TreeCipherBlock key){
         internalKey[0] = new TreeCipherBlock(key);
@@ -30,9 +40,34 @@ public class TreeCipher {
         }
     }
     
-    public TreeCipher(TreeCipherBlock key){
-        internalKey = new TreeCipherBlock[15];
-        this.generateInternalKey(key);
+    private void populateTree(){
+        encryptionLine = new LinkedList<>();
+        
+        Queue<TreeCipherBlock> treeQueue = new LinkedBlockingQueue<>();
+        int i = 1;
+        treeQueue.add(this.internalKey[0]);
+        
+        while (i < internalKey.length){
+            TreeCipherBlock parent = treeQueue.poll();
+            
+            treeQueue.add(this.internalKey[i]);
+            this.internalKey[i++].setParent(parent);
+            treeQueue.add(this.internalKey[i]); // binary, 2x
+            this.internalKey[i++].setParent(parent);   
+        }
+        
+        while(!treeQueue.isEmpty()){ // sisanya itu leaf, buat jalur enkripsi dengan leaf tsb
+            List<TreeCipherBlock> line = new LinkedList<>();
+            TreeCipherBlock element = treeQueue.poll();
+            
+            while (element != null){
+                line.add(element);
+                element = element.getParent();
+            }
+            
+            TreeCipherBlock lineArray[] = new TreeCipherBlock[line.size()];
+            encryptionLine.add(line.toArray(lineArray));
+        }
     }
     
     public void printInternal(){
