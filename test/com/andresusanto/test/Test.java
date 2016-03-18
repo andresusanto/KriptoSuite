@@ -11,7 +11,6 @@ import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
-import com.andresusanto.object.TreeCipherStructure;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,7 +44,7 @@ public class Test {
 //        Test.randomizer();
 //        Test.treeTest();
 //        Test.treeStructureTest();
-        Test.treeGeneratorTest();
+        Test.treeBlockBuilderTest();
     }
     
     public static TreeCipherBlock testKey(){
@@ -54,16 +53,68 @@ public class Test {
         
         for (int i = 0 ; i < 16; i++){
             datas[i] = (byte)(data + (i % 2) * (i % 4) + i);
+            System.out.print(datas[i]);
+            System.out.print(" ");
+            
+        }
+        System.out.println();
+        return new TreeCipherBlock(datas);
+    }
+    
+    public static void treeBlockBuilderTest() throws IOException{
+        byte datas[] = new byte[256];
+        for (int i = 0 ; i < 256; i++)
+            datas[i] = (byte)(12 + i % 100);
+        
+        for (byte b : datas){
+            System.out.print(b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        TreeCipherBlock[] data = TreeCipherBlock.build(datas);
+        
+        System.out.println("OKE");
+        
+        for (TreeCipherBlock bx : data){
+            for (byte b : bx.getBytes()){
+                System.out.print(b);
+                System.out.print(" ");
+            } 
         }
         
-        return new TreeCipherBlock(datas);
+    }
+    
+    public static void getByteTest(){
+        TreeCipherBlock tes = testKey();
+        
+        byte dataz = 13;
+        byte datas[] = new byte[16];
+        
+        for (int i = 0 ; i < 16; i++)
+            datas[i] = dataz;
+        
+        TreeCipher cip = new TreeCipher(new TreeCipherBlock(datas));
+        
+        cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_DOWN);
+        
+        cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_UP);
+        
+        byte data[] = tes.getBytes();
+        
+        
+        for (byte b : data){
+            System.out.print(b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        
     }
     
     public static void treeGeneratorTest(){
         TreeCipher cip = new TreeCipher(testKey());
         cip.printInternal();
         
-        TreeCipherStructure structure = new TreeCipherStructure(cip.internalKey);
+        //TreeCipherStructure structure = new TreeCipherStructure(cip.internalKey);
         
     }
     

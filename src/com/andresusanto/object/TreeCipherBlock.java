@@ -5,6 +5,8 @@
  */
 package com.andresusanto.object;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class TreeCipherBlock {
     private boolean content[];
     private TreeCipherBlock parent; // untuk keperluan membentuk pohon enkripsi
     
+    
     public TreeCipherBlock(byte data[]){
         this.content = new boolean[BLOCK_SIZE];
         
@@ -28,6 +31,43 @@ public class TreeCipherBlock {
                 this.content[i * 8 + j] = (((data[i] >> j) & 1) == 1);
             }
         }
+    }
+    
+    public TreeCipherBlock(byte data[], int start){
+        this.content = new boolean[BLOCK_SIZE];
+        
+        for (int i = 0; i < BLOCK_SIZE/8; i++){
+            for (int j = 0; j < 8; j++){
+                this.content[i * 8 + j] = (((data[i + start] >> j) & 1) == 1);
+            }
+        }
+    }
+    
+    public static TreeCipherBlock[] build(byte data[]) throws IOException{
+        if (data.length % (BLOCK_SIZE/8) != 0){
+            throw new IOException("Bit padding are currently not supported.");
+        }else{
+            TreeCipherBlock[] result = new TreeCipherBlock[data.length / (BLOCK_SIZE/8)];
+            for(int i = 0; i < data.length; i += (BLOCK_SIZE/8)){
+                result[i / (BLOCK_SIZE/8)] = new TreeCipherBlock(data, i);
+            }
+            return result;
+        }
+    }
+    
+    public byte[] getBytes(){
+        byte result[] = new byte[BLOCK_SIZE/8];
+        
+        for (int i = 0; i < BLOCK_SIZE/8; i++){
+            byte data = 0;
+            for (int j = 0; j < 8; j++){
+                if (this.content[i * 8 + j]){
+                    data |= 1 << j;
+                }
+            }
+            result[i] = data;
+        }
+        return result;
     }
     
     public TreeCipherBlock(TreeCipherBlock other){

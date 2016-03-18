@@ -26,6 +26,7 @@ public class TreeCipher {
     public TreeCipher(TreeCipherBlock key){
         internalKey = new TreeCipherBlock[15];
         this.generateInternalKey(key);
+        this.populateTree();
     }
     
     private void generateInternalKey(TreeCipherBlock key){
