@@ -13,7 +13,7 @@ import java.util.Random;
  * @author power
  */
 public class TreeCipher {
-    private TreeCipherBlock[] internalKey;
+    public TreeCipherBlock[] internalKey;
     
     private void generateInternalKey(TreeCipherBlock key){
         internalKey[0] = new TreeCipherBlock(key);
@@ -39,7 +39,16 @@ public class TreeCipher {
     }
     
     public void doFistel(TreeCipherBlock data, TreeCipherBlock key){
-        data.cutShuffle(TreeCipherBlock.BLOCK_SIZE/2);
+        data.cutShuffle(64); // tukar kiri menjadi kanan
+        data.halfXor(key, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_RIGHT);
+//        data.cutShuffle(64);
         
+        //TreeCipherBlock tmp = new TreeCipherBlock(key);
+        //tmp.halfXor(data, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_LEFT);
+        // TODO: s-box 1
+        //tmp.halfXor(tmp, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
+        // TODO: s-box 2
+        //data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
+        //data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
     }
 }

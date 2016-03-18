@@ -56,14 +56,29 @@ public class Test {
         TreeCipherBlock b = new TreeCipherBlock(datas);
         b.rotaryShiftLeft(5);
         a.xor(b);
-        a.cutShuffle(3);
+        a.cutShuffle(21);
+        b.xor(a);
+        b.rotaryShiftLeft(12);
         
+        a.halfXor(b, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_RIGHT);
+        a.halfXor(a, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
         System.out.println("Original key");
         a.printData();
-            
-        System.out.println("Internal Key");
+//        a.cutShuffle(64);
+//        a.halfXor(b, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
+//        a.cutShuffle(64);
+//        a.printData();
+        
+        //System.out.println("Internal Key");
         TreeCipher cip = new TreeCipher(a);
-        cip.printInternal();
+        //cip.printInternal();
+        
+//        a.printData();
+        cip.doFistel(a, cip.internalKey[0]);
+        a.printData();
+        cip.doFistel(a, cip.internalKey[0]);
+        a.printData();
+        
     }
     
     public static void psnr() throws IOException{
