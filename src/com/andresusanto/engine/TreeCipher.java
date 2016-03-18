@@ -13,6 +13,9 @@ import java.util.Random;
  * @author power
  */
 public class TreeCipher {
+    public static final char DIRECTION_UP = 'U';
+    public static final char DIRECTION_DOWN = 'D';
+    
     public TreeCipherBlock[] internalKey;
     
     private void generateInternalKey(TreeCipherBlock key){
@@ -38,17 +41,24 @@ public class TreeCipher {
         }
     }
     
-    public void doFistel(TreeCipherBlock data, TreeCipherBlock key){
-        data.cutShuffle(64); // tukar kiri menjadi kanan
-        data.halfXor(key, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_RIGHT);
-//        data.cutShuffle(64);
+    public void doFistel(TreeCipherBlock data, TreeCipherBlock key, char direction){
+        TreeCipherBlock tmp = new TreeCipherBlock(key);
         
-        //TreeCipherBlock tmp = new TreeCipherBlock(key);
-        //tmp.halfXor(data, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_LEFT);
-        // TODO: s-box 1
-        //tmp.halfXor(tmp, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
-        // TODO: s-box 2
-        //data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
-        //data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
+        if (direction == DIRECTION_DOWN){
+            data.cutShuffle(64);
+            tmp.halfXor(data, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_LEFT);
+            // TODO: s-box 1
+            tmp.halfXor(tmp, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
+            // TODO: s-box 2
+            data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
+        }else{
+            tmp.halfXor(data, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_LEFT);
+            // TODO: s-box 1
+            tmp.halfXor(tmp, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
+            // TODO: s-box 2
+            data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
+            
+            data.cutShuffle(64);
+        }
     }
 }

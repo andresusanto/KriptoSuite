@@ -54,29 +54,37 @@ public class Test {
         
         TreeCipherBlock a = new TreeCipherBlock(datas);
         TreeCipherBlock b = new TreeCipherBlock(datas);
+        TreeCipherBlock c = new TreeCipherBlock(datas);
+        
         b.rotaryShiftLeft(5);
         a.xor(b);
         a.cutShuffle(21);
         b.xor(a);
         b.rotaryShiftLeft(12);
-        
-        a.halfXor(b, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_RIGHT);
-        a.halfXor(a, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_RIGHT);
-        System.out.println("Original key");
-        a.printData();
-//        a.cutShuffle(64);
-//        a.halfXor(b, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
-//        a.cutShuffle(64);
-//        a.printData();
-        
+        a.cutShuffle(1);
+        a.halfXor(c, TreeCipherBlock.HALF_LEFT, TreeCipherBlock.HALF_LEFT);
         //System.out.println("Internal Key");
-        TreeCipher cip = new TreeCipher(a);
+        TreeCipher cip = new TreeCipher(b);
         //cip.printInternal();
         
-//        a.printData();
-        cip.doFistel(a, cip.internalKey[0]);
         a.printData();
-        cip.doFistel(a, cip.internalKey[0]);
+        
+        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
+        
+        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
+        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
+        
+        
+        a.printData();
+        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
+        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
+        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
+        
         a.printData();
         
     }
