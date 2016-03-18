@@ -5,10 +5,20 @@
  */
 package com.andresusanto.object;
 
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  *
  * @author power
  */
 public class TreeCipherStructure {
+    public TreeCipherBlock elements[];
     
+    public TreeCipherStructure(TreeCipherBlock internalKey[]){
+        this.elements = internalKey;
+        
+        Queue<TreeCipherBlock> treeQueue = new LinkedBlockingQueue<>();
+        while ()
+    }
 }
