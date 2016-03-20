@@ -44,7 +44,8 @@ public class Test {
 //        Test.randomizer();
 //        Test.treeTest();
 //        Test.treeStructureTest();
-        Test.treeBlockBuilderTest();
+//        Test.treeBlockBuilderTest();
+        Test.treeModificationTest();
     }
     
     public static TreeCipherBlock testKey(){
@@ -59,6 +60,22 @@ public class Test {
         }
         System.out.println();
         return new TreeCipherBlock(datas);
+    }
+    
+    public static void treeModificationTest(){
+        TreeCipherBlock key = testKey();
+        TreeCipher cip = new TreeCipher(key);
+        key.printData();
+        
+        TreeCipherBlock tes = new TreeCipherBlock(key);
+        tes.cutShuffle(2);
+        tes.rotaryShiftLeft(2);
+        tes.cutShuffle(43);
+        tes.printData();
+        
+        cip.printInternal();
+        cip.modifyTree(tes);
+        cip.printInternal();
     }
     
     public static void treeBlockBuilderTest() throws IOException{

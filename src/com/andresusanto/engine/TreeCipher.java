@@ -69,14 +69,36 @@ public class TreeCipher {
             TreeCipherBlock lineArray[] = new TreeCipherBlock[line.size()];
             encryptionLine.add(line.toArray(lineArray));
         }
+        
+    }
+    
+    public void modifyTree(TreeCipherBlock currentBlock){
+        TreeCipherBlock rootTransform = new TreeCipherBlock(internalKey[0]);
+        
+        if (currentBlock.content[0]){
+            rootTransform.rotaryShiftRight(2);
+        }else{
+            rootTransform.rotaryShiftLeft(1);
+        }
+        
+        int leafNumber = 0;
+        int numLeafBits = (int)(Math.log(encryptionLine.size()) / Math.log(2));
+        for (int i = 0; i < numLeafBits; i++){
+            if (currentBlock.content[i]) leafNumber |= 1 << i;
+        }
+        System.out.println("Leaf number is " + leafNumber);
+        encryptionLine.get(leafNumber)[0].push(rootTransform);
     }
     
     public void printInternal(){
-        for (int j = 0; j < 15; j++){
+        for (int j = 0; j < encryptionLine.size(); j++){
+            System.out.print("LINE ");
             System.out.print(j);
             System.out.print("\t: ");
             
-            internalKey[j].printData();
+            for(TreeCipherBlock data : encryptionLine.get(j)){
+                data.printData();
+            }
         }
     }
     

@@ -19,7 +19,8 @@ public class TreeCipherBlock {
     public static final int HALF_RIGHT = 0;
     
     public static final int BLOCK_SIZE = 128; // dalam satuan bit
-    private boolean content[];
+    public boolean content[];
+    
     private TreeCipherBlock parent; // untuk keperluan membentuk pohon enkripsi
     
     
