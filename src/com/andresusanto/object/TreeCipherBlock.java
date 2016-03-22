@@ -56,6 +56,17 @@ public class TreeCipherBlock {
         }
     }
     
+    public static byte[] toBytes(TreeCipherBlock[] data){
+        byte bytesData[] = new byte[data.length * (BLOCK_SIZE/8)];
+        for (int i = 0; i < data.length; i++){
+            byte curBytesData[] = data[i].getBytes();
+            for (int j = 0; j < (BLOCK_SIZE/8); j++){
+                bytesData[i * (BLOCK_SIZE/8) + j] = curBytesData[j];
+            }
+        }
+        return bytesData;
+    }
+    
     public byte[] getBytes(){
         byte result[] = new byte[BLOCK_SIZE/8];
         
@@ -100,6 +111,13 @@ public class TreeCipherBlock {
         }
     }
     
+    public void pad(byte other){
+        rotaryShiftLeft(8); // geser 8 bits
+        for (int j = 0; j < 8; j++){
+            this.content[j] = (((other >> j) & 1) == 1);
+        }
+    }
+    
     public void xor(TreeCipherBlock other){
         for (int i = 0; i < BLOCK_SIZE; i++){
             this.content[i] = other.content[i] ^ this.content[i];
@@ -123,10 +141,6 @@ public class TreeCipherBlock {
             result[this.content.length - k + i] = this.content[i];
         }
         this.content = result;
-    }
-    
-    public byte[] getData(){
-        return null;
     }
     
     public void rotaryShiftRight(int k){

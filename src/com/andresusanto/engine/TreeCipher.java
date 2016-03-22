@@ -22,11 +22,20 @@ public class TreeCipher {
     
     public TreeCipherBlock[] internalKey;
     public List<TreeCipherBlock[]> encryptionLine; // dari leaf sampai ke root untuk semua jalur pohon
+    public TreeCipherBlock internalQueue; // antrian yang digunakan pada modus CFB
     
     public TreeCipher(TreeCipherBlock key){
         internalKey = new TreeCipherBlock[15];
         this.generateInternalKey(key);
         this.populateTree();
+        this.generateInternalQueue(key);
+    }
+    
+    private void generateInternalQueue(TreeCipherBlock key){
+        internalQueue = new TreeCipherBlock(key);
+        internalQueue.cutShuffle(TreeCipherBlock.BLOCK_SIZE / 2);
+        internalQueue.rotaryShiftLeft(5);
+        internalQueue.cutShuffle(TreeCipherBlock.BLOCK_SIZE / 4);
     }
     
     private void generateInternalKey(TreeCipherBlock key){
@@ -72,7 +81,7 @@ public class TreeCipher {
         
     }
     
-    public void modifyTree(TreeCipherBlock currentBlock){
+    private void modifyTree(TreeCipherBlock currentBlock){
         TreeCipherBlock rootTransform = new TreeCipherBlock(internalKey[0]);
         
         if (currentBlock.content[0]){
@@ -86,23 +95,10 @@ public class TreeCipher {
         for (int i = 0; i < numLeafBits; i++){
             if (currentBlock.content[i]) leafNumber |= 1 << i;
         }
-        System.out.println("Leaf number is " + leafNumber);
         encryptionLine.get(leafNumber)[0].push(rootTransform);
     }
     
-    public void printInternal(){
-        for (int j = 0; j < encryptionLine.size(); j++){
-            System.out.print("LINE ");
-            System.out.print(j);
-            System.out.print("\t: ");
-            
-            for(TreeCipherBlock data : encryptionLine.get(j)){
-                data.printData();
-            }
-        }
-    }
-    
-    public void doFistel(TreeCipherBlock data, TreeCipherBlock key, char direction){
+    private void doFistel(TreeCipherBlock data, TreeCipherBlock key, char direction){
         TreeCipherBlock tmp = new TreeCipherBlock(key);
         
         if (direction == DIRECTION_DOWN){
@@ -120,6 +116,83 @@ public class TreeCipher {
             data.halfXor(tmp, TreeCipherBlock.HALF_RIGHT, TreeCipherBlock.HALF_LEFT);
             
             data.cutShuffle(64);
+        }
+    }
+    
+    private void doFistelLine(TreeCipherBlock data, char direction){
+        if (direction == DIRECTION_DOWN){
+            for (int j = 0; j < encryptionLine.size(); j++){ //(TreeCipherBlock[] fistelLine : encryptionLine){
+                TreeCipherBlock[] fistelLine = encryptionLine.get(j);
+                for (int i = fistelLine.length - 1; i >= 0; i--){ // karena 0 = leaf, akar = length - 1,enkripsi dilakukan dari akar
+                    doFistel(data, fistelLine[i], DIRECTION_DOWN);
+                }
+            }   
+        }else{
+            for (int j = encryptionLine.size() - 1; j >= 0; j--){ 
+                TreeCipherBlock[] fistelLine = encryptionLine.get(j);
+                for (int i = 0; i < fistelLine.length; i++){ // karena 0 = leaf, akar = length - 1,dekripsi dilakukan dari leaf
+                    doFistel(data, fistelLine[i], DIRECTION_UP);
+                }
+            }
+        }
+    }
+    
+    public byte encrypt(byte input){
+        TreeCipherBlock data[] = { new TreeCipherBlock(internalQueue) };
+        encrypt(data);
+        byte result = (byte)(input ^ data[0].getBytes()[0]);
+        internalQueue.pad(result);
+        return result;
+    }
+    
+    public byte decrypt(byte input){
+        TreeCipherBlock data[] = { new TreeCipherBlock(internalQueue) };
+        encrypt(data);
+        internalQueue.pad(input);
+        return (byte)(input ^ data[0].getBytes()[0]);
+    }
+    
+    public void encrypt(TreeCipherBlock datas[]){
+        for (TreeCipherBlock data: datas){
+            doFistelLine(data, DIRECTION_DOWN); // tahap enkripsi pohon 1
+            TreeCipherBlock dataPhase1 = new TreeCipherBlock(data); //simpan data hasil enkripsi 1 untuk memodifikasi pohon
+            doFistelLine(data, DIRECTION_DOWN); // tahap enkripsi pohon 2
+            modifyTree(dataPhase1);
+        }
+    }
+    
+    public void decrypt(TreeCipherBlock datas[]){
+        for (TreeCipherBlock data: datas){
+            doFistelLine(data, DIRECTION_UP); // tahap enkripsi pohon 1
+            TreeCipherBlock dataPhase1 = new TreeCipherBlock(data); //simpan data hasil enkripsi 1 untuk memodifikasi pohon
+            doFistelLine(data, DIRECTION_UP); // tahap enkripsi pohon 2
+            modifyTree(dataPhase1);
+        }
+    }
+    
+    public void printInternal(){
+        for (int j = 0; j < encryptionLine.size(); j++){
+            System.out.print("LINE ");
+            System.out.print(j);
+            System.out.print("\t: ");
+            
+            for(TreeCipherBlock data : encryptionLine.get(j)){
+                data.printData();
+            }
+        }
+    }
+    
+    public void printInternalKey(){
+        for (int i = 0 ; i < internalKey.length; i++){
+            System.out.print(i);
+            System.out.print("\t:");
+            
+            byte kb[] = internalKey[i].getBytes();
+            for (byte b : kb){
+                System.out.printf("%02X", b);
+                System.out.print(" ");
+            } System.out.println();
+            
         }
     }
 }

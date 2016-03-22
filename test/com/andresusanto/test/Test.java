@@ -44,8 +44,8 @@ public class Test {
 //        Test.randomizer();
 //        Test.treeTest();
 //        Test.treeStructureTest();
-//        Test.treeBlockBuilderTest();
-        Test.treeModificationTest();
+//        Test.treeGeneratorTest();
+        Test.CFBTest();
     }
     
     public static TreeCipherBlock testKey(){
@@ -54,12 +54,118 @@ public class Test {
         
         for (int i = 0 ; i < 16; i++){
             datas[i] = (byte)(data + (i % 2) * (i % 4) + i);
-            System.out.print(datas[i]);
-            System.out.print(" ");
-            
         }
-        System.out.println();
+        //datas[15]--;
+        //System.out.println();
         return new TreeCipherBlock(datas);
+    }
+    
+    public static void CFBTest(){
+        byte datas[] = new byte[256];
+        for (int i = 0 ; i < 256; i++)
+            datas[i] = (byte)((1 + (i % 9) * 3 + (i * i) % 223) % 256);
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        TreeCipherBlock key = testKey();
+        TreeCipher cip = new TreeCipher(key);
+        
+        for (int i = 0 ; i < datas.length ; i++){
+            datas[i] = cip.encrypt(datas[i]);
+        }
+        
+        datas[0]--;
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        cip = new TreeCipher(key);
+        
+        for (int i = 0 ; i < datas.length ; i++){
+            datas[i] = cip.decrypt(datas[i]);
+        }
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+    }
+    
+    public static void padTest(){
+        TreeCipherBlock key = testKey();
+        
+        for (byte b : key.getBytes()){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        key.pad( (byte)121 );
+        key.pad( (byte)123 );
+        key.pad( (byte)221 );
+        key.pad( (byte)12 );
+        
+        System.out.printf("%02X\n", (byte)121);
+        System.out.printf("%02X\n", (byte)123);
+        System.out.printf("%02X\n", (byte)221);
+        System.out.printf("%02X\n", (byte)12);
+        
+        
+        for (byte b : key.getBytes()){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+    }
+    
+    public static void cipherTest() throws IOException{
+        
+        TreeCipherBlock key = testKey();
+        TreeCipher cip = new TreeCipher(key);
+        
+        byte kb[] = key.getBytes();
+        for (byte b : kb){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        byte datas[] = new byte[256];
+        for (int i = 0 ; i < 256; i++)
+            datas[i] = (byte)((1 + (i % 9) * 3 + (i * i) % 223) % 256);
+        
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        
+        TreeCipherBlock dataBlocks [] = TreeCipherBlock.build(datas);
+        cip.encrypt(dataBlocks);
+        
+        
+        dataBlocks[0].content[0] = !dataBlocks[0].content[0];
+        
+        datas = TreeCipherBlock.toBytes(dataBlocks);
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        
+        cip = new TreeCipher(testKey());
+        cip.decrypt(dataBlocks);
+        
+        datas = TreeCipherBlock.toBytes(dataBlocks);
+        
+        for (byte b : datas){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
     }
     
     public static void treeModificationTest(){
@@ -74,7 +180,7 @@ public class Test {
         tes.printData();
         
         cip.printInternal();
-        cip.modifyTree(tes);
+        //cip.modifyTree(tes);
         cip.printInternal();
     }
     
@@ -112,9 +218,9 @@ public class Test {
         
         TreeCipher cip = new TreeCipher(new TreeCipherBlock(datas));
         
-        cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_DOWN);
+        //cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_DOWN);
         
-        cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_UP);
+       // cip.doFistel(tes, cip.internalKey[0], TreeCipher.DIRECTION_UP);
         
         byte data[] = tes.getBytes();
         
@@ -128,8 +234,11 @@ public class Test {
     }
     
     public static void treeGeneratorTest(){
+        System.out.print("Key\t: ");
+        testKey().printData();
+        
         TreeCipher cip = new TreeCipher(testKey());
-        cip.printInternal();
+        cip.printInternalKey();
         
         //TreeCipherStructure structure = new TreeCipherStructure(cip.internalKey);
         
@@ -222,27 +331,27 @@ public class Test {
         
         a.printData();
         
-        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
-        
-        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
-        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
+//        
+//        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_DOWN);
+//        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_DOWN);
         
         
         a.printData();
-        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
-        
-        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
-        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
+//        
+//        cip.doFistel(a, cip.internalKey[4], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[3], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[2], TreeCipher.DIRECTION_UP);
+//        cip.doFistel(a, cip.internalKey[1], TreeCipher.DIRECTION_UP);
         
         a.printData();
         
