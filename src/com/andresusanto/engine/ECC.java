@@ -8,31 +8,45 @@ package com.andresusanto.engine;
 import com.andresusanto.object.Coordinate;
 import com.andresusanto.object.Curve;
 import java.math.BigInteger;
+import java.util.Random;
 
 /**
  *
  * @author Andre
  */
 public class ECC {
+    
     private Curve curve;
     private Coordinate baseCoordinate;
+    private BigInteger privateKey;
     
-    public Coordinate publicKey;
-    public BigInteger privateKey;
     
-    public ECC (Curve curve, Coordinate base){
+    public ECC (Curve curve, Coordinate base, BigInteger privateKey){
         this.curve = curve;
         this.baseCoordinate = base;
+        this.privateKey = privateKey;
     }
     
-    // satu kordinat dienkripsi menjadi 2 kordinat
+    public Coordinate generatePublic(){
+        return multiplyCoordinate(baseCoordinate, privateKey);
+    }
+    
+    // satu kordinat dienkripsi menjadi 2 kordinat (ECC El Gamal)
     // hal tersebut karena kordinat 1 = random * kordinat basis, dan kordinat 2 = plain + random * publickey
-    public Coordinate[] encrypt(Coordinate plain) {
-        return null;
+    public Coordinate[] encrypt(Coordinate plain, Coordinate publicKey){
+        // pilih sebuah bilangan random r
+        BigInteger k = new BigInteger(curve.p.bitLength(), new Random());
+        
+        // membuat tupel el gamal hasil enkripsi
+        Coordinate[] ans = new Coordinate[2];
+        ans[0] = multiplyCoordinate(baseCoordinate, k); // bilangan random * kordinat basis
+        ans[1] = addCoordinate(plain, multiplyCoordinate(publicKey, k)); // plain + random * public key
+        return ans; // kembalikan tupel
     }
     
-    public Coordinate decrypt(Coordinate[] cipher) {
-        return null;
+    public Coordinate decrypt(Coordinate[] cipher){
+        Coordinate multiWithPrivate = multiplyCoordinate(cipher[0], privateKey);
+        return subtractCoordinate(cipher[1], multiWithPrivate);
     }
     
     // operasi penambahan titik dalam kurva
@@ -81,7 +95,7 @@ public class ECC {
         return addCoordinate(a, negateCoordinate(b));
     }
     
-    public Coordinate multiply(Coordinate a, BigInteger n) {
+    public Coordinate multiplyCoordinate(Coordinate a, BigInteger n) {
         BigInteger two = new BigInteger("2");
 
         // Basis untuk rekursif
@@ -90,11 +104,12 @@ public class ECC {
 
         
         if (n.mod(two).equals(BigInteger.ZERO)) {
-            Coordinate sqrt = multiply(a, n.divide(two));
+            Coordinate sqrt = multiplyCoordinate(a, n.divide(two));
             return addCoordinate(sqrt, sqrt);
         }else {
             n = n.subtract(BigInteger.ONE);
-            return addCoordinate(a, (multiply(a, n)));
+            return addCoordinate(a, (multiplyCoordinate(a, n)));
         }
     }
+    
 }
