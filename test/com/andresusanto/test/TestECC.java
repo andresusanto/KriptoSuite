@@ -31,8 +31,10 @@ public class TestECC {
         Coordinate tes2 = new Coordinate(new BigInteger("13"), new BigInteger("21"));
         Coordinate tes3 = ecc.negateCoordinate(coba);
         
-        ecc.addCoordinate(coba, tes).print();
+        Coordinate dua = ecc.multiply(tes, new BigInteger("2"));
+        dua.print();
+        ecc.multiply(tes, new BigInteger("4")).print();
         ecc.addCoordinate(coba, tes2).print();
-        ecc.addCoordinate(coba, tes3).print();
+        ecc.addCoordinate(dua, dua).print();
     }
 }

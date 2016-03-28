@@ -76,4 +76,25 @@ public class ECC {
     public Coordinate negateCoordinate(Coordinate a){
         return new Coordinate(a.X, curve.p.subtract(a.Y));
     }
+    
+    public Coordinate subtractCoordinate(Coordinate a, Coordinate b) {
+        return addCoordinate(a, negateCoordinate(b));
+    }
+    
+    public Coordinate multiply(Coordinate a, BigInteger n) {
+        BigInteger two = new BigInteger("2");
+
+        // Basis untuk rekursif
+        if (n.equals(BigInteger.ONE)) return new Coordinate(a);
+        if (n.equals(two)) return addCoordinate(a, a);
+
+        
+        if (n.mod(two).equals(BigInteger.ZERO)) {
+            Coordinate sqrt = multiply(a, n.divide(two));
+            return addCoordinate(sqrt, sqrt);
+        }else {
+            n = n.subtract(BigInteger.ONE);
+            return addCoordinate(a, (multiply(a, n)));
+        }
+    }
 }

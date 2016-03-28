@@ -28,6 +28,12 @@ public class Coordinate {
         System.out.printf("{%s,%s}\n", this.X.toString(), this.Y.toString());
     }
     
+    // copy constructor
+    public Coordinate(Coordinate other){
+        this.X = new BigInteger(other.X.toString());
+        this.Y = new BigInteger(other.Y.toString());
+    }
+    
     // buat titik dari byte. Proses encode byte ke titik dilakukan disini. Masih belom FIX Ukurannya (bisa jadi 1 point butuh 2 ato lebih byte)
     public Coordinate(byte data){
         
