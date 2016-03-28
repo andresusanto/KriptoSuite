@@ -30,8 +30,4 @@ public class Curve {
         this.p = new BigInteger(other.p.toString());
     }
     
-    // akan dibutuhkan untuk keperluan validasi
-    public boolean isEqual(Curve other){
-        return this.a.equals(other.a) && this.b.equals(other.b) && this.p.equals(other.p);
-    }
 }
