@@ -51,13 +51,12 @@ public class ECC {
     
     // operasi penambahan titik dalam kurva
     public Coordinate addCoordinate(Coordinate a, Coordinate b) {
-        // Digunakan untuk melakukan perhitungan lambda
-        BigInteger three = new BigInteger("3");
-        BigInteger two = new BigInteger("2");
-        BigInteger temp = new BigInteger(a.X.toString());
-
         if (a.isEqual(b)){
             // Hitung lamda untuk titik yang sama
+            BigInteger three = new BigInteger("3");
+            BigInteger two = new BigInteger("2");
+            BigInteger temp = new BigInteger(a.X.toString());
+
             BigInteger lambda = temp.modPow(two, curve.p);
             lambda = three.multiply(lambda);
             lambda = lambda.add(curve.a);
