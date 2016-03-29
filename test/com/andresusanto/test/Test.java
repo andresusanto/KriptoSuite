@@ -12,6 +12,8 @@ import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -28,9 +30,22 @@ import java.util.logging.Logger;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
-        Coordinate c = new Coordinate((byte) 11, new BigInteger("20"));
-        int decoded = c.toByte() & 0xFF;
-        System.out.println(decoded);
+        File file = new File("./test.txt");
+        byte[] fileData = new byte[(int) file.length()];
+        FileInputStream in = new FileInputStream(file);
+        in.read(fileData);
+        in.close();
+        byte[] decodedFile = new byte[fileData.length];
+        for(int i=0; i<fileData.length; i++) {
+            Coordinate c = new Coordinate(fileData[i], new BigInteger("20"));
+            decodedFile[i] = c.toByte();
+//            int decoded = c.toByte() & 0xFF;
+//            System.out.println(decoded);
+        }
+        FileOutputStream fw = new FileOutputStream(new File("./decoded.txt"));
+        fw.write(decodedFile);
+        fw.close();
+        
 //        Test.testFileByteConvertion();
 //        Test.fileLength();
 //        Test.dataComplexity();
