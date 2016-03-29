@@ -7,12 +7,14 @@ package com.andresusanto.test;
 
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.TreeCipher;
+import com.andresusanto.object.Coordinate;
 import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +28,9 @@ import java.util.logging.Logger;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
+        Coordinate c = new Coordinate((byte) 11, new BigInteger("20"));
+        int decoded = c.toByte() & 0xFF;
+        System.out.println(decoded);
 //        Test.testFileByteConvertion();
 //        Test.fileLength();
 //        Test.dataComplexity();
@@ -45,7 +50,7 @@ public class Test {
 //        Test.treeTest();
 //        Test.treeStructureTest();
 //        Test.treeGeneratorTest();
-        Test.CFBTest();
+//        Test.CFBTest();
     }
     
     public static TreeCipherBlock testKey(){
