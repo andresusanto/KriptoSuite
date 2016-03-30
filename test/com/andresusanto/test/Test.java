@@ -7,12 +7,17 @@ package com.andresusanto.test;
 
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.TreeCipher;
+import com.andresusanto.object.Coordinate;
+import com.andresusanto.object.Curve;
 import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +31,21 @@ import java.util.logging.Logger;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
+        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
+        File file = new File("./test.bmp");
+        byte[] fileData = new byte[(int) file.length()];
+        FileInputStream in = new FileInputStream(file);
+        in.read(fileData);
+        in.close();
+        byte[] decodedFile = new byte[fileData.length];
+        for(int i=0; i<fileData.length; i++) {
+            Coordinate c = new Coordinate(fileData[i], curve);
+            decodedFile[i] = c.toByte();
+        }
+        FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
+        fw.write(decodedFile);
+        fw.close();
+        
 //        Test.testFileByteConvertion();
 //        Test.fileLength();
 //        Test.dataComplexity();
@@ -45,7 +65,7 @@ public class Test {
 //        Test.treeTest();
 //        Test.treeStructureTest();
 //        Test.treeGeneratorTest();
-        Test.CFBTest();
+//        Test.CFBTest();
     }
     
     public static TreeCipherBlock testKey(){
