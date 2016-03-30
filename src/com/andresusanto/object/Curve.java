@@ -25,13 +25,9 @@ public class Curve {
     }
     
     public Curve(Curve other){
-        this.a = other.a;
-        this.b = other.b;
-        this.p = other.p;
+        this.a = new BigInteger(other.a.toString());
+        this.b = new BigInteger(other.b.toString());
+        this.p = new BigInteger(other.p.toString());
     }
     
-    // akan dibutuhkan untuk keperluan validasi
-    public boolean isEqual(Curve other){
-        return this.a == other.a && this.b == other.b && this.p == other.p;
-    }
 }
