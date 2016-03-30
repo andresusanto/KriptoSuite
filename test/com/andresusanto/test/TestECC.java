@@ -93,13 +93,17 @@ public class TestECC {
             Coordinate[] enkrip = ecc.encrypt(plain, ecc.generatePublic());
             encryptedFile[i*2] = enkrip[0].toByte();
             encryptedFile[i*2+1] = enkrip[1].toByte();
-//            System.out.print("Enkrip :\n");
-//            enkrip[0].print();
-//            enkrip[1].print();
+            System.out.print("Enkrip :\n");
+            enkrip[0].print();
+            enkrip[1].print();
             
             Coordinate[] coba = new Coordinate[2];
             coba[0] = new Coordinate(encryptedFile[i*2], curve);
             coba[1] = new Coordinate(encryptedFile[i*2 + 1], curve);
+            
+            System.out.print("Hasil :\n");
+            coba[0].print();
+            coba[1].print();
             
             Coordinate dekrip = ecc.decrypt(coba);
             decodedFile[i] = dekrip.toByte();
