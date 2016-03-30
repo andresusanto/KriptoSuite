@@ -29,6 +29,17 @@ public class Coordinate {
         System.out.printf("{%s,%s}\n", this.X.toString(), this.Y.toString());
     }
     
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("{");
+        sb.append(this.X.toString());
+        sb.append(",");
+        sb.append(this.Y.toString());
+        sb.append("}");
+        return sb.toString();
+    }
+    
     // copy constructor
     public Coordinate(Coordinate other){
         this.X = new BigInteger(other.X.toString());

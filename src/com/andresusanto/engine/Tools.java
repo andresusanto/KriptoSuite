@@ -11,7 +11,13 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -204,4 +210,26 @@ public class Tools {
         frame.setSize(picture.width, picture.height);
         frame.setVisible(true);
     }
+    
+    public static void writeStringToFile(String content, String fileName){
+        BufferedWriter writer = null;
+        try {
+            File logFile = new File(fileName);
+            writer = new BufferedWriter(new FileWriter(logFile));
+            writer.write(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+    
+    public static String readStringFile(String fileName) throws IOException{
+        return new String(Files.readAllBytes(Paths.get(fileName)));
+    }
+    
+    
 }
