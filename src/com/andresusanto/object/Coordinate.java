@@ -14,7 +14,7 @@ import java.math.BigInteger;
 public class Coordinate {
     public BigInteger X;
     public BigInteger Y;
-    public static BigInteger K = BigInteger.valueOf((long)1000);
+    public static final BigInteger K = BigInteger.valueOf((long)1000);
     
     public Coordinate(BigInteger X, BigInteger Y){
         this.X = X;
