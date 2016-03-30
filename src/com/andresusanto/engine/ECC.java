@@ -49,7 +49,7 @@ public class ECC {
     // hal tersebut karena kordinat 1 = random * kordinat basis, dan kordinat 2 = plain + random * publickey
     public Coordinate[] encrypt(Coordinate plain, Coordinate publicKey){
         // pilih sebuah bilangan random r
-        BigInteger k = new BigInteger("2"); //curve.p.bitLength(), new Random());
+        BigInteger k = new BigInteger(curve.p.bitLength(), new Random());
         
         // membuat tupel el gamal hasil enkripsi
         Coordinate[] ans = new Coordinate[2];
