@@ -45,7 +45,7 @@ public class TestECC {
     }
     
     public static void tesEnkripDekrip() throws Exception{
-        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
+        Curve curve = new Curve(new BigInteger("-1"), new BigInteger("188"), new BigInteger("751"));
         Coordinate base = new Coordinate(new BigInteger("118"), new BigInteger("29"));
         BigInteger privateKey = new BigInteger("2213123213213412");
         
@@ -61,7 +61,7 @@ public class TestECC {
             Coordinate plain = new Coordinate(fileData[i], curve);
             Coordinate[] enkrip = ecc.encrypt(plain, ecc.generatePublic());
             Coordinate dekrip = ecc.decrypt(enkrip);
-            decodedFile[i] = plain.toByte();
+            decodedFile[i] = dekrip.toByte();
         }
         FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
         fw.write(decodedFile);
