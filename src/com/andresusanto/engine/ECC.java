@@ -31,17 +31,45 @@ public class ECC {
         return multiplyCoordinate(baseCoordinate, privateKey);
     }
     
+    // fungsi untuk melakukan enkripsi data byte
+    public byte[] encrypt(byte[] input, Coordinate publicKey){
+        byte[] encryptedFile = new byte[2 * input.length];
+        
+        for(int i=0; i< input.length; i++) {
+            Coordinate plain = new Coordinate(input[i], curve);
+            Coordinate[] encrypted = encrypt(plain, publicKey);
+            encryptedFile[i*2] = encrypted[0].toByte();
+            encryptedFile[i*2+1] = encrypted[1].toByte();
+        }
+        
+        return encryptedFile;
+    }
+    
     // satu kordinat dienkripsi menjadi 2 kordinat (ECC El Gamal)
     // hal tersebut karena kordinat 1 = random * kordinat basis, dan kordinat 2 = plain + random * publickey
     public Coordinate[] encrypt(Coordinate plain, Coordinate publicKey){
         // pilih sebuah bilangan random r
-        BigInteger k = new BigInteger(curve.p.bitLength(), new Random());
+        BigInteger k = new BigInteger("2"); //curve.p.bitLength(), new Random());
         
         // membuat tupel el gamal hasil enkripsi
         Coordinate[] ans = new Coordinate[2];
         ans[0] = multiplyCoordinate(baseCoordinate, k); // bilangan random * kordinat basis
         ans[1] = addCoordinate(plain, multiplyCoordinate(publicKey, k)); // plain + random * public key
         return ans; // kembalikan tupel
+    }
+    
+    public byte[] decrypt(byte[] input){
+        byte[] decryptedFile = new byte[input.length / 2];
+        
+        for(int i = 0; i < input.length; i += 2) {
+            Coordinate[] encrypted = new Coordinate[2];
+            encrypted[0] = new Coordinate(input[i], curve);
+            encrypted[1] = new Coordinate(input[i + 1], curve);
+            Coordinate decrypted = decrypt(encrypted);
+            decryptedFile[i / 2] = decrypted.toByte();
+        }
+        
+        return decryptedFile;
     }
     
     public Coordinate decrypt(Coordinate[] cipher){
