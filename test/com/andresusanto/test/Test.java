@@ -8,6 +8,7 @@ package com.andresusanto.test;
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.TreeCipher;
 import com.andresusanto.object.Coordinate;
+import com.andresusanto.object.Curve;
 import com.andresusanto.object.Payload;
 import com.andresusanto.object.Picture;
 import com.andresusanto.object.Segmen;
@@ -30,19 +31,18 @@ import java.util.logging.Logger;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
-        File file = new File("./test.txt");
+        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
+        File file = new File("./test.bmp");
         byte[] fileData = new byte[(int) file.length()];
         FileInputStream in = new FileInputStream(file);
         in.read(fileData);
         in.close();
         byte[] decodedFile = new byte[fileData.length];
         for(int i=0; i<fileData.length; i++) {
-            Coordinate c = new Coordinate(fileData[i], new BigInteger("20"));
+            Coordinate c = new Coordinate(fileData[i], curve);
             decodedFile[i] = c.toByte();
-//            int decoded = c.toByte() & 0xFF;
-//            System.out.println(decoded);
         }
-        FileOutputStream fw = new FileOutputStream(new File("./decoded.txt"));
+        FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
         fw.write(decodedFile);
         fw.close();
         

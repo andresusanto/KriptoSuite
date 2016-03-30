@@ -8,6 +8,9 @@ package com.andresusanto.test;
 import com.andresusanto.object.Curve;
 import com.andresusanto.engine.ECC;
 import com.andresusanto.object.Coordinate;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.math.BigInteger;
 
 /**
@@ -48,16 +51,32 @@ public class TestECC {
         
         ECC ecc = new ECC(curve, base, privateKey);
         
-        Coordinate plain = new Coordinate(new BigInteger("38"), new BigInteger("12"));
-        plain.print();
-        
-        Coordinate[] enkrip = ecc.encrypt(plain, ecc.generatePublic());
-        
-        for (Coordinate cor : enkrip){
-            cor.print();
+        File file = new File("./test.bmp");
+        byte[] fileData = new byte[(int) file.length()];
+        FileInputStream in = new FileInputStream(file);
+        in.read(fileData);
+        in.close();
+        byte[] decodedFile = new byte[fileData.length];
+        for(int i=0; i<fileData.length; i++) {
+            Coordinate plain = new Coordinate(fileData[i], curve);
+            Coordinate[] enkrip = ecc.encrypt(plain, ecc.generatePublic());
+            Coordinate dekrip = ecc.decrypt(enkrip);
+            decodedFile[i] = plain.toByte();
         }
+        FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
+        fw.write(decodedFile);
+        fw.close();
         
-        Coordinate dekrip = ecc.decrypt(enkrip);
-        dekrip.print();
+        //Coordinate plain = new Coordinate(new BigInteger("38"), new BigInteger("12"));
+        //plain.print();
+        
+        //Coordinate[] enkrip = ecc.encrypt(plain, ecc.generatePublic());
+        
+//        for (Coordinate cor : enkrip){
+//            cor.print();
+//        }
+        
+        //Coordinate dekrip = ecc.decrypt(enkrip);
+        //dekrip.print();
     }
 }
