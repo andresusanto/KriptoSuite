@@ -86,6 +86,8 @@ public class FrmECC extends javax.swing.JFrame {
         lblProcessingTime = new javax.swing.JLabel();
         cmdDecrypt = new javax.swing.JButton();
         cmdEncrypt = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        lblUkuran = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,7 +102,7 @@ public class FrmECC extends javax.swing.JFrame {
 
         txtKurvaB.setText("5");
 
-        txtKurvaP.setText("98764321261");
+        txtKurvaP.setText("98764321291");
         txtKurvaP.setToolTipText("");
 
         jLabel4.setText("p");
@@ -295,6 +297,10 @@ public class FrmECC extends javax.swing.JFrame {
             }
         });
 
+        jLabel14.setText("Ukuran");
+
+        lblUkuran.setText("(belum dimulai)");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -311,10 +317,13 @@ public class FrmECC extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblProcessingTime)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblUkuran)
+                                    .addComponent(lblProcessingTime))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cmdEncrypt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmdDecrypt)))
@@ -336,9 +345,13 @@ public class FrmECC extends javax.swing.JFrame {
                     .addComponent(jLabel12)
                     .addComponent(lblProcessingTime))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmdDecrypt)
-                    .addComponent(cmdEncrypt))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cmdDecrypt)
+                        .addComponent(cmdEncrypt))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(lblUkuran)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -437,6 +450,7 @@ public class FrmECC extends javax.swing.JFrame {
                     
                     txtCipher.setText(sb.toString());
                     lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
+                    lblUkuran.setText("" + plain.length + " bytes / " + encrypted.length + " bytes");
                     
                     if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                         Files.write(Paths.get(fc.getSelectedFile().getPath()), encrypted);
@@ -481,6 +495,7 @@ public class FrmECC extends javax.swing.JFrame {
                     
                     txtCipher.setText(sb.toString());
                     lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
+                    lblUkuran.setText("" + cipher.length + " bytes / " + decrypt.length + " bytes");
                     
                     if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
                         Files.write(Paths.get(fc.getSelectedFile().getPath()), decrypt);
@@ -544,6 +559,7 @@ public class FrmECC extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -561,6 +577,7 @@ public class FrmECC extends javax.swing.JFrame {
     private javax.swing.JLabel lblPrivate;
     private javax.swing.JLabel lblProcessingTime;
     private javax.swing.JLabel lblPublic;
+    private javax.swing.JLabel lblUkuran;
     private javax.swing.JTextField txtBaseX;
     private javax.swing.JTextField txtBaseY;
     private javax.swing.JTextArea txtCipher;

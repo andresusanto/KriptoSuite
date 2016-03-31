@@ -18,8 +18,17 @@ import java.math.BigInteger;
  * @author Andre
  */
 public class TestECC {
+    private static final BigInteger Prime3Mod4 = new BigInteger("98764321291");
     
     public static void main(String[] args) throws Exception{
+//        Coordinate plain = new Coordinate((byte) 1, new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("98764321291")));
+//        plain.print();
+//        byte plainByte = plain.toByte();
+//        System.out.printf("Byte : %2x\n", plainByte);
+//        Coordinate decoded = new Coordinate(plainByte, new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("98764321291")));
+//        decoded.print();
+//        boolean tes = plain.isEqual(decoded);
+//        System.out.println(tes);
         //tesTambah();
         tesEnkripDekrip();
         //tesEnkripDekripLangsung();
@@ -99,7 +108,9 @@ public class TestECC {
             
             Coordinate[] coba = new Coordinate[2];
             coba[0] = new Coordinate(encryptedFile[i*2], curve);
-            coba[1] = new Coordinate(encryptedFile[i*2 + 1], curve);
+            coba[1] = new Coordinate(encryptedFile[i*2+1], curve);
+            
+            System.out.println(enkrip[0].isEqual(coba[0])+" "+enkrip[1].isEqual(coba[1]));
             
             System.out.print("Hasil :\n");
             coba[0].print();

@@ -164,7 +164,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtKurvaP">
               <Properties>
-                <Property name="text" type="java.lang.String" value="98764321261"/>
+                <Property name="text" type="java.lang.String" value="98764321291"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
@@ -348,13 +348,17 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="lblProcessingTime" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblUkuran" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblProcessingTime" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="cmdEncrypt" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cmdDecrypt" min="-2" max="-2" attributes="0"/>
@@ -381,9 +385,15 @@
                           <Component id="lblProcessingTime" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cmdDecrypt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cmdEncrypt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="cmdDecrypt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cmdEncrypt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblUkuran" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -463,6 +473,16 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdEncryptActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel14">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Ukuran"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblUkuran">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="(belum dimulai)"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
