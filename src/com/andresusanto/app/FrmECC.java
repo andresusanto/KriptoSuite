@@ -410,92 +410,92 @@ public class FrmECC extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdSaveActionPerformed
 
     private void cmdEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEncryptActionPerformed
-        final JFileChooser fc = new JFileChooser();     
-        try {
-            fc.setFileFilter(new FileNameExtensionFilter("Public Key", "pub"));
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-                String publicKeyFC = Tools.readStringFile(fc.getSelectedFile().getPath());
-                String publicKeystr[] = publicKeyFC.split("\n");
-                Coordinate publicKey = new Coordinate(new BigInteger(publicKeystr[0]), new BigInteger(publicKeystr[1]));
-                
-                
-                fc.setFileFilter(null);
-                if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-                    String content = Tools.readStringFile(fc.getSelectedFile().getPath());
-                    byte[] plain = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
-                    txtPlain.setText(content);
-                    
-                    StringBuilder sb = new StringBuilder();
-                    
-                    long timeBefore = System.currentTimeMillis();
-                    byte[] encrypted = ecc.encrypt(plain, publicKey);
-                    long timeAfter = System.currentTimeMillis();
-                    
-                    for (byte b : encrypted){
-                        sb.append(String.format("%02X ", b));
-                    }
-                    
-                    txtCipher.setText(sb.toString());
-                    lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
-                    
-                    if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                        Files.write(Paths.get(fc.getSelectedFile().getPath()), encrypted);
-                    }
-                }
-                
-                
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "Public key diperlukan untuk enkripsi!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Terdapat kesalahan!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//        final JFileChooser fc = new JFileChooser();     
+//        try {
+//            fc.setFileFilter(new FileNameExtensionFilter("Public Key", "pub"));
+//            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+//                String publicKeyFC = Tools.readStringFile(fc.getSelectedFile().getPath());
+//                String publicKeystr[] = publicKeyFC.split("\n");
+//                Coordinate publicKey = new Coordinate(new BigInteger(publicKeystr[0]), new BigInteger(publicKeystr[1]));
+//                
+//                
+//                fc.setFileFilter(null);
+//                if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+//                    String content = Tools.readStringFile(fc.getSelectedFile().getPath());
+//                    byte[] plain = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
+//                    txtPlain.setText(content);
+//                    
+//                    StringBuilder sb = new StringBuilder();
+//                    
+//                    long timeBefore = System.currentTimeMillis();
+//                    byte[] encrypted = ecc.encrypt(plain, publicKey);
+//                    long timeAfter = System.currentTimeMillis();
+//                    
+//                    for (byte b : encrypted){
+//                        sb.append(String.format("%02X ", b));
+//                    }
+//                    
+//                    txtCipher.setText(sb.toString());
+//                    lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
+//                    
+//                    if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+//                        Files.write(Paths.get(fc.getSelectedFile().getPath()), encrypted);
+//                    }
+//                }
+//                
+//                
+//                
+//            }else{
+//                JOptionPane.showMessageDialog(null, "Public key diperlukan untuk enkripsi!", "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }catch (Exception ex) {
+//            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Terdapat kesalahan!", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_cmdEncryptActionPerformed
 
     private void cmdDecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDecryptActionPerformed
-        final JFileChooser fc = new JFileChooser();     
-        try {
-            fc.setFileFilter(new FileNameExtensionFilter("Private Key", "pvt"));
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-                String privateKeystr = Tools.readStringFile(fc.getSelectedFile().getPath());
-                privateKey = new BigInteger(privateKeystr);
-                updateECC();
-                
-                fc.setFileFilter(null);
-                if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-                    byte[] cipher = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
-                    
-                    long timeBefore = System.currentTimeMillis();
-                    byte[] decrypt = ecc.decrypt(cipher);
-                    long timeAfter = System.currentTimeMillis();
-                    
-                    String content = new String(decrypt);
-                    txtPlain.setText(content);
-                    
-                    StringBuilder sb = new StringBuilder();
-                    for (byte b : cipher){
-                        sb.append(String.format("%02X ", b));
-                    }
-                    
-                    txtCipher.setText(sb.toString());
-                    lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
-                    
-                    if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                        Files.write(Paths.get(fc.getSelectedFile().getPath()), decrypt);
-                    }
-                }
-                
-                
-                
-            }else{
-                JOptionPane.showMessageDialog(null, "Public key diperlukan untuk enkripsi!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Terdapat kesalahan!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//        final JFileChooser fc = new JFileChooser();     
+//        try {
+//            fc.setFileFilter(new FileNameExtensionFilter("Private Key", "pvt"));
+//            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+//                String privateKeystr = Tools.readStringFile(fc.getSelectedFile().getPath());
+//                privateKey = new BigInteger(privateKeystr);
+//                updateECC();
+//                
+//                fc.setFileFilter(null);
+//                if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+//                    byte[] cipher = Files.readAllBytes(Paths.get(fc.getSelectedFile().getPath()));
+//                    
+//                    long timeBefore = System.currentTimeMillis();
+//                    byte[] decrypt = ecc.decrypt(cipher);
+//                    long timeAfter = System.currentTimeMillis();
+//                    
+//                    String content = new String(decrypt);
+//                    txtPlain.setText(content);
+//                    
+//                    StringBuilder sb = new StringBuilder();
+//                    for (byte b : cipher){
+//                        sb.append(String.format("%02X ", b));
+//                    }
+//                    
+//                    txtCipher.setText(sb.toString());
+//                    lblProcessingTime.setText("" + (timeAfter - timeBefore) + " ms");
+//                    
+//                    if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+//                        Files.write(Paths.get(fc.getSelectedFile().getPath()), decrypt);
+//                    }
+//                }
+//                
+//                
+//                
+//            }else{
+//                JOptionPane.showMessageDialog(null, "Public key diperlukan untuk enkripsi!", "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }catch (Exception ex) {
+//            ex.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Terdapat kesalahan!", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_cmdDecryptActionPerformed
 
     /**
