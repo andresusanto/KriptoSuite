@@ -31,20 +31,20 @@ import java.util.logging.Logger;
  */
 public class Test {
     public static void main(String[] args) throws IOException {
-        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
-        File file = new File("./test.bmp");
-        byte[] fileData = new byte[(int) file.length()];
-        FileInputStream in = new FileInputStream(file);
-        in.read(fileData);
-        in.close();
-        byte[] decodedFile = new byte[fileData.length];
-        for(int i=0; i<fileData.length; i++) {
-            Coordinate c = new Coordinate(fileData[i], curve);
-            decodedFile[i] = c.toByte();
-        }
-        FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
-        fw.write(decodedFile);
-        fw.close();
+//        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
+//        File file = new File("./test.bmp");
+//        byte[] fileData = new byte[(int) file.length()];
+//        FileInputStream in = new FileInputStream(file);
+//        in.read(fileData);
+//        in.close();
+//        byte[] decodedFile = new byte[fileData.length];
+//        for(int i=0; i<fileData.length; i++) {
+//            Coordinate c = new Coordinate(fileData[i], curve);
+//            decodedFile[i] = c.toByte();
+//        }
+//        FileOutputStream fw = new FileOutputStream(new File("./decoded.bmp"));
+//        fw.write(decodedFile);
+//        fw.close();
         
 //        Test.testFileByteConvertion();
 //        Test.fileLength();
