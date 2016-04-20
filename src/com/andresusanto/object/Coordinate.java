@@ -7,6 +7,7 @@ package com.andresusanto.object;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 /**
  *
@@ -20,6 +21,24 @@ public class Coordinate {
     public Coordinate(BigInteger X, BigInteger Y){
         this.X = X;
         this.Y = Y;
+    }
+    
+    public boolean isZero(){
+        return this.X.equals(BigInteger.ZERO) && this.Y.equals(BigInteger.ZERO);
+    }
+    
+    public Coordinate(BigInteger X, BigInteger Y, Curve curve){
+        this.X = X;
+        this.Y = Y;
+        
+        BigInteger ppodbf = curve.p.add(BigInteger.ONE).shiftRight(2);
+        BigInteger nY = this.X.multiply(X).add(curve.a).multiply(this.X).add(curve.b).modPow(ppodbf, curve.p); // hitung y
+        
+        if (!nY.equals(this.Y) && !this.Y.equals(curve.p.subtract(nY))){
+            System.out.println("ERR");
+        }
+        
+        
     }
 
     public boolean isEqual(Coordinate other){
@@ -64,16 +83,12 @@ public class Coordinate {
     // buat titik dari byte. Proses encode byte ke titik dilakukan disini. Masih belom FIX Ukurannya (bisa jadi 1 point butuh 2 ato lebih byte)
     // ada parameter tambahan k (dr paper) yg gue gak tau itu masukan pengguna atau random atau gimana
     public Coordinate(byte[] data, Curve curve) throws IOException{
-
         if (data.length != curve.pLength + 1) throw new IOException("Invalid bytes length");
-
         boolean isNegative = (data[0] != 0);
         data[0] = 0; // byte yang digunakan untuk menyimpan sign
 
         this.X = new BigInteger(data);
-        
         calculateY(curve, isNegative);
-
     }
 
     public BigInteger squareRoot(BigInteger num) {
@@ -103,8 +118,9 @@ public class Coordinate {
         byte data[] = new byte[curve.pLength + 1];
         byte xBytes[] = this.X.toByteArray();
         System.arraycopy(xBytes, 0, data, data.length - xBytes.length, xBytes.length);
-
+            
         if (this.Y.testBit(0)) data[0] = 1; // simpan sign Y
         return data;
+        
     }
 }

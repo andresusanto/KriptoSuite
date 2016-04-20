@@ -17,14 +17,16 @@ public class Curve {
     public BigInteger a;
     public BigInteger b;
     public BigInteger p;
+    public BigInteger n;
 
     public byte[] pb;
     public int pLength;
 
-    public Curve(BigInteger a, BigInteger b, BigInteger p){
+    public Curve(BigInteger a, BigInteger b, BigInteger p, BigInteger n){
         this.a = a;
         this.b = b;
         this.p = p;
+        this.n = n;
 
         calculatePByte();
     }
