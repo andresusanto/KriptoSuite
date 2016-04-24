@@ -15,6 +15,7 @@ import com.andresusanto.object.Segmen;
 import com.andresusanto.object.TreeCipherBlock;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -70,12 +71,32 @@ public class Test {
 //        Test.CFBTest();
 
          //Test.tesFloat();
-         
-         System.out.println(generateTOTP("kakau"));
+         tesPadding();
+         //System.out.println(generateTOTP("kakau"));
     }
     
-    public static void tesPadding(){
+    public static void tesPadding() throws FileNotFoundException, IOException{
+        File file = new File("./test.txt");
+        byte[] fileData = new byte[(int) file.length()];
+        FileInputStream in = new FileInputStream(file);
+        in.read(fileData);
+        in.close();
         
+        System.out.printf("Input %d: ", fileData.length);
+        for (byte b : fileData){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+        
+        TreeCipherBlock a[] = TreeCipherBlock.build(fileData);
+        
+        byte x[] = TreeCipherBlock.toBytes(a);
+        
+        System.out.printf("Input %d: ", x.length);
+        for (byte b : x){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
     }
     
     public static void tesFloat(){
