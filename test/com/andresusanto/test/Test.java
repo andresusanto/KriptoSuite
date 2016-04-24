@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
  * @author akhfa
  */
 public class Test {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 //        Curve curve = new Curve(new BigInteger("4"), new BigInteger("5"), new BigInteger("173"));
 //        File file = new File("./test.bmp");
 //        byte[] fileData = new byte[(int) file.length()];
@@ -66,6 +68,55 @@ public class Test {
 //        Test.treeStructureTest();
 //        Test.treeGeneratorTest();
 //        Test.CFBTest();
+
+         //Test.tesFloat();
+         
+         System.out.println(generateTOTP("kakau"));
+    }
+    
+    public static void tesPadding(){
+        
+    }
+    
+    public static void tesFloat(){
+        float value = 1.5e-3f;
+
+        byte bytes[] = tesF(value);
+        //printB(bytes);
+        System.out.printf("%02X \n", sumBytes(bytes));
+        value += 0.100000531f;
+        
+        
+        bytes = tesF(value);
+        System.out.printf("%02X \n", sumBytes(bytes));
+        
+    }
+    
+    public static void printB(byte[] bytes){
+        System.out.print("Input: ");
+        for (byte b : bytes){
+            System.out.printf("%02X", b);
+            System.out.print(" ");
+        } System.out.println();
+    }
+    
+    public static byte[] tesF(float f){
+        int bits = Float.floatToIntBits(f);
+        byte[] bytes = new byte[4];
+        bytes[0] = (byte)(bits & 0xff);
+        bytes[1] = (byte)((bits >> 8) & 0xff);
+        bytes[2] = (byte)((bits >> 16) & 0xff);
+        bytes[3] = (byte)((bits >> 24) & 0xff);
+        
+        return bytes;
+    }
+    
+    public static byte sumBytes(byte[] bytes){
+        byte tmp = 0;
+        for (byte b : bytes){
+            tmp = (byte)((b + tmp) % 256);
+        }
+        return tmp;
     }
     
     public static TreeCipherBlock testKey(){
@@ -114,6 +165,38 @@ public class Test {
             System.out.printf("%02X", b);
             System.out.print(" ");
         } System.out.println();
+    }
+    
+    public static byte[] getSHA256Hash(String input) throws NoSuchAlgorithmException{
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        digest.reset();
+        return digest.digest(input.getBytes());
+    }
+    
+     public static String generateTOTP(String passwordHash) throws NoSuchAlgorithmException {
+        StringBuffer sb = new StringBuffer();
+        int totpTime = (int) ((System.currentTimeMillis() / 1000L) / 30);
+
+        sb.append("231123213"); sb.append(passwordHash);
+        byte hash[] = getSHA256Hash(sb.toString());
+
+        printB(hash);
+               
+        for (byte b : hash){
+            sb.append(String.format("%02X", b));
+        }
+
+        String strHash = sb.toString();
+        int truncateAt = Integer.parseInt(String.format("%02X", hash[hash.length - 1]), 16);
+        
+        System.out.println(truncateAt);
+
+        sb = new StringBuffer();
+        for (int i = truncateAt; i < truncateAt + 8; ++i) {
+            sb.append(String.format("%02x", hash[i % 32]));
+        }
+
+        return sb.toString();
     }
     
     public static void padTest(){
