@@ -5,6 +5,7 @@
  */
 package com.andresusanto.test;
 
+import com.andresusanto.engine.IkedaPRNG;
 import com.andresusanto.engine.Tools;
 import com.andresusanto.engine.TreeCipher;
 import com.andresusanto.object.Coordinate;
@@ -71,8 +72,22 @@ public class Test {
 //        Test.CFBTest();
 
          //Test.tesFloat();
-         tesFloat();
+         //tesFloat();
+         
+         Test.tesPRNG();
+         
          //System.out.println(generateTOTP("kakau"));
+    }
+    
+    public static void tesPRNG(){
+        IkedaPRNG ikeda = new IkedaPRNG(0.98425f, 0.12332455536f, 0.678764532435f);
+        
+        ikeda.print();
+        
+        for (int i = 0 ; i < 1000; i ++){
+            ikeda.calcPrint();
+            System.out.println();
+        }
     }
     
     public static void tesPadding() throws FileNotFoundException, IOException{
