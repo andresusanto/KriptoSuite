@@ -71,7 +71,7 @@ public class Test {
 //        Test.CFBTest();
 
          //Test.tesFloat();
-         tesPadding();
+         tesFloat();
          //System.out.println(generateTOTP("kakau"));
     }
     
@@ -135,7 +135,9 @@ public class Test {
     public static byte sumBytes(byte[] bytes){
         byte tmp = 0;
         for (byte b : bytes){
-            tmp = (byte)((b + tmp) % 256);
+            //tmp = (byte)((b + tmp) % 256);
+            tmp = (byte)(tmp ^ b);
+            tmp = (byte)((tmp >>> 2) | (tmp << (6)));
         }
         return tmp;
     }
