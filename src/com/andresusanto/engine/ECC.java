@@ -63,14 +63,16 @@ public class ECC {
     }
     
     // fungsi untuk menghasilkan digital signature
+    // ukuran signature yang dihasilkan adalah 2 x ukuran P (dalam byte)
     public byte[] sign(byte[] input) throws IOException{
         BigInteger e = calculateE(curve.n, input);
-        BigInteger k = new BigInteger(curve.n.bitLength(), new Random());
         
         BigInteger r, s;
+        byte[] rb, sb;
         
         do { // generate s
-            
+            BigInteger k = new BigInteger(curve.n.bitLength(), new Random());
+        
             do // generate r
             {
                 Coordinate p = multiplyCoordinate(baseCoordinate, k);
@@ -80,16 +82,26 @@ public class ECC {
 
             s = k.modInverse(curve.n).multiply(e.add(this.privateKey.multiply(r))).mod(curve.n);
         
+            rb = r.toByteArray();
+            sb = s.toByteArray();
+            
+            // padding bit jika panjangnya < panjang p
+            if (rb.length != curve.pLength){
+                byte tmp[] = new byte[curve.pLength];
+                System.arraycopy(rb, 0, tmp, curve.pLength - rb.length, rb.length);
+                rb = tmp;
+            }
+            
+            if (sb.length != curve.pLength){
+                byte tmp[] = new byte[curve.pLength];
+                System.arraycopy(sb, 0, tmp, curve.pLength - sb.length, sb.length);
+                sb = tmp;
+            }
         }while (s.equals(BigInteger.ZERO));
         
-        System.out.println("R : " + r.toString());
-        System.out.println("S : " + s.toString());
-        
-        int len = r.toByteArray().length;
-        
-        byte result[] = new byte[len * 2];
-        System.arraycopy(r.toByteArray(), 0, result, 0, len);
-        System.arraycopy(s.toByteArray(), 0, result, len, len);
+        byte result[] = new byte[rb.length * 2];
+        System.arraycopy(rb, 0, result, 0, rb.length);
+        System.arraycopy(sb, 0, result, rb.length, rb.length);
         
         return result;
     }

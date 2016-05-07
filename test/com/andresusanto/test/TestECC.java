@@ -67,6 +67,8 @@ public class TestECC {
         
         byte sign[] = ecc.sign(fileData);
         
+        System.out.println(ecc.verify(fileData, sign, publicKey));
+        
         sign[12] = 1;
         
         System.out.println(ecc.verify(fileData, sign, publicKey));

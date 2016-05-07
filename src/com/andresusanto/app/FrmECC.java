@@ -12,7 +12,10 @@ import com.andresusanto.object.Curve;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -32,16 +35,20 @@ public class FrmECC extends javax.swing.JFrame {
     private Curve curve;
     private BigInteger privateKey;
     
-    public FrmECC() {
+    public FrmECC(){
         initComponents();
         privateKey = new BigInteger("123");
         updateECC();
     }
 
     private void updateECC(){
-        curve = new Curve(new BigInteger(txtKurvaA.getText()), new BigInteger(txtKurvaB.getText()), new BigInteger(txtKurvaP.getText()));
+        curve = new Curve(new BigInteger(txtKurvaA.getText()), new BigInteger(txtKurvaB.getText()), new BigInteger(txtKurvaP.getText()), new BigInteger("1"));
         base = new Coordinate(new BigInteger(txtBaseX.getText()), new BigInteger(txtBaseY.getText()));
-        ecc = new ECC(curve, base, privateKey);
+        try {
+            ecc = new ECC(curve, base, privateKey);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(FrmECC.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

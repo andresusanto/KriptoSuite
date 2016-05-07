@@ -6,7 +6,6 @@
 package com.andresusanto.object;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,17 +42,29 @@ public class TreeCipherBlock {
             }
         }
     }
+        
+    private static byte[] bitPadding(byte[] data){
+        if (data.length % (BLOCK_SIZE/8) != 0){
+            int bytestoPad = (BLOCK_SIZE/8) - data.length % (BLOCK_SIZE/8);
+            byte result[] = new byte[data.length + bytestoPad];
+            System.arraycopy(data, 0, result, 0, data.length);
+            return result;
+        }else{
+            return data;
+        }
+    }
     
     public static TreeCipherBlock[] build(byte data[]) throws IOException{
-        if (data.length % (BLOCK_SIZE/8) != 0){
-            throw new IOException("Bit padding are currently not supported.");
-        }else{
-            TreeCipherBlock[] result = new TreeCipherBlock[data.length / (BLOCK_SIZE/8)];
-            for(int i = 0; i < data.length; i += (BLOCK_SIZE/8)){
-                result[i / (BLOCK_SIZE/8)] = new TreeCipherBlock(data, i);
+//        if (data.length % (BLOCK_SIZE/8) != 0){
+//            throw new IOException("Bit padding are currently not supported.");
+//        }else{
+            byte input[] = bitPadding(data);
+            TreeCipherBlock[] result = new TreeCipherBlock[input.length / (BLOCK_SIZE/8)];
+            for(int i = 0; i < input.length; i += (BLOCK_SIZE/8)){
+                result[i / (BLOCK_SIZE/8)] = new TreeCipherBlock(input, i);
             }
             return result;
-        }
+//        }
     }
     
     public static byte[] toBytes(TreeCipherBlock[] data){
