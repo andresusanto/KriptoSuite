@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -74,20 +76,39 @@ public class Test {
          //Test.tesFloat();
          //tesFloat();
          
-         Test.tesPRNG();
-         
+         Test.tesPRNGByte();
+         //Test.tesPRNG();
          //System.out.println(generateTOTP("kakau"));
     }
     
-    public static void tesPRNG(){
-        IkedaPRNG ikeda = new IkedaPRNG(0.98425f, 0.12332455536f, 0.678764532435f);
+    public static void tesPRNGByte() throws FileNotFoundException, UnsupportedEncodingException{
+        IkedaPRNG ikeda = new IkedaPRNG(0.98425, 0.5644, 0.768900001);
+        
+        PrintWriter writer = new PrintWriter("ikedabytes.txt", "UTF-8");
+        for (int i = 0; i < 150; i++){
+            byte gen = ikeda.next();
+            
+            //System.out.printf("%02X ", gen);
+            writer.printf("%02X ", gen);
+            
+            //if ((i+1) % 50 == 0) System.out.println();
+        }
+        writer.close();
+    }
+    
+    public static void tesPRNG() throws FileNotFoundException, UnsupportedEncodingException{
+        IkedaPRNG ikeda = new IkedaPRNG(0.98425, 0.12332455536, 0.678764532435);
         
         ikeda.print();
         
-        for (int i = 0 ; i < 1000; i ++){
+        PrintWriter writer = new PrintWriter("ikedareal.txt", "UTF-8");
+        for (int i = 0 ; i < 10000000; i ++){
             ikeda.calcPrint();
-            System.out.println();
+            //System.out.println();
+            
+            writer.println(ikeda.toString());
         }
+        writer.close();
     }
     
     public static void tesPadding() throws FileNotFoundException, IOException{
